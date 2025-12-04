@@ -20,6 +20,7 @@ function initCustomDropdowns() {
             const isOpening = !menu.classList.contains('show');
             menu.classList.toggle('show');
             toggle.classList.toggle('open');
+            toggle.setAttribute('aria-expanded', isOpening);
 
             if (window.innerWidth <= 640) {
                 if (isOpening) {
@@ -44,7 +45,20 @@ function initCustomDropdowns() {
                 overlay.classList.remove('show');
 
                 hiddenSelect.dispatchEvent(new Event('change'));
+
+                // Update ARIA
+                toggle.setAttribute('aria-expanded', 'false');
+                menu.querySelectorAll('.custom-dropdown-item').forEach(i => i.setAttribute('aria-selected', 'false'));
+                this.setAttribute('aria-selected', 'true');
             });
+        });
+
+        // Keyboard navigation support
+        toggle.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                this.click();
+            }
         });
     });
 
@@ -65,6 +79,10 @@ function initCustomDropdowns() {
         });
         overlay.classList.remove('show');
     });
+}
+
+function normalizeInput(str) {
+    return str.replace(',', '.');
 }
 
 function validateTime(timeStr, allowHours = true) {
@@ -223,325 +241,279 @@ function calculate() {
     copyBtn.disabled = true;
 
     if (mode === 'zone') {
-        const timeInput = document.getElementById('time10k').value.trim();
-        const errorDiv = document.getElementById('errorZone');
-
-        if (!validateTime(timeInput)) {
-            errorDiv.style.display = 'block';
-            return;
-        }
-
-        const thresholdPace = calculateThresholdPace(timeInput);
-        const zones = calculateZones(thresholdPace);
-        const races = [
-            [5, "5K"],
-            [10, "10K"],
-            [21.0975, "Half Marathon"],
-            [42.195, "Marathon"]
-        ].map(([dist, name]) => ({
-            name,
-            ...estimateRacePace(thresholdPace, dist)
-        }));
-
-        currentResults = { mode: 'zone', timeInput, thresholdPace, zones, races };
-
-        document.getElementById('refTime').textContent = timeInput;
-        document.getElementById('refPace').textContent = secondsToPace(thresholdPace) + '/km';
-
-        const zonesHtml = zones.map(z => `
-            <div class="zone-card">
-                <div class="zone-header">
-                    <div class="zone-name">${z.name}</div>
-                    <div class="zone-pace">${z.lower} – ${z.upper}</div>
-                </div>
-                <div class="zone-desc">${z.description}</div>
-            </div>
-        `).join('');
-        document.getElementById('zones').innerHTML = zonesHtml;
-
-        const racesHtml = races.map(r => {
-            const totalTime = secondsToTime(r.totalSeconds);
-            return `
-                <div class="zone-card race-card">
-                    <div class="race-name">${r.name}</div>
-                    <div class="race-details">
-                        <div class="race-pace">${r.pace}/km</div>
-                        <div class="race-time">${totalTime}</div>
-                    </div>
-                </div>
-            `;
-        }).join('');
-        document.getElementById('races').innerHTML = racesHtml;
-
-        resultsDiv.style.display = 'block';
-        zoneResults.classList.remove('hidden');
-        copyBtn.disabled = false;
-
+        calculateZone(resultsDiv, zoneResults, copyBtn);
     } else if (mode === 'pace') {
-        const distStr = document.getElementById('distancePace').value.trim();
-        const timeStr = document.getElementById('timePace').value.trim();
-        const errorDiv = document.getElementById('errorPace');
-        const dist = parseFloat(distStr);
-
-        if (isNaN(dist) || dist <= 0 || !validateTime(timeStr)) {
-            errorDiv.style.display = 'block';
-            return;
-        }
-
-        const totalSeconds = timeToSeconds(timeStr);
-        const paceSeconds = totalSeconds / dist;
-        const pace = secondsToPace(paceSeconds);
-
-        const splits = calculateSplits(paceSeconds, dist);
-        currentResults = { mode: 'pace', distance: dist, distanceLabel: presetDistances[distStr] || `${dist} km`, time: timeStr, pace, splits };
-
-        const splitsHtml = `
-            <div class="splits-section">
-                <div class="section-title">Splits</div>
-                <div class="splits-table">
-                    <div class="split-row header">
-                        <div class="split-col">Km</div>
-                        <div class="split-col">Time</div>
-                    </div>
-                    ${splits.map(s => `
-                        <div class="split-row">
-                            <div class="split-col">${s.km}</div>
-                            <div class="split-col">${s.time}</div>
-                        </div>
-                    `).join('')}
-                </div>
-            </div>
-        `;
-
-        paceTimeResults.innerHTML = `
-            <div class="result-grid">
-                <div class="result-card">
-                    <div class="result-item">
-                        <div class="metric-label">Distance</div>
-                        <div class="metric-value">${presetDistances[distStr] || `${dist} km`}</div>
-                    </div>
-                    <div class="result-item">
-                        <div class="metric-label">Time</div>
-                        <div class="metric-value">${timeStr}</div>
-                    </div>
-                    <div class="result-item">
-                        <div class="metric-label">Pace</div>
-                        <div class="metric-value">${pace}/km</div>
-                    </div>
-                </div>
-                ${splitsHtml}
-            </div>
-        `;
-        resultsDiv.style.display = 'block';
-        paceTimeResults.classList.remove('hidden');
-        copyBtn.disabled = false;
-
+        calculatePace(resultsDiv, paceTimeResults, copyBtn);
     } else if (mode === 'time') {
-        const distStr = document.getElementById('distanceTime').value.trim();
-        const paceStr = document.getElementById('paceTime').value.trim();
-        const errorDiv = document.getElementById('errorTime');
-        const dist = parseFloat(distStr);
-
-        if (isNaN(dist) || dist <= 0 || !validateTime(paceStr, false)) {
-            errorDiv.style.display = 'block';
-            return;
-        }
-
-        const paceSeconds = timeToSeconds(paceStr);
-        const totalSeconds = paceSeconds * dist;
-        const totalTime = secondsToTime(totalSeconds);
-
-        const splits = calculateSplits(paceSeconds, dist);
-        currentResults = { mode: 'time', distance: dist, distanceLabel: presetDistances[distStr] || `${dist} km`, pace: paceStr, totalTime, splits };
-
-        const splitsHtml = `
-            <div class="splits-section">
-                <div class="section-title">Splits</div>
-                <div class="splits-table">
-                    <div class="split-row header">
-                        <div class="split-col">Km</div>
-                        <div class="split-col">Time</div>
-                    </div>
-                    ${splits.map(s => `
-                        <div class="split-row">
-                            <div class="split-col">${s.km}</div>
-                            <div class="split-col">${s.time}</div>
-                        </div>
-                    `).join('')}
-                </div>
-            </div>
-        `;
-
-        paceTimeResults.innerHTML = `
-            <div class="result-grid">
-                <div class="result-card">
-                    <div class="result-item">
-                        <div class="metric-label">Distance</div>
-                        <div class="metric-value">${presetDistances[distStr] || `${dist} km`}</div>
-                    </div>
-                    <div class="result-item">
-                        <div class="metric-label">Pace</div>
-                        <div class="metric-value">${paceStr}/km</div>
-                    </div>
-                    <div class="result-item">
-                        <div class="metric-label">Total Time</div>
-                        <div class="metric-value">${totalTime}</div>
-                    </div>
-                </div>
-                ${splitsHtml}
-            </div>
-        `;
-        resultsDiv.style.display = 'block';
-        paceTimeResults.classList.remove('hidden');
-        copyBtn.disabled = false;
-
+        calculateTime(resultsDiv, paceTimeResults, copyBtn);
     } else if (mode === 'distance') {
-        const timeStr = document.getElementById('timeDistance').value.trim();
-        const paceStr = document.getElementById('paceDistance').value.trim();
-        const errorDiv = document.getElementById('errorDistance');
+        calculateDistance(resultsDiv, paceTimeResults, copyBtn);
+    } else if (mode === 'converter') {
+        calculateConverter(resultsDiv, converterResults, copyBtn);
+    }
+}
 
-        if (!validateTime(timeStr) || !validateTime(paceStr, false)) {
+function calculateZone(resultsDiv, zoneResults, copyBtn) {
+    const timeInput = normalizeInput(document.getElementById('time10k').value.trim());
+    const errorDiv = document.getElementById('errorZone');
+
+    if (!validateTime(timeInput)) {
+        errorDiv.style.display = 'block';
+        return;
+    }
+
+    const thresholdPace = calculateThresholdPace(timeInput);
+    const zones = calculateZones(thresholdPace);
+    const races = [
+        [5, "5K"],
+        [10, "10K"],
+        [21.0975, "Half Marathon"],
+        [42.195, "Marathon"]
+    ].map(([dist, name]) => ({
+        name,
+        ...estimateRacePace(thresholdPace, dist)
+    }));
+
+    currentResults = { mode: 'zone', timeInput, thresholdPace, zones, races };
+
+    document.getElementById('refTime').textContent = timeInput;
+    document.getElementById('refPace').textContent = secondsToPace(thresholdPace) + '/km';
+
+    const zonesHtml = zones.map(z => `
+        <div class="zone-card">
+            <div class="zone-header">
+                <div class="zone-name">${z.name}</div>
+                <div class="zone-pace">${z.lower} – ${z.upper}</div>
+            </div>
+            <div class="zone-desc">${z.description}</div>
+        </div>
+    `).join('');
+    document.getElementById('zones').innerHTML = zonesHtml;
+
+    const racesHtml = races.map(r => {
+        const totalTime = secondsToTime(r.totalSeconds);
+        return `
+            <div class="zone-card race-card">
+                <div class="race-name">${r.name}</div>
+                <div class="race-details">
+                    <div class="race-pace">${r.pace}/km</div>
+                    <div class="race-time">${totalTime}</div>
+                </div>
+            </div>
+        `;
+    }).join('');
+    document.getElementById('races').innerHTML = racesHtml;
+
+    resultsDiv.style.display = 'block';
+    zoneResults.classList.remove('hidden');
+    copyBtn.disabled = false;
+}
+
+function calculatePace(resultsDiv, paceTimeResults, copyBtn) {
+    const distStr = normalizeInput(document.getElementById('distancePace').value.trim());
+    const timeStr = normalizeInput(document.getElementById('timePace').value.trim());
+    const errorDiv = document.getElementById('errorPace');
+    const dist = parseFloat(distStr);
+
+    if (isNaN(dist) || dist <= 0 || !validateTime(timeStr)) {
+        errorDiv.style.display = 'block';
+        return;
+    }
+
+    const totalSeconds = timeToSeconds(timeStr);
+    const paceSeconds = totalSeconds / dist;
+    const pace = secondsToPace(paceSeconds);
+
+    const splits = calculateSplits(paceSeconds, dist);
+    currentResults = { mode: 'pace', distance: dist, distanceLabel: presetDistances[distStr] || `${dist} km`, time: timeStr, pace, splits };
+
+    renderPaceTimeResults(paceTimeResults, [
+        { label: 'Distance', value: presetDistances[distStr] || `${dist} km` },
+        { label: 'Time', value: timeStr },
+        { label: 'Pace', value: `${pace}/km` }
+    ], splits);
+
+    resultsDiv.style.display = 'block';
+    paceTimeResults.classList.remove('hidden');
+    copyBtn.disabled = false;
+}
+
+function calculateTime(resultsDiv, paceTimeResults, copyBtn) {
+    const distStr = normalizeInput(document.getElementById('distanceTime').value.trim());
+    const paceStr = normalizeInput(document.getElementById('paceTime').value.trim());
+    const errorDiv = document.getElementById('errorTime');
+    const dist = parseFloat(distStr);
+
+    if (isNaN(dist) || dist <= 0 || !validateTime(paceStr, false)) {
+        errorDiv.style.display = 'block';
+        return;
+    }
+
+    const paceSeconds = timeToSeconds(paceStr);
+    const totalSeconds = paceSeconds * dist;
+    const totalTime = secondsToTime(totalSeconds);
+
+    const splits = calculateSplits(paceSeconds, dist);
+    currentResults = { mode: 'time', distance: dist, distanceLabel: presetDistances[distStr] || `${dist} km`, pace: paceStr, totalTime, splits };
+
+    renderPaceTimeResults(paceTimeResults, [
+        { label: 'Distance', value: presetDistances[distStr] || `${dist} km` },
+        { label: 'Pace', value: `${paceStr}/km` },
+        { label: 'Total Time', value: totalTime }
+    ], splits);
+
+    resultsDiv.style.display = 'block';
+    paceTimeResults.classList.remove('hidden');
+    copyBtn.disabled = false;
+}
+
+function calculateDistance(resultsDiv, paceTimeResults, copyBtn) {
+    const timeStr = normalizeInput(document.getElementById('timeDistance').value.trim());
+    const paceStr = normalizeInput(document.getElementById('paceDistance').value.trim());
+    const errorDiv = document.getElementById('errorDistance');
+
+    if (!validateTime(timeStr) || !validateTime(paceStr, false)) {
+        errorDiv.style.display = 'block';
+        return;
+    }
+
+    const totalSeconds = timeToSeconds(timeStr);
+    const paceSeconds = timeToSeconds(paceStr);
+    const distance = totalSeconds / paceSeconds;
+    const distanceLabel = distance.toFixed(2) + ' km';
+
+    const splits = calculateSplits(paceSeconds, distance);
+    currentResults = { mode: 'distance', time: timeStr, pace: paceStr, distance, distanceLabel, splits };
+
+    renderPaceTimeResults(paceTimeResults, [
+        { label: 'Total Time', value: timeStr },
+        { label: 'Pace', value: `${paceStr}/km` },
+        { label: 'Distance', value: distanceLabel }
+    ], splits);
+
+    resultsDiv.style.display = 'block';
+    paceTimeResults.classList.remove('hidden');
+    copyBtn.disabled = false;
+}
+
+function calculateConverter(resultsDiv, converterResults, copyBtn) {
+    const type = document.getElementById('convType').value;
+    const valueStr = normalizeInput(document.getElementById('convValue').value.trim());
+    const activeToggle = document.querySelector('.toggle-btn.active');
+    const unit = activeToggle ? activeToggle.getAttribute('data-value') : 'km';
+    const errorDiv = document.getElementById('errorConverter');
+
+    if (type === 'distance') {
+        const val = parseFloat(valueStr);
+        if (isNaN(val) || val < 0) {
             errorDiv.style.display = 'block';
             return;
         }
 
-        const totalSeconds = timeToSeconds(timeStr);
-        const paceSeconds = timeToSeconds(paceStr);
-        const distance = totalSeconds / paceSeconds;
-        const distanceLabel = distance.toFixed(2) + ' km';
+        let km, miles;
+        if (unit === 'km') {
+            km = val;
+            miles = val * 0.621371;
+        } else {
+            miles = val;
+            km = val * 1.60934;
+        }
 
-        const splits = calculateSplits(paceSeconds, distance);
-        currentResults = { mode: 'distance', time: timeStr, pace: paceStr, distance, distanceLabel, splits };
+        const resultLabel = unit === 'km' ? `${miles.toFixed(2)} miles` : `${km.toFixed(2)} km`;
+        const inputLabel = unit === 'km' ? `${val} km` : `${val} miles`;
 
-        const splitsHtml = `
-            <div class="splits-section">
-                <div class="section-title">Splits</div>
-                <div class="splits-table">
-                    <div class="split-row header">
-                        <div class="split-col">Km</div>
-                        <div class="split-col">Time</div>
-                    </div>
-                    ${splits.map(s => `
-                        <div class="split-row">
-                            <div class="split-col">${s.km}</div>
-                            <div class="split-col">${s.time}</div>
-                        </div>
-                    `).join('')}
-                </div>
-            </div>
-        `;
+        currentResults = { mode: 'converter', type: 'distance', inputLabel, resultLabel };
 
-        paceTimeResults.innerHTML = `
+        converterResults.innerHTML = `
             <div class="result-grid">
                 <div class="result-card">
                     <div class="result-item">
-                        <div class="metric-label">Total Time</div>
-                        <div class="metric-value">${timeStr}</div>
+                        <div class="metric-label">Input (${unit === 'km' ? 'Km' : 'Miles'})</div>
+                        <div class="metric-value">${val}</div>
                     </div>
                     <div class="result-item">
-                        <div class="metric-label">Pace</div>
-                        <div class="metric-value">${paceStr}/km</div>
-                    </div>
-                    <div class="result-item">
-                        <div class="metric-label">Distance</div>
-                        <div class="metric-value">${distanceLabel}</div>
+                        <div class="metric-label">Converted (${unit === 'km' ? 'Miles' : 'Km'})</div>
+                        <div class="metric-value">${unit === 'km' ? miles.toFixed(2) : km.toFixed(2)}</div>
                     </div>
                 </div>
-                ${splitsHtml}
             </div>
         `;
-        resultsDiv.style.display = 'block';
-        paceTimeResults.classList.remove('hidden');
-        copyBtn.disabled = false;
-    } else if (mode === 'converter') {
-        const type = document.getElementById('convType').value;
-        const valueStr = document.getElementById('convValue').value.trim();
-        // Get active unit from toggle
-        const activeToggle = document.querySelector('.toggle-btn.active');
-        const unit = activeToggle ? activeToggle.getAttribute('data-value') : 'km';
-        const errorDiv = document.getElementById('errorConverter');
-
-        if (type === 'distance') {
-            const val = parseFloat(valueStr);
-            if (isNaN(val) || val < 0) {
-                errorDiv.style.display = 'block';
-                return;
-            }
-
-            let km, miles;
-            if (unit === 'km') {
-                km = val;
-                miles = val * 0.621371;
-            } else {
-                miles = val;
-                km = val * 1.60934;
-            }
-
-            const resultLabel = unit === 'km' ? `${miles.toFixed(2)} miles` : `${km.toFixed(2)} km`;
-            const inputLabel = unit === 'km' ? `${val} km` : `${val} miles`;
-
-            currentResults = { mode: 'converter', type: 'distance', inputLabel, resultLabel };
-
-            converterResults.innerHTML = `
-                <div class="result-grid">
-                    <div class="result-card">
-                        <div class="result-item">
-                            <div class="metric-label">Input (${unit === 'km' ? 'Km' : 'Miles'})</div>
-                            <div class="metric-value">${val}</div>
-                        </div>
-                        <div class="result-item">
-                            <div class="metric-label">Converted (${unit === 'km' ? 'Miles' : 'Km'})</div>
-                            <div class="metric-value">${unit === 'km' ? miles.toFixed(2) : km.toFixed(2)}</div>
-                        </div>
-                    </div>
-                </div>
-            `;
-        } else {
-            // Pace conversion
-            if (!validateTime(valueStr, false)) {
-                errorDiv.style.display = 'block';
-                return;
-            }
-
-            const seconds = timeToSeconds(valueStr);
-            let resultSeconds;
-
-            if (unit === 'km') {
-                // min/km to min/mile
-                // 1 mile = 1.60934 km, so pace per mile = pace per km * 1.60934
-                resultSeconds = seconds * 1.60934;
-            } else {
-                // min/mile to min/km
-                // 1 km = 0.621371 miles, so pace per km = pace per mile * 0.621371
-                resultSeconds = seconds * 0.621371;
-            }
-
-            const resultPace = secondsToPace(resultSeconds);
-            const inputLabel = `${valueStr} /${unit}`;
-            const resultLabel = `${resultPace} /${unit === 'km' ? 'mi' : 'km'}`;
-
-            currentResults = { mode: 'converter', type: 'pace', inputLabel, resultLabel };
-
-            converterResults.innerHTML = `
-                <div class="result-grid">
-                    <div class="result-card">
-                        <div class="result-item">
-                            <div class="metric-label">Input Pace (/${unit === 'km' ? 'km' : 'mi'})</div>
-                            <div class="metric-value">${valueStr}</div>
-                        </div>
-                        <div class="result-item">
-                            <div class="metric-label">Converted Pace (/${unit === 'km' ? 'mi' : 'km'})</div>
-                            <div class="metric-value">${resultPace}</div>
-                        </div>
-                    </div>
-                </div>
-            `;
+    } else {
+        if (!validateTime(valueStr, false)) {
+            errorDiv.style.display = 'block';
+            return;
         }
 
-        resultsDiv.style.display = 'block';
-        converterResults.classList.remove('hidden');
-        copyBtn.disabled = false;
+        const seconds = timeToSeconds(valueStr);
+        let resultSeconds;
+
+        if (unit === 'km') {
+            resultSeconds = seconds * 1.60934;
+        } else {
+            resultSeconds = seconds * 0.621371;
+        }
+
+        const resultPace = secondsToPace(resultSeconds);
+        const inputLabel = `${valueStr} /${unit}`;
+        const resultLabel = `${resultPace} /${unit === 'km' ? 'mi' : 'km'}`;
+
+        currentResults = { mode: 'converter', type: 'pace', inputLabel, resultLabel };
+
+        converterResults.innerHTML = `
+            <div class="result-grid">
+                <div class="result-card">
+                    <div class="result-item">
+                        <div class="metric-label">Input Pace (/${unit === 'km' ? 'km' : 'mi'})</div>
+                        <div class="metric-value">${valueStr}</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="metric-label">Converted Pace (/${unit === 'km' ? 'mi' : 'km'})</div>
+                        <div class="metric-value">${resultPace}</div>
+                    </div>
+                </div>
+            </div>
+        `;
     }
+
+    resultsDiv.style.display = 'block';
+    converterResults.classList.remove('hidden');
+    copyBtn.disabled = false;
+}
+
+function renderPaceTimeResults(container, metrics, splits) {
+    const splitsHtml = `
+        <div class="splits-section">
+            <div class="section-title">Splits</div>
+            <div class="splits-table">
+                <div class="split-row header">
+                    <div class="split-col">Km</div>
+                    <div class="split-col">Time</div>
+                </div>
+                ${splits.map(s => `
+                    <div class="split-row">
+                        <div class="split-col">${s.km}</div>
+                        <div class="split-col">${s.time}</div>
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+    `;
+
+    const metricsHtml = metrics.map(m => `
+        <div class="result-item">
+            <div class="metric-label">${m.label}</div>
+            <div class="metric-value">${m.value}</div>
+        </div>
+    `).join('');
+
+    container.innerHTML = `
+        <div class="result-grid">
+            <div class="result-card">
+                ${metricsHtml}
+            </div>
+            ${splitsHtml}
+        </div>
+    `;
 }
 
 function reset() {
@@ -653,9 +625,22 @@ document.getElementById('calcMode').addEventListener('change', function () {
         document.getElementById('distanceInputs').classList.remove('hidden');
     } else if (mode === 'converter') {
         document.getElementById('converterInputs').classList.remove('hidden');
+        updateConverterLabel();
     }
     reset();
 });
+
+function updateConverterLabel() {
+    const type = document.getElementById('convType').value;
+    const label = document.querySelector('label[for="convValue"]');
+    if (type === 'distance') {
+        label.textContent = 'Distance';
+    } else {
+        label.textContent = 'Pace (MM:SS)';
+    }
+}
+
+document.getElementById('convType').addEventListener('change', updateConverterLabel);
 
 document.getElementById('distancePresetPace').addEventListener('change', function () {
     updateDistanceInput('pace');
