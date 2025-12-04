@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Maratona</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏃</text></svg>">
-    <link rel="stylesheet" href="assets/style.css"/>
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏃</text></svg>">
+    <link rel="stylesheet" href="assets/style.css" />
     <script src="assets/app.js" defer></script>
 </head>
+
 <body>
     <div class="container">
         <header class="header">
@@ -26,6 +29,7 @@
                     <div class="custom-dropdown-item" data-value="pace">Pace Calculator</div>
                     <div class="custom-dropdown-item" data-value="time">Time Calculator</div>
                     <div class="custom-dropdown-item" data-value="distance">Distance Calculator</div>
+                    <div class="custom-dropdown-item" data-value="converter">Km-Mile Converter</div>
                 </div>
             </div>
             <select id="calcMode" class="original-select">
@@ -33,6 +37,7 @@
                 <option value="pace">Pace Calculator</option>
                 <option value="time">Time Calculator</option>
                 <option value="distance">Distance Calculator</option>
+                <option value="converter">Km-Mile Converter</option>
             </select>
         </div>
 
@@ -120,6 +125,37 @@
             <div class="error-text" id="errorDistance">Invalid input. Check time and pace format</div>
         </div>
 
+        <div class="section hidden" id="converterInputs">
+            <div class="input-group">
+                <label class="label">Conversion Type</label>
+                <div class="custom-dropdown" id="convTypeDropdown">
+                    <div class="custom-dropdown-toggle" id="convTypeToggle">
+                        Distance
+                    </div>
+                    <div class="custom-dropdown-menu" id="convTypeMenu">
+                        <div class="custom-dropdown-item selected" data-value="distance">Distance</div>
+                        <div class="custom-dropdown-item" data-value="pace">Pace</div>
+                    </div>
+                </div>
+                <select id="convType" class="original-select">
+                    <option value="distance">Distance</option>
+                    <option value="pace">Pace</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label class="label" for="convValue">Value</label>
+                <div class="input-with-toggle">
+                    <input type="text" id="convValue" class="input-field" placeholder="10">
+                    <div class="unit-toggle">
+                        <button class="toggle-btn active" data-value="km">Km</button>
+                        <button class="toggle-btn" data-value="mi">Mi</button>
+                    </div>
+                </div>
+            </div>
+            <div class="error-text" id="errorConverter">Invalid input format</div>
+        </div>
+
         <div class="success-text" id="successMsg">Copied to clipboard</div>
 
         <div class="button-group">
@@ -155,9 +191,12 @@
             </div>
 
             <div id="paceTimeResults" class="hidden"></div>
+
+            <div id="converterResults" class="hidden"></div>
         </div>
     </div>
 
     <div class="custom-dropdown-overlay" id="dropdownOverlay"></div>
 </body>
+
 </html>

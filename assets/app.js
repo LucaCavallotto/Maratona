@@ -1,26 +1,26 @@
 function initCustomDropdowns() {
     const dropdowns = document.querySelectorAll('.custom-dropdown');
     const overlay = document.getElementById('dropdownOverlay');
-    
+
     dropdowns.forEach(dropdown => {
         const toggle = dropdown.querySelector('.custom-dropdown-toggle');
         const menu = dropdown.querySelector('.custom-dropdown-menu');
         const hiddenSelect = dropdown.nextElementSibling;
-        
-        toggle.addEventListener('click', function(e) {
+
+        toggle.addEventListener('click', function (e) {
             e.stopPropagation();
-            
+
             document.querySelectorAll('.custom-dropdown-menu.show').forEach(otherMenu => {
                 if (otherMenu !== menu) {
                     otherMenu.classList.remove('show');
                     otherMenu.parentElement.querySelector('.custom-dropdown-toggle').classList.remove('open');
                 }
             });
-            
+
             const isOpening = !menu.classList.contains('show');
             menu.classList.toggle('show');
             toggle.classList.toggle('open');
-            
+
             if (window.innerWidth <= 640) {
                 if (isOpening) {
                     overlay.classList.add('show');
@@ -29,26 +29,26 @@ function initCustomDropdowns() {
                 }
             }
         });
-        
+
         menu.querySelectorAll('.custom-dropdown-item').forEach(item => {
-            item.addEventListener('click', function() {
+            item.addEventListener('click', function () {
                 menu.querySelectorAll('.custom-dropdown-item').forEach(i => i.classList.remove('selected'));
                 this.classList.add('selected');
-                
+
                 toggle.textContent = this.textContent;
-                
+
                 hiddenSelect.value = this.getAttribute('data-value');
-                
+
                 menu.classList.remove('show');
                 toggle.classList.remove('open');
                 overlay.classList.remove('show');
-                
+
                 hiddenSelect.dispatchEvent(new Event('change'));
             });
         });
     });
-    
-    document.addEventListener('click', function(e) {
+
+    document.addEventListener('click', function (e) {
         if (!e.target.closest('.custom-dropdown')) {
             document.querySelectorAll('.custom-dropdown-menu.show').forEach(menu => {
                 menu.classList.remove('show');
@@ -58,7 +58,7 @@ function initCustomDropdowns() {
         }
     });
 
-    overlay.addEventListener('click', function() {
+    overlay.addEventListener('click', function () {
         document.querySelectorAll('.custom-dropdown-menu.show').forEach(menu => {
             menu.classList.remove('show');
             menu.parentElement.querySelector('.custom-dropdown-toggle').classList.remove('open');
@@ -71,7 +71,7 @@ function validateTime(timeStr, allowHours = true) {
     const parts = timeStr.split(':');
     if (!allowHours && parts.length !== 2) return false;
     if (allowHours && (parts.length !== 2 && parts.length !== 3)) return false;
-    
+
     try {
         if (parts.length === 2) {
             const [mm, ss] = parts.map(Number);
@@ -104,7 +104,7 @@ function secondsToTime(seconds) {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     const secs = Math.floor(seconds % 60);
-    
+
     if (seconds >= 3600) {
         return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
     } else {
@@ -126,7 +126,7 @@ function calculateZones(thresholdPace) {
         ["Z6 – Anaerobic", 0.88, 0.80, "Power and endurance"],
         ["Z7 – Sprint", 0.80, 0.70, "Maximum speed"]
     ];
-    
+
     return zoneDefinitions.map(([name, upper, lower, desc]) => ({
         name,
         lower: secondsToPace(thresholdPace * upper),
@@ -141,7 +141,7 @@ function estimateRacePace(thresholdPace, distance) {
     else if (distance <= 10) multiplier = 0.97;
     else if (distance <= 21.0975) multiplier = 1.03;
     else multiplier = 1.08;
-    
+
     const pace = secondsToPace(thresholdPace * multiplier);
     const totalSeconds = thresholdPace * multiplier * distance;
     return { pace, totalSeconds };
@@ -164,9 +164,11 @@ function resetResultsDisplay() {
     const resultsDiv = document.getElementById('results');
     const zoneResults = document.getElementById('zoneResults');
     const paceTimeResults = document.getElementById('paceTimeResults');
+    const converterResults = document.getElementById('converterResults');
     resultsDiv.style.display = 'none';
     zoneResults.classList.add('hidden');
     paceTimeResults.classList.add('hidden');
+    converterResults.classList.add('hidden');
 }
 
 function updateDistanceInput(mode) {
@@ -191,8 +193,9 @@ function calculate() {
     const resultsDiv = document.getElementById('results');
     const zoneResults = document.getElementById('zoneResults');
     const paceTimeResults = document.getElementById('paceTimeResults');
+    const converterResults = document.getElementById('converterResults');
     const copyBtn = document.getElementById('copyBtn');
-    
+
     successMsg.style.display = 'none';
     hideAllErrors();
     resetResultsDisplay();
@@ -201,12 +204,12 @@ function calculate() {
     if (mode === 'zone') {
         const timeInput = document.getElementById('time10k').value.trim();
         const errorDiv = document.getElementById('errorZone');
-        
+
         if (!validateTime(timeInput)) {
             errorDiv.style.display = 'block';
             return;
         }
-        
+
         const thresholdPace = calculateThresholdPace(timeInput);
         const zones = calculateZones(thresholdPace);
         const races = [
@@ -218,12 +221,12 @@ function calculate() {
             name,
             ...estimateRacePace(thresholdPace, dist)
         }));
-        
+
         currentResults = { mode: 'zone', timeInput, thresholdPace, zones, races };
-        
+
         document.getElementById('refTime').textContent = timeInput;
         document.getElementById('refPace').textContent = secondsToPace(thresholdPace) + '/km';
-        
+
         const zonesHtml = zones.map(z => `
             <div class="zone-card">
                 <div class="zone-header">
@@ -234,7 +237,7 @@ function calculate() {
             </div>
         `).join('');
         document.getElementById('zones').innerHTML = zonesHtml;
-        
+
         const racesHtml = races.map(r => {
             const totalTime = secondsToTime(r.totalSeconds);
             return `
@@ -248,7 +251,7 @@ function calculate() {
             `;
         }).join('');
         document.getElementById('races').innerHTML = racesHtml;
-        
+
         resultsDiv.style.display = 'block';
         zoneResults.classList.remove('hidden');
         copyBtn.disabled = false;
@@ -369,6 +372,94 @@ function calculate() {
         resultsDiv.style.display = 'block';
         paceTimeResults.classList.remove('hidden');
         copyBtn.disabled = false;
+    } else if (mode === 'converter') {
+        const type = document.getElementById('convType').value;
+        const valueStr = document.getElementById('convValue').value.trim();
+        // Get active unit from toggle
+        const activeToggle = document.querySelector('.toggle-btn.active');
+        const unit = activeToggle ? activeToggle.getAttribute('data-value') : 'km';
+        const errorDiv = document.getElementById('errorConverter');
+
+        if (type === 'distance') {
+            const val = parseFloat(valueStr);
+            if (isNaN(val) || val < 0) {
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            let km, miles;
+            if (unit === 'km') {
+                km = val;
+                miles = val * 0.621371;
+            } else {
+                miles = val;
+                km = val * 1.60934;
+            }
+
+            const resultLabel = unit === 'km' ? `${miles.toFixed(2)} miles` : `${km.toFixed(2)} km`;
+            const inputLabel = unit === 'km' ? `${val} km` : `${val} miles`;
+
+            currentResults = { mode: 'converter', type: 'distance', inputLabel, resultLabel };
+
+            converterResults.innerHTML = `
+                <div class="result-grid">
+                    <div class="result-card">
+                        <div class="result-item">
+                            <div class="metric-label">Input (${unit === 'km' ? 'Km' : 'Miles'})</div>
+                            <div class="metric-value">${val}</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="metric-label">Converted (${unit === 'km' ? 'Miles' : 'Km'})</div>
+                            <div class="metric-value">${unit === 'km' ? miles.toFixed(2) : km.toFixed(2)}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        } else {
+            // Pace conversion
+            if (!validateTime(valueStr, false)) {
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            const seconds = timeToSeconds(valueStr);
+            let resultSeconds;
+
+            if (unit === 'km') {
+                // min/km to min/mile
+                // 1 mile = 1.60934 km, so pace per mile = pace per km * 1.60934
+                resultSeconds = seconds * 1.60934;
+            } else {
+                // min/mile to min/km
+                // 1 km = 0.621371 miles, so pace per km = pace per mile * 0.621371
+                resultSeconds = seconds * 0.621371;
+            }
+
+            const resultPace = secondsToPace(resultSeconds);
+            const inputLabel = `${valueStr} /${unit}`;
+            const resultLabel = `${resultPace} /${unit === 'km' ? 'mi' : 'km'}`;
+
+            currentResults = { mode: 'converter', type: 'pace', inputLabel, resultLabel };
+
+            converterResults.innerHTML = `
+                <div class="result-grid">
+                    <div class="result-card">
+                        <div class="result-item">
+                            <div class="metric-label">Input Pace (/${unit === 'km' ? 'km' : 'mi'})</div>
+                            <div class="metric-value">${valueStr}</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="metric-label">Converted Pace (/${unit === 'km' ? 'mi' : 'km'})</div>
+                            <div class="metric-value">${resultPace}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        resultsDiv.style.display = 'block';
+        converterResults.classList.remove('hidden');
+        copyBtn.disabled = false;
     }
 }
 
@@ -382,6 +473,7 @@ function reset() {
     document.getElementById('paceTime').value = '';
     document.getElementById('timeDistance').value = '';
     document.getElementById('paceDistance').value = '';
+    document.getElementById('convValue').value = '';
     hideAllErrors();
     document.getElementById('successMsg').style.display = 'none';
     resetResultsDisplay();
@@ -392,7 +484,7 @@ function reset() {
 
 function copyResults() {
     if (!currentResults) return;
-    
+
     let text = '';
     if (currentResults.mode === 'zone') {
         const { timeInput, thresholdPace, zones, races } = currentResults;
@@ -425,9 +517,15 @@ function copyResults() {
         text = `RUNTOOLS - DISTANCE CALCULATOR\n\n`;
         text += `Total Time: ${time}\n`;
         text += `Pace: ${pace}/km\n`;
+        text += `Pace: ${pace}/km\n`;
         text += `Distance: ${distanceLabel}\n`;
+    } else if (currentResults.mode === 'converter') {
+        const { type, inputLabel, resultLabel } = currentResults;
+        text = `RUNTOOLS - CONVERTER\n\n`;
+        text += `${type === 'distance' ? 'Distance' : 'Pace'} Conversion\n`;
+        text += `${inputLabel} = ${resultLabel}\n`;
     }
-    
+
     navigator.clipboard.writeText(text).then(() => {
         const successMsg = document.getElementById('successMsg');
         successMsg.style.display = 'block';
@@ -439,13 +537,14 @@ function copyResults() {
     });
 }
 
-document.getElementById('calcMode').addEventListener('change', function() {
+document.getElementById('calcMode').addEventListener('change', function () {
     const mode = this.value;
     document.getElementById('zoneInputs').classList.add('hidden');
     document.getElementById('paceInputs').classList.add('hidden');
     document.getElementById('timeInputs').classList.add('hidden');
     document.getElementById('distanceInputs').classList.add('hidden');
-    
+    document.getElementById('converterInputs').classList.add('hidden');
+
     if (mode === 'zone') {
         document.getElementById('zoneInputs').classList.remove('hidden');
     } else if (mode === 'pace') {
@@ -454,41 +553,56 @@ document.getElementById('calcMode').addEventListener('change', function() {
         document.getElementById('timeInputs').classList.remove('hidden');
     } else if (mode === 'distance') {
         document.getElementById('distanceInputs').classList.remove('hidden');
+    } else if (mode === 'converter') {
+        document.getElementById('converterInputs').classList.remove('hidden');
     }
     reset();
 });
 
-document.getElementById('distancePresetPace').addEventListener('change', function() {
+document.getElementById('distancePresetPace').addEventListener('change', function () {
     updateDistanceInput('pace');
 });
 
-document.getElementById('distancePresetTime').addEventListener('change', function() {
+document.getElementById('distancePresetTime').addEventListener('change', function () {
     updateDistanceInput('time');
 });
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     initCustomDropdowns();
     updateDistanceInput(document.getElementById('calcMode').value);
 });
 
-document.getElementById('time10k').addEventListener('keypress', function(e) {
+document.getElementById('time10k').addEventListener('keypress', function (e) {
     if (e.key === 'Enter') calculate();
 });
-document.getElementById('distancePace').addEventListener('keypress', function(e) {
+document.getElementById('distancePace').addEventListener('keypress', function (e) {
     if (e.key === 'Enter') calculate();
 });
-document.getElementById('timePace').addEventListener('keypress', function(e) {
+document.getElementById('timePace').addEventListener('keypress', function (e) {
     if (e.key === 'Enter') calculate();
 });
-document.getElementById('distanceTime').addEventListener('keypress', function(e) {
+document.getElementById('distanceTime').addEventListener('keypress', function (e) {
     if (e.key === 'Enter') calculate();
 });
-document.getElementById('paceTime').addEventListener('keypress', function(e) {
+document.getElementById('paceTime').addEventListener('keypress', function (e) {
     if (e.key === 'Enter') calculate();
 });
-document.getElementById('timeDistance').addEventListener('keypress', function(e) {
+document.getElementById('timeDistance').addEventListener('keypress', function (e) {
     if (e.key === 'Enter') calculate();
 });
-document.getElementById('paceDistance').addEventListener('keypress', function(e) {
+document.getElementById('paceDistance').addEventListener('keypress', function (e) {
     if (e.key === 'Enter') calculate();
+});
+document.getElementById('convValue').addEventListener('keypress', function (e) {
+    if (e.key === 'Enter') calculate();
+});
+
+// Toggle Button Logic
+document.querySelectorAll('.toggle-btn').forEach(btn => {
+    btn.addEventListener('click', function () {
+        // Remove active class from siblings
+        this.parentElement.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+        // Add active class to clicked button
+        this.classList.add('active');
+    });
 });

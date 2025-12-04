@@ -41,13 +41,17 @@ body {
         color: #3A3A3C;
     }
 
-    .input-field, .select-field, .custom-dropdown-toggle {
+    .input-field,
+    .select-field,
+    .custom-dropdown-toggle {
         background-color: #F2F2F7;
         border: 1px solid #E5E5EA;
         color: #000000;
     }
 
-    .input-field:focus, .select-field:focus, .custom-dropdown-toggle:focus {
+    .input-field:focus,
+    .select-field:focus,
+    .custom-dropdown-toggle:focus {
         border-color: #000000;
         background-color: #FFFFFF;
     }
@@ -75,16 +79,19 @@ body {
         background-color: #F2F2F7;
     }
 
-    .zone-card, .result-card {
+    .zone-card,
+    .result-card {
         background-color: #F9F9F9;
         border: 1px solid #EBEBEB;
     }
 
-    .zone-name, .race-name {
+    .zone-name,
+    .race-name {
         color: #000000;
     }
 
-    .zone-pace, .race-pace {
+    .zone-pace,
+    .race-pace {
         color: #3A3A3C;
     }
 
@@ -162,13 +169,17 @@ body {
         color: #E5E5EA;
     }
 
-    .input-field, .select-field, .custom-dropdown-toggle {
+    .input-field,
+    .select-field,
+    .custom-dropdown-toggle {
         background-color: #2C2C2E;
         border: 1px solid #3A3A3C;
         color: #FFFFFF;
     }
 
-    .input-field:focus, .select-field:focus, .custom-dropdown-toggle:focus {
+    .input-field:focus,
+    .select-field:focus,
+    .custom-dropdown-toggle:focus {
         border-color: #FFFFFF;
         background-color: #2C2C2E;
     }
@@ -208,16 +219,19 @@ body {
         background-color: #2C2C2E;
     }
 
-    .zone-card, .result-card {
+    .zone-card,
+    .result-card {
         background-color: #2C2C2E;
         border: 1px solid #3A3A3C;
     }
 
-    .zone-name, .race-name {
+    .zone-name,
+    .race-name {
         color: #FFFFFF;
     }
 
-    .zone-pace, .race-pace {
+    .zone-pace,
+    .race-pace {
         color: #E5E5EA;
     }
 
@@ -326,7 +340,9 @@ body {
     margin-bottom: 12px;
 }
 
-.input-field, .select-field, .custom-dropdown-toggle {
+.input-field,
+.select-field,
+.custom-dropdown-toggle {
     width: 100%;
     height: 48px;
     padding: 14px 16px;
@@ -373,7 +389,8 @@ body {
     cursor: not-allowed;
 }
 
-.error-text, .success-text {
+.error-text,
+.success-text {
     font-size: 13px;
     font-weight: 400;
     margin-top: 8px;
@@ -414,12 +431,14 @@ body {
     letter-spacing: -0.02em;
 }
 
-.zones-grid, .races-grid {
+.zones-grid,
+.races-grid {
     display: grid;
     gap: 12px;
 }
 
-.zone-card, .result-card {
+.zone-card,
+.result-card {
     padding: 20px;
     border-radius: 12px;
     transition: all 0.2s ease;
@@ -590,7 +609,9 @@ body {
         gap: 12px;
     }
 
-    .select-field, .input-field, .custom-dropdown-toggle {
+    .select-field,
+    .input-field,
+    .custom-dropdown-toggle {
         width: 100%;
         height: 48px;
         padding: 14px 16px;
@@ -635,4 +656,63 @@ select {
 
 select option {
     padding: 12px;
+}
+
+/* Input with Toggle */
+.input-with-toggle {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-with-toggle .input-field {
+    padding-right: 110px;
+    /* Space for toggle */
+}
+
+.unit-toggle {
+    position: absolute;
+    right: 6px;
+    top: 6px;
+    bottom: 6px;
+    background-color: #E5E5EA;
+    border-radius: 8px;
+    display: flex;
+    padding: 2px;
+}
+
+.toggle-btn {
+    border: none;
+    background: transparent;
+    padding: 0 12px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #8E8E93;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: 'Inter', sans-serif;
+}
+
+.toggle-btn.active {
+    background-color: #FFFFFF;
+    color: #000000;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Dark Mode Toggle Styles */
+@media (prefers-color-scheme: dark) {
+    .unit-toggle {
+        background-color: #1C1C1E;
+        border: 1px solid #3A3A3C;
+    }
+
+    .toggle-btn {
+        color: #8E8E93;
+    }
+
+    .toggle-btn.active {
+        background-color: #636366;
+        color: #FFFFFF;
+    }
 }
