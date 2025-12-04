@@ -147,6 +147,27 @@ function estimateRacePace(thresholdPace, distance) {
     return { pace, totalSeconds };
 }
 
+function calculateSplits(paceSeconds, totalDistance) {
+    const splits = [];
+    const fullKm = Math.floor(totalDistance);
+
+    for (let i = 1; i <= fullKm; i++) {
+        splits.push({
+            km: i,
+            time: secondsToTime(paceSeconds * i)
+        });
+    }
+
+    if (totalDistance > fullKm) {
+        splits.push({
+            km: parseFloat(totalDistance.toFixed(2)),
+            time: secondsToTime(paceSeconds * totalDistance)
+        });
+    }
+
+    return splits;
+}
+
 const presetDistances = {
     "5": "5K",
     "10": "10K",
@@ -271,7 +292,26 @@ function calculate() {
         const paceSeconds = totalSeconds / dist;
         const pace = secondsToPace(paceSeconds);
 
-        currentResults = { mode: 'pace', distance: dist, distanceLabel: presetDistances[distStr] || `${dist} km`, time: timeStr, pace };
+        const splits = calculateSplits(paceSeconds, dist);
+        currentResults = { mode: 'pace', distance: dist, distanceLabel: presetDistances[distStr] || `${dist} km`, time: timeStr, pace, splits };
+
+        const splitsHtml = `
+            <div class="splits-section">
+                <div class="section-title">Splits</div>
+                <div class="splits-table">
+                    <div class="split-row header">
+                        <div class="split-col">Km</div>
+                        <div class="split-col">Time</div>
+                    </div>
+                    ${splits.map(s => `
+                        <div class="split-row">
+                            <div class="split-col">${s.km}</div>
+                            <div class="split-col">${s.time}</div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
 
         paceTimeResults.innerHTML = `
             <div class="result-grid">
@@ -289,6 +329,7 @@ function calculate() {
                         <div class="metric-value">${pace}/km</div>
                     </div>
                 </div>
+                ${splitsHtml}
             </div>
         `;
         resultsDiv.style.display = 'block';
@@ -310,7 +351,26 @@ function calculate() {
         const totalSeconds = paceSeconds * dist;
         const totalTime = secondsToTime(totalSeconds);
 
-        currentResults = { mode: 'time', distance: dist, distanceLabel: presetDistances[distStr] || `${dist} km`, pace: paceStr, totalTime };
+        const splits = calculateSplits(paceSeconds, dist);
+        currentResults = { mode: 'time', distance: dist, distanceLabel: presetDistances[distStr] || `${dist} km`, pace: paceStr, totalTime, splits };
+
+        const splitsHtml = `
+            <div class="splits-section">
+                <div class="section-title">Splits</div>
+                <div class="splits-table">
+                    <div class="split-row header">
+                        <div class="split-col">Km</div>
+                        <div class="split-col">Time</div>
+                    </div>
+                    ${splits.map(s => `
+                        <div class="split-row">
+                            <div class="split-col">${s.km}</div>
+                            <div class="split-col">${s.time}</div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
 
         paceTimeResults.innerHTML = `
             <div class="result-grid">
@@ -328,6 +388,7 @@ function calculate() {
                         <div class="metric-value">${totalTime}</div>
                     </div>
                 </div>
+                ${splitsHtml}
             </div>
         `;
         resultsDiv.style.display = 'block';
@@ -349,7 +410,26 @@ function calculate() {
         const distance = totalSeconds / paceSeconds;
         const distanceLabel = distance.toFixed(2) + ' km';
 
-        currentResults = { mode: 'distance', time: timeStr, pace: paceStr, distance, distanceLabel };
+        const splits = calculateSplits(paceSeconds, distance);
+        currentResults = { mode: 'distance', time: timeStr, pace: paceStr, distance, distanceLabel, splits };
+
+        const splitsHtml = `
+            <div class="splits-section">
+                <div class="section-title">Splits</div>
+                <div class="splits-table">
+                    <div class="split-row header">
+                        <div class="split-col">Km</div>
+                        <div class="split-col">Time</div>
+                    </div>
+                    ${splits.map(s => `
+                        <div class="split-row">
+                            <div class="split-col">${s.km}</div>
+                            <div class="split-col">${s.time}</div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
 
         paceTimeResults.innerHTML = `
             <div class="result-grid">
@@ -367,6 +447,7 @@ function calculate() {
                         <div class="metric-value">${distanceLabel}</div>
                     </div>
                 </div>
+                ${splitsHtml}
             </div>
         `;
         resultsDiv.style.display = 'block';
@@ -488,7 +569,7 @@ function copyResults() {
     let text = '';
     if (currentResults.mode === 'zone') {
         const { timeInput, thresholdPace, zones, races } = currentResults;
-        text = `RUNTOOLS - ZONE CALCULATOR\n\n`;
+        text = `Maratona - ZONE CALCULATOR\n\n`;
         text += `10K Time: ${timeInput}\n`;
         text += `Threshold Pace: ${secondsToPace(thresholdPace)}/km\n\n`;
         text += `TRAINING ZONES\n`;
@@ -501,27 +582,44 @@ function copyResults() {
             text += `${r.name}: ${r.pace}/km (${totalTime})\n`;
         });
     } else if (currentResults.mode === 'pace') {
-        const { distanceLabel, time, pace } = currentResults;
-        text = `RUNTOOLS - PACE CALCULATOR\n\n`;
-        text += `Distance: ${distanceLabel}\n`;
+        const { distance, distanceLabel, time, pace, splits } = currentResults;
+        text = `Maratona - PACE CALCULATOR\n\n`;
+        text += `Distance: ${distance}\n`;
         text += `Time: ${time}\n`;
         text += `Pace: ${pace}/km\n`;
+        if (splits) {
+            text += `\nSPLITS\n`;
+            splits.forEach(s => {
+                text += `Km ${s.km}: ${s.time}\n`;
+            });
+        }
     } else if (currentResults.mode === 'time') {
-        const { distanceLabel, pace, totalTime } = currentResults;
-        text = `RUNTOOLS - TIME CALCULATOR\n\n`;
+        const { distanceLabel, pace, totalTime, splits } = currentResults;
+        text = `Maratona - TIME CALCULATOR\n\n`;
         text += `Distance: ${distanceLabel}\n`;
         text += `Pace: ${pace}/km\n`;
         text += `Total Time: ${totalTime}\n`;
+        if (splits) {
+            text += `\nSPLITS\n`;
+            splits.forEach(s => {
+                text += `Km ${s.km}: ${s.time}\n`;
+            });
+        }
     } else if (currentResults.mode === 'distance') {
-        const { time, pace, distanceLabel } = currentResults;
-        text = `RUNTOOLS - DISTANCE CALCULATOR\n\n`;
+        const { time, pace, distanceLabel, splits } = currentResults;
+        text = `Maratona - DISTANCE CALCULATOR\n\n`;
         text += `Total Time: ${time}\n`;
         text += `Pace: ${pace}/km\n`;
-        text += `Pace: ${pace}/km\n`;
         text += `Distance: ${distanceLabel}\n`;
+        if (splits) {
+            text += `\nSPLITS\n`;
+            splits.forEach(s => {
+                text += `Km ${s.km}: ${s.time}\n`;
+            });
+        }
     } else if (currentResults.mode === 'converter') {
         const { type, inputLabel, resultLabel } = currentResults;
-        text = `RUNTOOLS - CONVERTER\n\n`;
+        text = `Maratona - CONVERTER\n\n`;
         text += `${type === 'distance' ? 'Distance' : 'Pace'} Conversion\n`;
         text += `${inputLabel} = ${resultLabel}\n`;
     }
