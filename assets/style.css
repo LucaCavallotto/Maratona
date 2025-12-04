@@ -371,6 +371,13 @@ body {
     margin: 40px 0;
 }
 
+.hint-text {
+    font-size: 13px;
+    color: #8E8E93;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
 .label {
     display: block;
     font-size: 12px;
@@ -451,6 +458,7 @@ body {
 @keyframes fade-in-up {
     0% {
         opacity: 0;
+        transform: translateY(20px);
     }
 
     100% {

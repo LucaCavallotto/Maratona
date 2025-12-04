@@ -42,12 +42,16 @@
         </div>
 
         <div class="section" id="zoneInputs">
+            <p class="hint-text">To calculate accurate training zones, enter your time for a 10km run performed at a
+                maximum, steady pace. This could be a recent race result or a time trial.</p>
             <label class="label" for="time10k">10K Time</label>
             <input type="text" id="time10k" class="input-field" placeholder="45:30">
             <div class="error-text" id="errorZone">Invalid format. Use MM:SS or HH:MM:SS</div>
         </div>
 
         <div class="section hidden" id="paceInputs">
+            <p class="hint-text">Calculate your average running pace. Enter the distance you ran and the total time it
+                took.</p>
             <div class="input-group">
                 <label class="label" for="distancePace">Distance</label>
                 <div class="input-row">
@@ -81,6 +85,8 @@
         </div>
 
         <div class="section hidden" id="timeInputs">
+            <p class="hint-text">Plan your run. Enter your target distance and planned pace to calculate the total time
+                required.</p>
             <div class="input-group">
                 <label class="label" for="distanceTime">Distance</label>
                 <div class="input-row">
@@ -114,6 +120,8 @@
         </div>
 
         <div class="section hidden" id="distanceInputs">
+            <p class="hint-text">See how far you can go. Enter your available time and average pace to calculate the
+                total distance.</p>
             <div class="input-group">
                 <label class="label" for="timeDistance">Total Time</label>
                 <input type="text" id="timeDistance" class="input-field" placeholder="45:30">
@@ -126,6 +134,8 @@
         </div>
 
         <div class="section hidden" id="converterInputs">
+            <p class="hint-text">Quickly convert values. Switch between Kilometers and Miles for both distance and pace
+                measurements.</p>
             <div class="input-group">
                 <label class="label" for="convType">Conversion Type</label>
                 <div class="custom-dropdown" id="convTypeDropdown">
