@@ -17,19 +17,19 @@
     <div class="container">
         <header class="header">
             <h1 class="header-title">Maratona</h1>
-            <p class="header-subtitle">Training zones and pace calculator</p>
+            <p class="header-subtitle">Running calculators, done right</p>
         </header>
 
-        <div class="section">
+        <div class="section selector-header">
             <label class="label" for="calcMode">Mode</label>
             <div class="custom-dropdown" id="calcModeDropdown">
                 <div class="custom-dropdown-toggle" id="calcModeToggle" role="combobox" aria-expanded="false"
                     aria-haspopup="listbox" aria-controls="calcModeMenu" tabindex="0">
-                    Zone Calculator
+                    Training Zones Calculator
                 </div>
                 <div class="custom-dropdown-menu" id="calcModeMenu" role="listbox">
-                    <div class="custom-dropdown-item selected" data-value="zone" role="option" aria-selected="true">Zone
-                        Calculator</div>
+                    <div class="custom-dropdown-item selected" data-value="zone" role="option" aria-selected="true">
+                        Training Zones Calculator</div>
                     <div class="custom-dropdown-item" data-value="pace" role="option" aria-selected="false">Pace
                         Calculator</div>
                     <div class="custom-dropdown-item" data-value="time" role="option" aria-selected="false">Time
@@ -41,7 +41,7 @@
                 </div>
             </div>
             <select id="calcMode" class="original-select">
-                <option value="zone">Zone Calculator</option>
+                <option value="zone">Training Zones Calculator</option>
                 <option value="pace">Pace Calculator</option>
                 <option value="time">Time Calculator</option>
                 <option value="distance">Distance Calculator</option>
@@ -49,17 +49,16 @@
             </select>
         </div>
 
-        <div class="section" id="zoneInputs">
-            <p class="hint-text">To calculate accurate training zones, enter your time for a 10km run performed at a
-                maximum, steady pace. This could be a recent race result or a time trial.</p>
+        <div class="section calculator-body" id="zoneInputs">
+            <p class="hint-text">Enter your best recent 10K time run at a steady, maximal effort.</p>
             <label class="label" for="time10k">10K Time</label>
-            <input type="text" id="time10k" class="input-field" placeholder="HH:MM:SS">
+            <input type="text" id="time10k" class="input-field" placeholder="HH:MM:SS, e.g. 01:44:30">
             <div class="error-text" id="errorZone">Invalid format. Use MM:SS or HH:MM:SS</div>
         </div>
 
-        <div class="section hidden" id="paceInputs">
-            <p class="hint-text">Calculate your average running pace. Enter the distance you ran and the total time it
-                took.</p>
+        <div class="section calculator-body hidden" id="paceInputs">
+            <p class="hint-text">Enter the distance you ran and the total time to calculate your average pace.
+            </p>
             <div class="input-group">
                 <label class="label" for="distancePace">Distance</label>
                 <div class="input-row">
@@ -89,7 +88,7 @@
                         <option value="21.0975">Half Marathon</option>
                         <option value="42.195">Marathon</option>
                     </select>
-                    <input type="text" id="distancePace" class="input-field" placeholder="km">
+                    <input type="text" id="distancePace" class="input-field" placeholder="km, e.g. 10">
                 </div>
             </div>
             <div class="input-group">
@@ -99,9 +98,8 @@
             <div class="error-text" id="errorPace">Invalid input. Check distance and time format</div>
         </div>
 
-        <div class="section hidden" id="timeInputs">
-            <p class="hint-text">Plan your run. Enter your target distance and planned pace to calculate the total time
-                required.</p>
+        <div class="section calculator-body hidden" id="timeInputs">
+            <p class="hint-text">Enter a distance and a target pace to calculate the total time.</p>
             <div class="input-group">
                 <label class="label" for="distanceTime">Distance</label>
                 <div class="input-row">
@@ -131,33 +129,31 @@
                         <option value="21.0975">Half Marathon</option>
                         <option value="42.195">Marathon</option>
                     </select>
-                    <input type="text" id="distanceTime" class="input-field" placeholder="km">
+                    <input type="text" id="distanceTime" class="input-field" placeholder="km, e.g. 10.8">
                 </div>
             </div>
             <div class="input-group">
                 <label class="label" for="paceTime">Pace per km</label>
-                <input type="text" id="paceTime" class="input-field" placeholder="MM:SS">
+                <input type="text" id="paceTime" class="input-field" placeholder="MM:SS, e.g. 04:30">
             </div>
             <div class="error-text" id="errorTime">Invalid input. Check distance and pace format</div>
         </div>
 
-        <div class="section hidden" id="distanceInputs">
-            <p class="hint-text">See how far you can go. Enter your available time and average pace to calculate the
-                total distance.</p>
+        <div class="section calculator-body hidden" id="distanceInputs">
+            <p class="hint-text">Enter the available time and your average pace to calculate the distance covered.</p>
             <div class="input-group">
                 <label class="label" for="timeDistance">Total Time</label>
-                <input type="text" id="timeDistance" class="input-field" placeholder="HH:MM:SS">
+                <input type="text" id="timeDistance" class="input-field" placeholder="HH:MM:SS, e.g. 01:44:30">
             </div>
             <div class="input-group">
                 <label class="label" for="paceDistance">Pace per km</label>
-                <input type="text" id="paceDistance" class="input-field" placeholder="MM:SS">
+                <input type="text" id="paceDistance" class="input-field" placeholder="MM:SS, e.g. 04:30">
             </div>
             <div class="error-text" id="errorDistance">Invalid input. Check time and pace format</div>
         </div>
 
-        <div class="section hidden" id="converterInputs">
-            <p class="hint-text">Quickly convert values. Switch between Kilometers and Miles for both distance and pace
-                measurements.</p>
+        <div class="section calculator-body hidden" id="converterInputs">
+            <p class="hint-text">Select what to convert, enter a value, then switch units if you want.</p>
             <div class="input-group">
                 <label class="label" for="convType">Conversion Type</label>
                 <div class="custom-dropdown" id="convTypeDropdown">
@@ -181,7 +177,7 @@
             <div class="input-group">
                 <label class="label" for="convValue">Value</label>
                 <div class="input-with-toggle">
-                    <input type="text" id="convValue" class="input-field" placeholder="10">
+                    <input type="text" id="convValue" class="input-field" placeholder="10, e.g. 10.8">
                     <div class="unit-toggle">
                         <button class="toggle-btn active" data-value="km">Km</button>
                         <button class="toggle-btn" data-value="mi">Mi</button>
@@ -191,7 +187,7 @@
             <div class="error-text" id="errorConverter">Invalid input format</div>
         </div>
 
-        <div class="success-text" id="successMsg">Copied to clipboard</div>
+        <div class="success-text" id="successMsg">Copied results to clipboard</div>
 
         <div class="button-group">
             <button class="btn btn-primary" onclick="calculate()">Calculate</button>
@@ -216,8 +212,6 @@
                     <h2 class="section-title">Training Zones</h2>
                     <div class="zones-grid" id="zones"></div>
                 </div>
-
-                <div class="section-divider"></div>
 
                 <div class="section">
                     <h2 class="section-title">Race Predictions</h2>

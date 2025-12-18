@@ -253,7 +253,11 @@ function calculate() {
     }
 }
 
+
+// Renamed function arguments and variables for better readability
+
 function calculateZone(resultsDiv, zoneResults, copyBtn) {
+    // Renamed function arguments and variables for better readability
     const timeInput = normalizeInput(document.getElementById('time10k').value.trim());
     const errorDiv = document.getElementById('errorZone');
 
@@ -264,39 +268,39 @@ function calculateZone(resultsDiv, zoneResults, copyBtn) {
 
     const thresholdPace = calculateThresholdPace(timeInput);
     const zones = calculateZones(thresholdPace);
-    const races = [
+    const racePredictions = [
         [5, "5K"],
         [10, "10K"],
         [21.0975, "Half Marathon"],
         [42.195, "Marathon"]
-    ].map(([dist, name]) => ({
-        name,
-        ...estimateRacePace(thresholdPace, dist)
+    ].map(([distanceInKm, raceName]) => ({
+        name: raceName,
+        ...estimateRacePace(thresholdPace, distanceInKm)
     }));
 
-    currentResults = { mode: 'zone', timeInput, thresholdPace, zones, races };
+    currentResults = { mode: 'zone', timeInput, thresholdPace, zones, races: racePredictions };
 
     document.getElementById('refTime').textContent = timeInput;
     document.getElementById('refPace').textContent = secondsToPace(thresholdPace) + '/km';
 
-    const zonesHtml = zones.map(z => `
+    const zonesHtml = zones.map(zone => `
         <div class="zone-card">
             <div class="zone-header">
-                <div class="zone-name">${z.name}</div>
-                <div class="zone-pace">${z.lower} – ${z.upper}</div>
+                <div class="zone-name">${zone.name}</div>
+                <div class="zone-pace">${zone.lower}/km – ${zone.upper}/km</div>
             </div>
-            <div class="zone-desc">${z.description}</div>
+            <div class="zone-desc">${zone.description}</div>
         </div>
     `).join('');
     document.getElementById('zones').innerHTML = zonesHtml;
 
-    const racesHtml = races.map(r => {
-        const totalTime = secondsToTime(r.totalSeconds);
+    const racesHtml = racePredictions.map(racePrediction => {
+        const totalTime = secondsToTime(racePrediction.totalSeconds);
         return `
             <div class="zone-card race-card">
-                <div class="race-name">${r.name}</div>
+                <div class="race-name">${racePrediction.name}</div>
                 <div class="race-details">
-                    <div class="race-pace">${r.pace}/km</div>
+                    <div class="race-pace">${racePrediction.pace}/km</div>
                     <div class="race-time">${totalTime}</div>
                 </div>
             </div>
@@ -310,27 +314,27 @@ function calculateZone(resultsDiv, zoneResults, copyBtn) {
 }
 
 function calculatePace(resultsDiv, paceTimeResults, copyBtn) {
-    const distStr = normalizeInput(document.getElementById('distancePace').value.trim());
-    const timeStr = normalizeInput(document.getElementById('timePace').value.trim());
+    const distanceString = normalizeInput(document.getElementById('distancePace').value.trim());
+    const timeString = normalizeInput(document.getElementById('timePace').value.trim());
     const errorDiv = document.getElementById('errorPace');
-    const dist = parseFloat(distStr);
+    const distanceValue = parseFloat(distanceString);
 
-    if (isNaN(dist) || dist <= 0 || !validateTime(timeStr)) {
+    if (isNaN(distanceValue) || distanceValue <= 0 || !validateTime(timeString)) {
         errorDiv.style.display = 'block';
         return;
     }
 
-    const totalSeconds = timeToSeconds(timeStr);
-    const paceSeconds = totalSeconds / dist;
-    const pace = secondsToPace(paceSeconds);
+    const totalSeconds = timeToSeconds(timeString);
+    const paceSeconds = totalSeconds / distanceValue;
+    const paceString = secondsToPace(paceSeconds);
 
-    const splits = calculateSplits(paceSeconds, dist);
-    currentResults = { mode: 'pace', distance: dist, distanceLabel: presetDistances[distStr] || `${dist} km`, time: timeStr, pace, splits };
+    const splits = calculateSplits(paceSeconds, distanceValue);
+    currentResults = { mode: 'pace', distance: distanceValue, distanceLabel: presetDistances[distanceString] || `${distanceValue} km`, time: timeString, pace: paceString, splits };
 
     renderPaceTimeResults(paceTimeResults, [
-        { label: 'Distance', value: presetDistances[distStr] || `${dist} km` },
-        { label: 'Time', value: timeStr },
-        { label: 'Pace', value: `${pace}/km` }
+        { label: 'Distance', value: presetDistances[distanceString] || `${distanceValue} km` },
+        { label: 'Time', value: timeString },
+        { label: 'Pace', value: `${paceString}/km` }
     ], splits);
 
     resultsDiv.style.display = 'block';
@@ -339,26 +343,26 @@ function calculatePace(resultsDiv, paceTimeResults, copyBtn) {
 }
 
 function calculateTime(resultsDiv, paceTimeResults, copyBtn) {
-    const distStr = normalizeInput(document.getElementById('distanceTime').value.trim());
-    const paceStr = normalizeInput(document.getElementById('paceTime').value.trim());
+    const distanceString = normalizeInput(document.getElementById('distanceTime').value.trim());
+    const paceString = normalizeInput(document.getElementById('paceTime').value.trim());
     const errorDiv = document.getElementById('errorTime');
-    const dist = parseFloat(distStr);
+    const distanceValue = parseFloat(distanceString);
 
-    if (isNaN(dist) || dist <= 0 || !validateTime(paceStr, false)) {
+    if (isNaN(distanceValue) || distanceValue <= 0 || !validateTime(paceString, false)) {
         errorDiv.style.display = 'block';
         return;
     }
 
-    const paceSeconds = timeToSeconds(paceStr);
-    const totalSeconds = paceSeconds * dist;
+    const paceSeconds = timeToSeconds(paceString);
+    const totalSeconds = paceSeconds * distanceValue;
     const totalTime = secondsToTime(totalSeconds);
 
-    const splits = calculateSplits(paceSeconds, dist);
-    currentResults = { mode: 'time', distance: dist, distanceLabel: presetDistances[distStr] || `${dist} km`, pace: paceStr, totalTime, splits };
+    const splits = calculateSplits(paceSeconds, distanceValue);
+    currentResults = { mode: 'time', distance: distanceValue, distanceLabel: presetDistances[distanceString] || `${distanceValue} km`, pace: paceString, totalTime, splits };
 
     renderPaceTimeResults(paceTimeResults, [
-        { label: 'Distance', value: presetDistances[distStr] || `${dist} km` },
-        { label: 'Pace', value: `${paceStr}/km` },
+        { label: 'Distance', value: presetDistances[distanceString] || `${distanceValue} km` },
+        { label: 'Pace', value: `${paceString}/km` },
         { label: 'Total Time', value: totalTime }
     ], splits);
 
@@ -368,26 +372,26 @@ function calculateTime(resultsDiv, paceTimeResults, copyBtn) {
 }
 
 function calculateDistance(resultsDiv, paceTimeResults, copyBtn) {
-    const timeStr = normalizeInput(document.getElementById('timeDistance').value.trim());
-    const paceStr = normalizeInput(document.getElementById('paceDistance').value.trim());
+    const timeString = normalizeInput(document.getElementById('timeDistance').value.trim());
+    const paceString = normalizeInput(document.getElementById('paceDistance').value.trim());
     const errorDiv = document.getElementById('errorDistance');
 
-    if (!validateTime(timeStr) || !validateTime(paceStr, false)) {
+    if (!validateTime(timeString) || !validateTime(paceString, false)) {
         errorDiv.style.display = 'block';
         return;
     }
 
-    const totalSeconds = timeToSeconds(timeStr);
-    const paceSeconds = timeToSeconds(paceStr);
-    const distance = totalSeconds / paceSeconds;
-    const distanceLabel = distance.toFixed(2) + ' km';
+    const totalSeconds = timeToSeconds(timeString);
+    const paceSeconds = timeToSeconds(paceString);
+    const distanceValue = totalSeconds / paceSeconds;
+    const distanceLabel = distanceValue.toFixed(2) + ' km';
 
-    const splits = calculateSplits(paceSeconds, distance);
-    currentResults = { mode: 'distance', time: timeStr, pace: paceStr, distance, distanceLabel, splits };
+    const splits = calculateSplits(paceSeconds, distanceValue);
+    currentResults = { mode: 'distance', time: timeString, pace: paceString, distance: distanceValue, distanceLabel, splits };
 
     renderPaceTimeResults(paceTimeResults, [
-        { label: 'Total Time', value: timeStr },
-        { label: 'Pace', value: `${paceStr}/km` },
+        { label: 'Total Time', value: timeString },
+        { label: 'Pace', value: `${paceString}/km` },
         { label: 'Distance', value: distanceLabel }
     ], splits);
 
@@ -397,30 +401,30 @@ function calculateDistance(resultsDiv, paceTimeResults, copyBtn) {
 }
 
 function calculateConverter(resultsDiv, converterResults, copyBtn) {
-    const type = document.getElementById('convType').value;
-    const valueStr = normalizeInput(document.getElementById('convValue').value.trim());
+    const conversionType = document.getElementById('convType').value;
+    const inputString = normalizeInput(document.getElementById('convValue').value.trim());
     const activeToggle = document.querySelector('.toggle-btn.active');
     const unit = activeToggle ? activeToggle.getAttribute('data-value') : 'km';
     const errorDiv = document.getElementById('errorConverter');
 
-    if (type === 'distance') {
-        const val = parseFloat(valueStr);
-        if (isNaN(val) || val < 0) {
+    if (conversionType === 'distance') {
+        const numericValue = parseFloat(inputString);
+        if (isNaN(numericValue) || numericValue < 0) {
             errorDiv.style.display = 'block';
             return;
         }
 
-        let km, miles;
+        let kilometers, miles;
         if (unit === 'km') {
-            km = val;
-            miles = val * 0.621371;
+            kilometers = numericValue;
+            miles = numericValue * 0.621371;
         } else {
-            miles = val;
-            km = val * 1.60934;
+            miles = numericValue;
+            kilometers = numericValue * 1.60934;
         }
 
-        const resultLabel = unit === 'km' ? `${miles.toFixed(2)} miles` : `${km.toFixed(2)} km`;
-        const inputLabel = unit === 'km' ? `${val} km` : `${val} miles`;
+        const resultLabel = unit === 'km' ? `${miles.toFixed(2)} miles` : `${kilometers.toFixed(2)} km`;
+        const inputLabel = unit === 'km' ? `${numericValue} km` : `${numericValue} miles`;
 
         currentResults = { mode: 'converter', type: 'distance', inputLabel, resultLabel };
 
@@ -429,32 +433,32 @@ function calculateConverter(resultsDiv, converterResults, copyBtn) {
                 <div class="result-card">
                     <div class="result-item">
                         <div class="metric-label">Input (${unit === 'km' ? 'Km' : 'Miles'})</div>
-                        <div class="metric-value">${val}</div>
+                        <div class="metric-value">${numericValue}</div>
                     </div>
                     <div class="result-item">
                         <div class="metric-label">Converted (${unit === 'km' ? 'Miles' : 'Km'})</div>
-                        <div class="metric-value">${unit === 'km' ? miles.toFixed(2) : km.toFixed(2)}</div>
+                        <div class="metric-value">${unit === 'km' ? miles.toFixed(2) : kilometers.toFixed(2)}</div>
                     </div>
                 </div>
             </div>
         `;
     } else {
-        if (!validateTime(valueStr, false)) {
+        if (!validateTime(inputString, false)) {
             errorDiv.style.display = 'block';
             return;
         }
 
-        const seconds = timeToSeconds(valueStr);
+        const inputSeconds = timeToSeconds(inputString);
         let resultSeconds;
 
         if (unit === 'km') {
-            resultSeconds = seconds * 1.60934;
+            resultSeconds = inputSeconds * 1.60934;
         } else {
-            resultSeconds = seconds * 0.621371;
+            resultSeconds = inputSeconds * 0.621371;
         }
 
         const resultPace = secondsToPace(resultSeconds);
-        const inputLabel = `${valueStr} /${unit}`;
+        const inputLabel = `${inputString} /${unit}`;
         const resultLabel = `${resultPace} /${unit === 'km' ? 'mi' : 'km'}`;
 
         currentResults = { mode: 'converter', type: 'pace', inputLabel, resultLabel };
@@ -464,7 +468,7 @@ function calculateConverter(resultsDiv, converterResults, copyBtn) {
                 <div class="result-card">
                     <div class="result-item">
                         <div class="metric-label">Input Pace (/${unit === 'km' ? 'km' : 'mi'})</div>
-                        <div class="metric-value">${valueStr}</div>
+                        <div class="metric-value">${inputString}</div>
                     </div>
                     <div class="result-item">
                         <div class="metric-label">Converted Pace (/${unit === 'km' ? 'mi' : 'km'})</div>
@@ -489,20 +493,20 @@ function renderPaceTimeResults(container, metrics, splits) {
                     <div class="split-col">Km</div>
                     <div class="split-col">Time</div>
                 </div>
-                ${splits.map(s => `
+                ${splits.map(split => `
                     <div class="split-row">
-                        <div class="split-col">${s.km}</div>
-                        <div class="split-col">${s.time}</div>
+                        <div class="split-col">${split.km}</div>
+                        <div class="split-col">${split.time}</div>
                     </div>
                 `).join('')}
             </div>
         </div>
     `;
 
-    const metricsHtml = metrics.map(m => `
+    const metricsHtml = metrics.map(metric => `
         <div class="result-item">
-            <div class="metric-label">${m.label}</div>
-            <div class="metric-value">${m.value}</div>
+            <div class="metric-label">${metric.label}</div>
+            <div class="metric-value">${metric.value}</div>
         </div>
     `).join('');
 
@@ -515,6 +519,7 @@ function renderPaceTimeResults(container, metrics, splits) {
         </div>
     `;
 }
+
 
 function reset() {
     document.getElementById('time10k').value = '';
@@ -541,7 +546,8 @@ function copyResults() {
     let text = '';
     if (currentResults.mode === 'zone') {
         const { timeInput, thresholdPace, zones, races } = currentResults;
-        text = `Maratona - ZONE CALCULATOR\n\n`;
+        const currentDate = new Date().toLocaleDateString();
+        text = `Maratona - ZONE CALCULATOR - ${currentDate}\n\n`;
         text += `10K Time: ${timeInput}\n`;
         text += `Threshold Pace: ${secondsToPace(thresholdPace)}/km\n\n`;
         text += `TRAINING ZONES\n`;
