@@ -171,15 +171,15 @@ function calculateSplits(paceSeconds, totalDistance) {
 
     for (let i = 1; i <= fullKm; i++) {
         splits.push({
-            km: i,
-            time: secondsToTime(paceSeconds * i)
+            km: `<span class="metric-num">${i}</span>`,
+            time: `<span class="metric-num">${secondsToTime(paceSeconds * i)}</span>`
         });
     }
 
     if (totalDistance > fullKm) {
         splits.push({
-            km: parseFloat(totalDistance.toFixed(2)),
-            time: secondsToTime(paceSeconds * totalDistance)
+            km: `<span class="metric-num">${parseFloat(totalDistance.toFixed(2))}</span>`,
+            time: `<span class="metric-num">${secondsToTime(paceSeconds * totalDistance)}</span>`
         });
     }
 
@@ -280,14 +280,14 @@ function calculateZone(resultsDiv, zoneResults, copyBtn) {
 
     currentResults = { mode: 'zone', timeInput, thresholdPace, zones, races: racePredictions };
 
-    document.getElementById('refTime').textContent = timeInput;
-    document.getElementById('refPace').textContent = secondsToPace(thresholdPace) + '/km';
+    document.getElementById('refTime').innerHTML = `<span class="metric-num">${timeInput}</span>`;
+    document.getElementById('refPace').innerHTML = `<span class="metric-num">${secondsToPace(thresholdPace)}</span><span class="metric-unit">/km</span>`;
 
     const zonesHtml = zones.map(zone => `
         <div class="zone-card">
             <div class="zone-header">
                 <div class="zone-name">${zone.name}</div>
-                <div class="zone-pace">${zone.lower}/km – ${zone.upper}/km</div>
+                <div class="zone-pace"><span class="metric-num">${zone.lower}</span><span class="metric-unit">/km – </span><span class="metric-num">${zone.upper}</span><span class="metric-unit">/km</span></div>
             </div>
             <div class="zone-desc">${zone.description}</div>
         </div>
@@ -300,8 +300,8 @@ function calculateZone(resultsDiv, zoneResults, copyBtn) {
             <div class="zone-card race-card">
                 <div class="race-name">${racePrediction.name}</div>
                 <div class="race-details">
-                    <div class="race-pace">${racePrediction.pace}/km</div>
-                    <div class="race-time">${totalTime}</div>
+                    <div class="race-pace"><span class="metric-num">${racePrediction.pace}</span><span class="metric-unit">/km</span></div>
+                    <div class="race-time"><span class="metric-num">${totalTime}</span></div>
                 </div>
             </div>
         `;
@@ -334,10 +334,10 @@ function calculatePace(resultsDiv, paceTimeResults, copyBtn) {
     currentResults = { mode: 'pace', distance: distanceValue, distanceLabel: presetDistances[distanceString] || `${distanceValue} km`, time: timeString, pace: paceString, speedKmH, speedMS, splits };
 
     renderPaceTimeResults(paceTimeResults, [
-        { label: 'Distance', value: presetDistances[distanceString] || `${distanceValue} km` },
-        { label: 'Time', value: timeString },
-        { label: 'Pace', value: `${paceString}/km` },
-        { label: 'Speed', value: `${speedKmH} km/h`, subValue: `${speedMS} m/s` }
+        { label: 'Distance', value: { num: distanceValue, unit: ' km' } },
+        { label: 'Time', value: { num: timeString, unit: '' } },
+        { label: 'Pace', value: { num: paceString, unit: '/km' } },
+        { label: 'Speed', value: { num: speedKmH, unit: ' km/h' }, subValue: { num: speedMS, unit: ' m/s' } }
     ], splits);
 
     resultsDiv.style.display = 'block';
@@ -366,10 +366,10 @@ function calculateTime(resultsDiv, paceTimeResults, copyBtn) {
     currentResults = { mode: 'time', distance: distanceValue, distanceLabel: presetDistances[distanceString] || `${distanceValue} km`, pace: paceString, totalTime, speedKmH, speedMS, splits };
 
     renderPaceTimeResults(paceTimeResults, [
-        { label: 'Distance', value: presetDistances[distanceString] || `${distanceValue} km` },
-        { label: 'Pace', value: `${paceString}/km` },
-        { label: 'Total Time', value: totalTime },
-        { label: 'Speed', value: `${speedKmH} km/h`, subValue: `${speedMS} m/s` }
+        { label: 'Distance', value: { num: distanceValue, unit: ' km' } },
+        { label: 'Pace', value: { num: paceString, unit: '/km' } },
+        { label: 'Total Time', value: { num: totalTime, unit: '' } },
+        { label: 'Speed', value: { num: speedKmH, unit: ' km/h' }, subValue: { num: speedMS, unit: ' m/s' } }
     ], splits);
 
     resultsDiv.style.display = 'block';
@@ -398,10 +398,10 @@ function calculateDistance(resultsDiv, paceTimeResults, copyBtn) {
     currentResults = { mode: 'distance', time: timeString, pace: paceString, distance: distanceValue, distanceLabel, speedKmH, speedMS, splits };
 
     renderPaceTimeResults(paceTimeResults, [
-        { label: 'Total Time', value: timeString },
-        { label: 'Pace', value: `${paceString}/km` },
-        { label: 'Distance', value: distanceLabel },
-        { label: 'Speed', value: `${speedKmH} km/h`, subValue: `${speedMS} m/s` }
+        { label: 'Total Time', value: { num: timeString, unit: '' } },
+        { label: 'Pace', value: { num: paceString, unit: '/km' } },
+        { label: 'Distance', value: { num: distanceValue.toFixed(2), unit: ' km' } },
+        { label: 'Speed', value: { num: speedKmH, unit: ' km/h' }, subValue: { num: speedMS, unit: ' m/s' } }
     ], splits);
 
     resultsDiv.style.display = 'block';
@@ -442,11 +442,11 @@ function calculateConverter(resultsDiv, converterResults, copyBtn) {
                 <div class="result-card">
                     <div class="result-item">
                         <div class="metric-label">Input (${unit === 'km' ? 'Km' : 'Miles'})</div>
-                        <div class="metric-value">${numericValue}</div>
+                        <div class="metric-value"><span class="metric-num">${numericValue}</span></div>
                     </div>
                     <div class="result-item">
                         <div class="metric-label">Converted (${unit === 'km' ? 'Miles' : 'Km'})</div>
-                        <div class="metric-value">${unit === 'km' ? miles.toFixed(2) : kilometers.toFixed(2)}</div>
+                        <div class="metric-value"><span class="metric-num">${unit === 'km' ? miles.toFixed(2) : kilometers.toFixed(2)}</span></div>
                     </div>
                 </div>
             </div>
@@ -477,11 +477,11 @@ function calculateConverter(resultsDiv, converterResults, copyBtn) {
                 <div class="result-card">
                     <div class="result-item">
                         <div class="metric-label">Input Pace (/${unit === 'km' ? 'km' : 'mi'})</div>
-                        <div class="metric-value">${inputString}</div>
+                        <div class="metric-value"><span class="metric-num">${inputString}</span></div>
                     </div>
                     <div class="result-item">
                         <div class="metric-label">Converted Pace (/${unit === 'km' ? 'mi' : 'km'})</div>
-                        <div class="metric-value">${resultPace}</div>
+                        <div class="metric-value"><span class="metric-num">${resultPace}</span></div>
                     </div>
                 </div>
             </div>
@@ -512,15 +512,21 @@ function renderPaceTimeResults(container, metrics, splits) {
         </div>
     `;
 
-    const metricsHtml = metrics.map(metric => `
+    const metricsHtml = metrics.map(metric => {
+        const valueNum = typeof metric.value === 'object' ? metric.value.num : metric.value;
+        const valueUnit = typeof metric.value === 'object' ? metric.value.unit : '';
+        const subValNum = metric.subValue && typeof metric.subValue === 'object' ? metric.subValue.num : metric.subValue;
+        const subValUnit = metric.subValue && typeof metric.subValue === 'object' ? metric.subValue.unit : '';
+
+        return `
         <div class="result-item">
             <div class="metric-label">${metric.label}</div>
             <div class="metric-value">
-                ${metric.value}
-                ${metric.subValue ? `<span class="metric-sub-value">${metric.subValue}</span>` : ''}
+                <span class="metric-num">${valueNum}</span><span class="metric-unit">${valueUnit}</span>
+                ${metric.subValue ? `<span class="metric-sub-value"><span class="metric-num">${subValNum}</span><span class="metric-unit">${subValUnit}</span></span>` : ''}
             </div>
         </div>
-    `).join('');
+    `}).join('');
 
     container.innerHTML = `
         <div class="result-grid">

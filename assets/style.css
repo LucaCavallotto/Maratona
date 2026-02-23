@@ -527,12 +527,19 @@ body {
 }
 
 .metric-value {
-    font-family: var(--font-mono);
     font-size: 28px;
     font-weight: 600;
     letter-spacing: -0.02em;
-    font-variant-numeric: tabular-nums;
     color: var(--text-primary);
+}
+
+.metric-num {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+}
+
+.metric-unit {
+    font-family: var(--font-sans);
 }
 
 .metric-sub-value {
@@ -575,10 +582,9 @@ body {
 
 .zone-pace,
 .race-pace {
-    font-family: var(--font-mono);
+    font-family: var(--font-sans);
     font-size: 14px;
     font-weight: 500;
-    font-variant-numeric: tabular-nums;
     color: var(--zone-pace-color);
 }
 
@@ -600,10 +606,9 @@ body {
 }
 
 .race-time {
-    font-family: var(--font-mono);
+    font-family: var(--font-sans);
     font-size: 13px;
     font-weight: 400;
-    font-variant-numeric: tabular-nums;
     margin-top: 2px;
     color: var(--text-secondary);
     /* Implicitly inherited usually, but good to set */
@@ -630,11 +635,8 @@ body {
     justify-content: space-between;
     padding: 12px 16px;
     border-bottom: 1px solid var(--card-border);
-    font-family: var(--font-mono);
-    /* Apply mono to the whole row content */
+    font-family: var(--font-sans);
     font-size: 13px;
-    /* Slightly smaller for mono */
-    font-variant-numeric: tabular-nums;
     color: var(--text-primary);
 }
 
