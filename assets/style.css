@@ -535,6 +535,13 @@ body {
     color: var(--text-primary);
 }
 
+.metric-sub-value {
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--text-secondary);
+    margin-left: 6px;
+}
+
 .zones-grid,
 .races-grid,
 .result-grid {

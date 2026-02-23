@@ -329,12 +329,15 @@ function calculatePace(resultsDiv, paceTimeResults, copyBtn) {
     const paceString = secondsToPace(paceSeconds);
 
     const splits = calculateSplits(paceSeconds, distanceValue);
-    currentResults = { mode: 'pace', distance: distanceValue, distanceLabel: presetDistances[distanceString] || `${distanceValue} km`, time: timeString, pace: paceString, splits };
+    const speedKmH = (3600 / paceSeconds).toFixed(2);
+    const speedMS = (1000 / paceSeconds).toFixed(2);
+    currentResults = { mode: 'pace', distance: distanceValue, distanceLabel: presetDistances[distanceString] || `${distanceValue} km`, time: timeString, pace: paceString, speedKmH, speedMS, splits };
 
     renderPaceTimeResults(paceTimeResults, [
         { label: 'Distance', value: presetDistances[distanceString] || `${distanceValue} km` },
         { label: 'Time', value: timeString },
-        { label: 'Pace', value: `${paceString}/km` }
+        { label: 'Pace', value: `${paceString}/km` },
+        { label: 'Speed', value: `${speedKmH} km/h`, subValue: `${speedMS} m/s` }
     ], splits);
 
     resultsDiv.style.display = 'block';
@@ -358,12 +361,15 @@ function calculateTime(resultsDiv, paceTimeResults, copyBtn) {
     const totalTime = secondsToTime(totalSeconds);
 
     const splits = calculateSplits(paceSeconds, distanceValue);
-    currentResults = { mode: 'time', distance: distanceValue, distanceLabel: presetDistances[distanceString] || `${distanceValue} km`, pace: paceString, totalTime, splits };
+    const speedKmH = (3600 / paceSeconds).toFixed(2);
+    const speedMS = (1000 / paceSeconds).toFixed(2);
+    currentResults = { mode: 'time', distance: distanceValue, distanceLabel: presetDistances[distanceString] || `${distanceValue} km`, pace: paceString, totalTime, speedKmH, speedMS, splits };
 
     renderPaceTimeResults(paceTimeResults, [
         { label: 'Distance', value: presetDistances[distanceString] || `${distanceValue} km` },
         { label: 'Pace', value: `${paceString}/km` },
-        { label: 'Total Time', value: totalTime }
+        { label: 'Total Time', value: totalTime },
+        { label: 'Speed', value: `${speedKmH} km/h`, subValue: `${speedMS} m/s` }
     ], splits);
 
     resultsDiv.style.display = 'block';
@@ -387,12 +393,15 @@ function calculateDistance(resultsDiv, paceTimeResults, copyBtn) {
     const distanceLabel = distanceValue.toFixed(2) + ' km';
 
     const splits = calculateSplits(paceSeconds, distanceValue);
-    currentResults = { mode: 'distance', time: timeString, pace: paceString, distance: distanceValue, distanceLabel, splits };
+    const speedKmH = (3600 / paceSeconds).toFixed(2);
+    const speedMS = (1000 / paceSeconds).toFixed(2);
+    currentResults = { mode: 'distance', time: timeString, pace: paceString, distance: distanceValue, distanceLabel, speedKmH, speedMS, splits };
 
     renderPaceTimeResults(paceTimeResults, [
         { label: 'Total Time', value: timeString },
         { label: 'Pace', value: `${paceString}/km` },
-        { label: 'Distance', value: distanceLabel }
+        { label: 'Distance', value: distanceLabel },
+        { label: 'Speed', value: `${speedKmH} km/h`, subValue: `${speedMS} m/s` }
     ], splits);
 
     resultsDiv.style.display = 'block';
@@ -506,7 +515,10 @@ function renderPaceTimeResults(container, metrics, splits) {
     const metricsHtml = metrics.map(metric => `
         <div class="result-item">
             <div class="metric-label">${metric.label}</div>
-            <div class="metric-value">${metric.value}</div>
+            <div class="metric-value">
+                ${metric.value}
+                ${metric.subValue ? `<span class="metric-sub-value">${metric.subValue}</span>` : ''}
+            </div>
         </div>
     `).join('');
 
@@ -565,6 +577,7 @@ function copyResults() {
         text += `Distance: ${distance}\n`;
         text += `Time: ${time}\n`;
         text += `Pace: ${pace}/km\n`;
+        text += `Speed: ${currentResults.speedKmH} km/h (${currentResults.speedMS} m/s)\n`;
         if (splits) {
             text += `\nSPLITS\n`;
             splits.forEach(s => {
@@ -577,6 +590,7 @@ function copyResults() {
         text += `Distance: ${distanceLabel}\n`;
         text += `Pace: ${pace}/km\n`;
         text += `Total Time: ${totalTime}\n`;
+        text += `Speed: ${currentResults.speedKmH} km/h (${currentResults.speedMS} m/s)\n`;
         if (splits) {
             text += `\nSPLITS\n`;
             splits.forEach(s => {
@@ -589,6 +603,7 @@ function copyResults() {
         text += `Total Time: ${time}\n`;
         text += `Pace: ${pace}/km\n`;
         text += `Distance: ${distanceLabel}\n`;
+        text += `Speed: ${currentResults.speedKmH} km/h (${currentResults.speedMS} m/s)\n`;
         if (splits) {
             text += `\nSPLITS\n`;
             splits.forEach(s => {
