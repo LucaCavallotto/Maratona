@@ -446,11 +446,17 @@ function calculateConverter(resultsDiv, converterResults, copyBtn) {
             <div class="result-grid">
                 <div class="result-card">
                     <div class="result-item">
-                        <div class="metric-label">Input (${unit === 'km' ? 'Km' : 'Miles'})</div>
+                        <div class="metric-label">
+                            <svg class="icon-svg" viewBox="0 0 24 24"><path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 10H3V8h2v4h2V8h2v4h2V8h2v4h2V8h2v4h2V8h2v8z"/></svg>
+                            Input (${unit === 'km' ? 'Km' : 'Miles'})
+                        </div>
                         <div class="metric-value"><span class="metric-num">${numericValue}</span></div>
                     </div>
                     <div class="result-item">
-                        <div class="metric-label">Converted (${unit === 'km' ? 'Miles' : 'Km'})</div>
+                        <div class="metric-label">
+                             <svg class="icon-svg" viewBox="0 0 24 24"><path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 10H3V8h2v4h2V8h2v4h2V8h2v4h2V8h2v4h2V8h2v8z"/></svg>
+                            Converted (${unit === 'km' ? 'Miles' : 'Km'})
+                        </div>
                         <div class="metric-value"><span class="metric-num">${unit === 'km' ? miles.toFixed(2) : kilometers.toFixed(2)}</span></div>
                     </div>
                 </div>
@@ -481,11 +487,17 @@ function calculateConverter(resultsDiv, converterResults, copyBtn) {
             <div class="result-grid">
                 <div class="result-card">
                     <div class="result-item">
-                        <div class="metric-label">Input Pace (/${unit === 'km' ? 'km' : 'mi'})</div>
+                        <div class="metric-label">
+                            <svg class="icon-svg" viewBox="0 0 24 24"><path d="M15 1H9v2h6V1zm-4 13h2V8h-2v6zm8.03-6.61l1.42-1.42c-.43-.51-.9-.99-1.41-1.41l-1.42 1.42A8.962 8.962 0 0012 4c-4.97 0-9 4.03-9 9s4.02 9 9 9a8.994 8.994 0 007.03-14.61zM12 20c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/></svg>
+                            Input Pace (/${unit === 'km' ? 'km' : 'mi'})
+                        </div>
                         <div class="metric-value"><span class="metric-num">${inputString}</span></div>
                     </div>
                     <div class="result-item">
-                        <div class="metric-label">Converted Pace (/${unit === 'km' ? 'mi' : 'km'})</div>
+                        <div class="metric-label">
+                            <svg class="icon-svg" viewBox="0 0 24 24"><path d="M15 1H9v2h6V1zm-4 13h2V8h-2v6zm8.03-6.61l1.42-1.42c-.43-.51-.9-.99-1.41-1.41l-1.42 1.42A8.962 8.962 0 0012 4c-4.97 0-9 4.03-9 9s4.02 9 9 9a8.994 8.994 0 007.03-14.61zM12 20c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/></svg>
+                            Converted Pace (/${unit === 'km' ? 'mi' : 'km'})
+                        </div>
                         <div class="metric-value"><span class="metric-num">${resultPace}</span></div>
                     </div>
                 </div>
@@ -518,15 +530,27 @@ function renderPaceTimeResults(container, metrics, splits) {
         </div>
     `;
 
+    const iconMap = {
+        'Distance': '<svg class="icon-svg" viewBox="0 0 24 24"><path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 10H3V8h2v4h2V8h2v4h2V8h2v4h2V8h2v4h2V8h2v8z"/></svg>',
+        'Pace': '<svg class="icon-svg" viewBox="0 0 24 24"><path d="M15 1H9v2h6V1zm-4 13h2V8h-2v6zm8.03-6.61l1.42-1.42c-.43-.51-.9-.99-1.41-1.41l-1.42 1.42A8.962 8.962 0 0012 4c-4.97 0-9 4.03-9 9s4.02 9 9 9a8.994 8.994 0 007.03-14.61zM12 20c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/></svg>',
+        'Time': '<svg class="icon-svg" viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/><path d="M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>',
+        'Speed': '<svg class="icon-svg" viewBox="0 0 24 24"><path d="M22 13h-4v9H6v-9H2L12 2z"/></svg>',
+        'Total Time': '<svg class="icon-svg" viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/><path d="M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>'
+    };
+
     const metricsHtml = metrics.map(metric => {
         const valueNum = typeof metric.value === 'object' ? metric.value.num : metric.value;
         const valueUnit = typeof metric.value === 'object' ? metric.value.unit : '';
         const subValNum = metric.subValue && typeof metric.subValue === 'object' ? metric.subValue.num : metric.subValue;
         const subValUnit = metric.subValue && typeof metric.subValue === 'object' ? metric.subValue.unit : '';
+        const icon = iconMap[metric.label] || '';
 
         return `
         <div class="result-item">
-            <div class="metric-label">${metric.label}</div>
+            <div class="metric-label">
+                ${icon}
+                ${metric.label}
+            </div>
             <div class="metric-value">
                 <span class="metric-num">${valueNum}</span><span class="metric-unit">${valueUnit}</span>
                 ${metric.subValue ? `<span class="metric-sub-value"><span class="metric-num">${subValNum}</span><span class="metric-unit">${subValUnit}</span></span>` : ''}
