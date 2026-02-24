@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="assets/css/components.css" />
     <link rel="stylesheet" href="assets/css/results.css" />
     <link rel="stylesheet" href="assets/css/mobile.css" />
-    <script src="assets/app.js" defer></script>
+    <script type="module" src="assets/js/main.js"></script>
 </head>
 
 <body>
@@ -218,9 +218,9 @@
             <div class="success-text" id="successMsg">Copied results to clipboard</div>
 
             <div class="button-group">
-                <button class="btn btn-primary" onclick="calculate()">Calculate</button>
-                <button class="btn btn-secondary" id="resetBtn" onclick="reset()" disabled>Reset</button>
-                <button class="btn btn-secondary" id="copyBtn" onclick="copyResults()" disabled>Copy</button>
+                <button class="btn btn-primary" id="calculateBtn">Calculate</button>
+                <button class="btn btn-secondary" id="resetBtn" disabled>Reset</button>
+                <button class="btn btn-secondary" id="copyBtn" disabled>Copy</button>
             </div>
         </aside>
 
