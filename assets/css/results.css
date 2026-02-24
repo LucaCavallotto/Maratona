@@ -20,6 +20,11 @@
 
 .metric-card {
     padding: 20px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
 }
 
 .icon-svg {
@@ -222,4 +227,3 @@
         transform: translateY(0);
     }
 }
-
