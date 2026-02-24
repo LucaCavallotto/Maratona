@@ -239,6 +239,7 @@ function calculate() {
     hideAllErrors();
     resetResultsDisplay();
     copyBtn.disabled = true;
+    document.getElementById('resetBtn').disabled = true;
 
     if (mode === 'zone') {
         calculateZone(resultsDiv, zoneResults, copyBtn);
@@ -311,6 +312,7 @@ function calculateZone(resultsDiv, zoneResults, copyBtn) {
     resultsDiv.style.display = 'block';
     zoneResults.classList.remove('hidden');
     copyBtn.disabled = false;
+    document.getElementById('resetBtn').disabled = false;
 }
 
 function calculatePace(resultsDiv, paceTimeResults, copyBtn) {
@@ -343,6 +345,7 @@ function calculatePace(resultsDiv, paceTimeResults, copyBtn) {
     resultsDiv.style.display = 'block';
     paceTimeResults.classList.remove('hidden');
     copyBtn.disabled = false;
+    document.getElementById('resetBtn').disabled = false;
 }
 
 function calculateTime(resultsDiv, paceTimeResults, copyBtn) {
@@ -375,6 +378,7 @@ function calculateTime(resultsDiv, paceTimeResults, copyBtn) {
     resultsDiv.style.display = 'block';
     paceTimeResults.classList.remove('hidden');
     copyBtn.disabled = false;
+    document.getElementById('resetBtn').disabled = false;
 }
 
 function calculateDistance(resultsDiv, paceTimeResults, copyBtn) {
@@ -407,6 +411,7 @@ function calculateDistance(resultsDiv, paceTimeResults, copyBtn) {
     resultsDiv.style.display = 'block';
     paceTimeResults.classList.remove('hidden');
     copyBtn.disabled = false;
+    document.getElementById('resetBtn').disabled = false;
 }
 
 function calculateConverter(resultsDiv, converterResults, copyBtn) {
@@ -491,6 +496,7 @@ function calculateConverter(resultsDiv, converterResults, copyBtn) {
     resultsDiv.style.display = 'block';
     converterResults.classList.remove('hidden');
     copyBtn.disabled = false;
+    document.getElementById('resetBtn').disabled = false;
 }
 
 function renderPaceTimeResults(container, metrics, splits) {
@@ -554,6 +560,7 @@ function reset() {
     document.getElementById('successMsg').style.display = 'none';
     resetResultsDisplay();
     document.getElementById('copyBtn').disabled = true;
+    document.getElementById('resetBtn').disabled = true;
     currentResults = null;
     updateDistanceInput(document.getElementById('calcMode').value);
 }
