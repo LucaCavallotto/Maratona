@@ -133,7 +133,7 @@ async function handleCalculate(e) {
                     <div class="race-name">${racePrediction.name}</div>
                     <div class="race-details">
                         <div class="race-pace"><span class="metric-num">${racePrediction.pace}</span><span class="metric-unit">/km</span></div>
-                        <div class="race-time"><span class="metric-num">${racePrediction.totalSeconds}</span></div>
+                        <div class="race-time"><span class="metric-num">${secondsToTime(racePrediction.totalSeconds)}</span></div>
                     </div>
                 </div>
             `;
