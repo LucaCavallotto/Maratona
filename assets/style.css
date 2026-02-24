@@ -188,11 +188,19 @@ body {
 
     .container.app-layout {
         max-width: 1200px;
-        flex-direction: row;
-        gap: 40px;
-        align-items: stretch;
+        display: grid;
+        grid-template-columns: 380px minmax(0, 0fr);
+        justify-content: center;
+        gap: 0;
+        align-items: start;
         padding: 40px;
         height: 100vh;
+        transition: grid-template-columns 0.6s cubic-bezier(0.4, 0, 0.2, 1), gap 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .container.app-layout.state-results {
+        grid-template-columns: 380px minmax(0, 1fr);
+        gap: 40px;
     }
 
     .sidebar {
@@ -224,10 +232,20 @@ body {
     }
 
     .main-content {
-        flex: 1;
+        min-width: 0;
         height: calc(100vh - 80px);
         overflow-y: auto;
         padding-right: 16px;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(20px);
+        transition: opacity 0.4s ease, transform 0.4s ease, visibility 0.4s;
+    }
+
+    .container.app-layout.results-ready .main-content {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
     }
 
     .main-content::-webkit-scrollbar {
@@ -443,6 +461,23 @@ body {
 
 .btn-primary:active {
     transform: scale(0.98);
+}
+
+.spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 0.8s ease-in-out infinite;
+    vertical-align: middle;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 .btn-secondary {
@@ -866,6 +901,13 @@ body {
     .metrics-grid {
         grid-template-columns: 1fr;
         gap: 16px;
+    }
+
+    .container.app-layout .main-content {
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+        transition: none;
     }
 
     .metric-sub-value {

@@ -226,21 +226,95 @@ function updateDistanceInput(mode) {
     }
 }
 
-function calculate() {
+function validateInputsForMode(mode) {
+    if (mode === 'zone') {
+        const timeInput = normalizeInput(document.getElementById('time10k').value.trim());
+        if (!validateTime(timeInput)) {
+            document.getElementById('errorZone').style.display = 'block';
+            return false;
+        }
+    } else if (mode === 'pace') {
+        const distanceValue = parseFloat(normalizeInput(document.getElementById('distancePace').value.trim()));
+        const timeString = normalizeInput(document.getElementById('timePace').value.trim());
+        if (isNaN(distanceValue) || distanceValue <= 0 || !validateTime(timeString)) {
+            document.getElementById('errorPace').style.display = 'block';
+            return false;
+        }
+    } else if (mode === 'time') {
+        const distanceValue = parseFloat(normalizeInput(document.getElementById('distanceTime').value.trim()));
+        const paceString = normalizeInput(document.getElementById('paceTime').value.trim());
+        if (isNaN(distanceValue) || distanceValue <= 0 || !validateTime(paceString, false)) {
+            document.getElementById('errorTime').style.display = 'block';
+            return false;
+        }
+    } else if (mode === 'distance') {
+        const timeString = normalizeInput(document.getElementById('timeDistance').value.trim());
+        const paceString = normalizeInput(document.getElementById('paceDistance').value.trim());
+        if (!validateTime(timeString) || !validateTime(paceString, false)) {
+            document.getElementById('errorDistance').style.display = 'block';
+            return false;
+        }
+    } else if (mode === 'converter') {
+        const conversionType = document.getElementById('convType').value;
+        const inputString = normalizeInput(document.getElementById('convValue').value.trim());
+        if (conversionType === 'distance') {
+            const numericValue = parseFloat(inputString);
+            if (isNaN(numericValue) || numericValue < 0) {
+                document.getElementById('errorConverter').style.display = 'block';
+                return false;
+            }
+        } else {
+            if (!validateTime(inputString, false)) {
+                document.getElementById('errorConverter').style.display = 'block';
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+async function calculate() {
     const mode = document.getElementById('calcMode').value;
+    const calcBtn = document.querySelector('.btn-primary');
+
+    hideAllErrors();
+
+    if (!validateInputsForMode(mode)) {
+        return;
+    }
+
     const successMsg = document.getElementById('successMsg');
     const resultsDiv = document.getElementById('results');
     const zoneResults = document.getElementById('zoneResults');
     const paceTimeResults = document.getElementById('paceTimeResults');
     const converterResults = document.getElementById('converterResults');
     const copyBtn = document.getElementById('copyBtn');
+    const appLayout = document.querySelector('.app-layout');
 
     successMsg.style.display = 'none';
-    hideAllErrors();
-    resetResultsDisplay();
     copyBtn.disabled = true;
     document.getElementById('resetBtn').disabled = true;
 
+    // Start Spinner State
+    const originalText = calcBtn.textContent;
+    calcBtn.innerHTML = '<span class="spinner"></span>';
+    calcBtn.disabled = true;
+
+    // Fade out old results if recalculating
+    if (appLayout.classList.contains('results-ready')) {
+        appLayout.classList.remove('results-ready');
+        await new Promise(r => setTimeout(r, 400));
+    }
+
+    resetResultsDisplay();
+
+    // Slide transition if first time
+    if (!appLayout.classList.contains('state-results')) {
+        appLayout.classList.add('state-results');
+        await new Promise(r => setTimeout(r, 600));
+    }
+
+    // Execute logic completely devoid of validation returns
     if (mode === 'zone') {
         calculateZone(resultsDiv, zoneResults, copyBtn);
     } else if (mode === 'pace') {
@@ -252,6 +326,13 @@ function calculate() {
     } else if (mode === 'converter') {
         calculateConverter(resultsDiv, converterResults, copyBtn);
     }
+
+    // Fade in results
+    appLayout.classList.add('results-ready');
+
+    // Restore button State
+    calcBtn.textContent = originalText;
+    calcBtn.disabled = false;
 }
 
 
@@ -260,12 +341,7 @@ function calculate() {
 function calculateZone(resultsDiv, zoneResults, copyBtn) {
     // Renamed function arguments and variables for better readability
     const timeInput = normalizeInput(document.getElementById('time10k').value.trim());
-    const errorDiv = document.getElementById('errorZone');
 
-    if (!validateTime(timeInput)) {
-        errorDiv.style.display = 'block';
-        return;
-    }
 
     const thresholdPace = calculateThresholdPace(timeInput);
     const zones = calculateZones(thresholdPace);
@@ -318,13 +394,8 @@ function calculateZone(resultsDiv, zoneResults, copyBtn) {
 function calculatePace(resultsDiv, paceTimeResults, copyBtn) {
     const distanceString = normalizeInput(document.getElementById('distancePace').value.trim());
     const timeString = normalizeInput(document.getElementById('timePace').value.trim());
-    const errorDiv = document.getElementById('errorPace');
     const distanceValue = parseFloat(distanceString);
 
-    if (isNaN(distanceValue) || distanceValue <= 0 || !validateTime(timeString)) {
-        errorDiv.style.display = 'block';
-        return;
-    }
 
     const totalSeconds = timeToSeconds(timeString);
     const paceSeconds = totalSeconds / distanceValue;
@@ -351,13 +422,8 @@ function calculatePace(resultsDiv, paceTimeResults, copyBtn) {
 function calculateTime(resultsDiv, paceTimeResults, copyBtn) {
     const distanceString = normalizeInput(document.getElementById('distanceTime').value.trim());
     const paceString = normalizeInput(document.getElementById('paceTime').value.trim());
-    const errorDiv = document.getElementById('errorTime');
     const distanceValue = parseFloat(distanceString);
 
-    if (isNaN(distanceValue) || distanceValue <= 0 || !validateTime(paceString, false)) {
-        errorDiv.style.display = 'block';
-        return;
-    }
 
     const paceSeconds = timeToSeconds(paceString);
     const totalSeconds = paceSeconds * distanceValue;
@@ -384,12 +450,7 @@ function calculateTime(resultsDiv, paceTimeResults, copyBtn) {
 function calculateDistance(resultsDiv, paceTimeResults, copyBtn) {
     const timeString = normalizeInput(document.getElementById('timeDistance').value.trim());
     const paceString = normalizeInput(document.getElementById('paceDistance').value.trim());
-    const errorDiv = document.getElementById('errorDistance');
 
-    if (!validateTime(timeString) || !validateTime(paceString, false)) {
-        errorDiv.style.display = 'block';
-        return;
-    }
 
     const totalSeconds = timeToSeconds(timeString);
     const paceSeconds = timeToSeconds(paceString);
@@ -419,14 +480,10 @@ function calculateConverter(resultsDiv, converterResults, copyBtn) {
     const inputString = normalizeInput(document.getElementById('convValue').value.trim());
     const activeToggle = document.querySelector('.toggle-btn.active');
     const unit = activeToggle ? activeToggle.getAttribute('data-value') : 'km';
-    const errorDiv = document.getElementById('errorConverter');
 
     if (conversionType === 'distance') {
         const numericValue = parseFloat(inputString);
-        if (isNaN(numericValue) || numericValue < 0) {
-            errorDiv.style.display = 'block';
-            return;
-        }
+
 
         let kilometers, miles;
         if (unit === 'km') {
@@ -463,11 +520,6 @@ function calculateConverter(resultsDiv, converterResults, copyBtn) {
             </div>
         `;
     } else {
-        if (!validateTime(inputString, false)) {
-            errorDiv.style.display = 'block';
-            return;
-        }
-
         const inputSeconds = timeToSeconds(inputString);
         let resultSeconds;
 
@@ -587,6 +639,11 @@ function reset() {
     document.getElementById('resetBtn').disabled = true;
     currentResults = null;
     updateDistanceInput(document.getElementById('calcMode').value);
+
+    const appLayout = document.querySelector('.app-layout');
+    if (appLayout) {
+        appLayout.classList.remove('state-results', 'results-ready');
+    }
 }
 
 function copyResults() {
