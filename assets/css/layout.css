@@ -1,0 +1,181 @@
+@media (min-width: 641px) {
+    .container {
+        margin: 40px auto;
+        border-radius: 20px;
+        /* Optional: adds subtle containment on desktop */
+    }
+
+    .selector-header {
+        z-index: 20;
+    }
+
+    .calculator-body {
+        z-index: 10;
+    }
+}
+
+.container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 48px 24px;
+    min-height: 100vh;
+    background-color: var(--bg-container);
+}
+
+/* App Layout Settings */
+.app-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+.sidebar {
+    display: flex;
+    flex-direction: column;
+}
+
+.main-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-grid {
+    display: flex;
+    flex-direction: column;
+}
+
+@media (min-width: 992px) {
+    body {
+        overflow: hidden;
+        /* Lock body scrolling to panels inside app-layout */
+    }
+
+    .container.app-layout {
+        max-width: 1200px;
+        display: grid;
+        grid-template-columns: 380px minmax(0, 0fr);
+        justify-content: center;
+        gap: 0;
+        align-items: start;
+        padding: 40px;
+        height: 100vh;
+        transition: grid-template-columns 0.6s cubic-bezier(0.4, 0, 0.2, 1), gap 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .container.app-layout.state-results {
+        grid-template-columns: 380px minmax(0, 1fr);
+        gap: 40px;
+    }
+
+    .sidebar {
+        width: 380px;
+        flex-shrink: 0;
+        position: sticky;
+        top: 40px;
+        height: max-content;
+        max-height: calc(100vh - 80px);
+        overflow-y: auto;
+        padding: 32px;
+        background-color: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 16px;
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+    }
+
+    .sidebar::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    .sidebar::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .sidebar::-webkit-scrollbar-thumb {
+        background: var(--divider-color);
+        border-radius: 4px;
+    }
+
+    .main-content {
+        min-width: 0;
+        height: calc(100vh - 80px);
+        overflow-y: auto;
+        padding-right: 16px;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(20px);
+        transition: opacity 0.4s ease, transform 0.4s ease, visibility 0.4s;
+    }
+
+    .container.app-layout.results-ready .main-content {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+
+    .main-content::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .main-content::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .main-content::-webkit-scrollbar-thumb {
+        background: var(--divider-color);
+        border-radius: 4px;
+    }
+
+    /* Inputs will naturally stack using flex-direction: column from the base styles */
+}
+
+.header {
+    margin-bottom: 32px;
+}
+
+.header-title {
+    font-size: 32px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+    color: var(--text-header);
+}
+
+.header-subtitle {
+    font-size: 15px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    color: var(--text-secondary);
+}
+
+/* Sections */
+.section {
+    margin-bottom: 32px;
+}
+
+.selector-header {
+    /*  Targeting the semantic class for potentially specific styling */
+    position: relative;
+    /* Ensure dropdowns in header sit above body elements */
+    margin-bottom: 24px;
+}
+
+.calculator-body {
+    /* Targeting the semantic class */
+    position: relative;
+}
+
+.section-divider {
+    height: 1px;
+    margin: 40px 0;
+    background-color: var(--divider-color);
+}
+
+.section-title {
+    font-size: 13px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 20px;
+    opacity: 0.6;
+}
+
