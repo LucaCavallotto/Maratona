@@ -75,6 +75,12 @@ function validateInputsForMode(mode) {
 // Orchestrator Handle
 async function handleCalculate(e) {
     if (e) e.preventDefault();
+
+    // UX Fix: Force blur on any active input to dismiss keyboard and enable global R/C shortcuts
+    if (document.activeElement && document.activeElement.blur) {
+        document.activeElement.blur();
+    }
+
     const mode = document.getElementById('calcMode').value;
     const appLayout = document.querySelector('.app-layout');
 
@@ -402,14 +408,43 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Enter Key Bindings for Form Inputs
-    const enterInputs = ['time10k', 'distancePace', 'timePace', 'distanceTime', 'paceTime', 'timeDistance', 'paceDistance', 'convValue'];
-    enterInputs.forEach(inputId => {
-        const inputEl = document.getElementById(inputId);
-        if (inputEl) {
-            inputEl.addEventListener('keypress', function (e) {
-                if (e.key === 'Enter') handleCalculate(e);
-            });
+    // Global Keyboard Shortcuts
+    document.addEventListener('keydown', function (e) {
+        // Only ignore R and C if user is typing in an input or textarea
+        const targetTag = e.target.tagName.toLowerCase();
+        const isInputFocus = targetTag === 'input' || targetTag === 'textarea';
+
+        if (e.key === 'Enter') {
+            const calcBtn = document.getElementById('calculateBtn');
+            if (calcBtn && !calcBtn.disabled) {
+                e.preventDefault(); // Prevent default form submission or other unintended actions
+
+                // Visual feedback
+                calcBtn.classList.add('active-shortcut');
+                setTimeout(() => calcBtn.classList.remove('active-shortcut'), 200);
+
+                handleCalculate(e);
+            }
+        } else if (e.key.toLowerCase() === 'r' && !isInputFocus) {
+            const resetBtn = document.getElementById('resetBtn');
+            if (resetBtn && !resetBtn.disabled) {
+                e.preventDefault();
+                // Visual feedback
+                resetBtn.classList.add('active-shortcut');
+                setTimeout(() => resetBtn.classList.remove('active-shortcut'), 200);
+
+                handleReset(e);
+            }
+        } else if (e.key.toLowerCase() === 'c' && !isInputFocus) {
+            const copyBtn = document.getElementById('copyBtn');
+            if (copyBtn && !copyBtn.disabled) {
+                e.preventDefault();
+                // Visual feedback
+                copyBtn.classList.add('active-shortcut');
+                setTimeout(() => copyBtn.classList.remove('active-shortcut'), 200);
+
+                handleCopy(e);
+            }
         }
     });
 });

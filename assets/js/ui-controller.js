@@ -33,6 +33,10 @@ export function initCustomDropdowns() {
             toggle.classList.toggle('open');
             toggle.setAttribute('aria-expanded', isOpening);
 
+            if (isOpening) {
+                toggle.focus(); // Force focus capture when opening via mouse
+            }
+
             if (window.innerWidth <= 640) {
                 if (isOpening) {
                     overlay.classList.add('show');
@@ -64,10 +68,74 @@ export function initCustomDropdowns() {
         });
 
         // Keyboard navigation support
+        let focusedItemIndex = -1;
+        const items = Array.from(menu.querySelectorAll('.custom-dropdown-item'));
+
+        // Reset and set initial focus when opening
+        toggle.addEventListener('click', function () {
+            if (menu.classList.contains('show')) {
+                focusedItemIndex = items.findIndex(item => item.classList.contains('selected'));
+                if (focusedItemIndex === -1 && items.length > 0) focusedItemIndex = 0;
+
+                items.forEach((item, index) => {
+                    item.classList.toggle('focused', index === focusedItemIndex);
+                    if (index === focusedItemIndex) {
+                        setTimeout(() => item.scrollIntoView({ block: 'nearest' }), 10);
+                    }
+                });
+            } else {
+                items.forEach(item => item.classList.remove('focused'));
+                focusedItemIndex = -1;
+            }
+        });
+
         toggle.addEventListener('keydown', function (e) {
+            const isOpen = menu.classList.contains('show');
+
             if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
-                this.click();
+                e.stopPropagation(); // Prevent global shortcuts (like calculate) from receiving this and blurring the input
+                if (isOpen && focusedItemIndex >= 0) {
+                    items[focusedItemIndex].click();
+                    toggle.focus(); // Return focus to toggle
+                } else {
+                    this.click();
+                }
+            } else if (e.key === 'Escape') {
+                if (isOpen) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    menu.classList.remove('show');
+                    toggle.classList.remove('open');
+                    if (overlay) overlay.classList.remove('show');
+                    toggle.setAttribute('aria-expanded', 'false');
+                    items.forEach(item => item.classList.remove('focused'));
+                    toggle.focus();
+                }
+            } else if (e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'Tab') {
+                e.stopPropagation();
+                if (isOpen) {
+                    e.preventDefault(); // Prevent page scrolling or tabbing away to background elements
+
+                    if (e.key === 'ArrowDown' || (e.key === 'Tab' && !e.shiftKey)) {
+                        focusedItemIndex = (focusedItemIndex + 1) % items.length;
+                    } else if (e.key === 'ArrowUp' || (e.key === 'Tab' && e.shiftKey)) {
+                        focusedItemIndex = (focusedItemIndex - 1 + items.length) % items.length;
+                    }
+
+                    items.forEach((item, index) => {
+                        if (index === focusedItemIndex) {
+                            item.classList.add('focused');
+                            item.scrollIntoView({ block: 'nearest' });
+                        } else {
+                            item.classList.remove('focused');
+                        }
+                    });
+                } else if (e.key === 'ArrowDown') {
+                    // Open dropdown if closed
+                    e.preventDefault();
+                    this.click();
+                }
             }
         });
     });
