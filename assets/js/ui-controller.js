@@ -71,6 +71,14 @@ export function initCustomDropdowns() {
         let focusedItemIndex = -1;
         const items = Array.from(menu.querySelectorAll('.custom-dropdown-item'));
 
+        // Clear keyboard focus when mouse takes over for seamless UX
+        menu.addEventListener('mousemove', function () {
+            if (focusedItemIndex !== -1) {
+                items.forEach(item => item.classList.remove('is-highlighted'));
+                focusedItemIndex = -1;
+            }
+        });
+
         // Reset and set initial focus when opening
         toggle.addEventListener('click', function () {
             if (menu.classList.contains('show')) {
@@ -78,13 +86,13 @@ export function initCustomDropdowns() {
                 if (focusedItemIndex === -1 && items.length > 0) focusedItemIndex = 0;
 
                 items.forEach((item, index) => {
-                    item.classList.toggle('focused', index === focusedItemIndex);
+                    item.classList.toggle('is-highlighted', index === focusedItemIndex);
                     if (index === focusedItemIndex) {
                         setTimeout(() => item.scrollIntoView({ block: 'nearest' }), 10);
                     }
                 });
             } else {
-                items.forEach(item => item.classList.remove('focused'));
+                items.forEach(item => item.classList.remove('is-highlighted'));
                 focusedItemIndex = -1;
             }
         });
@@ -109,7 +117,7 @@ export function initCustomDropdowns() {
                     toggle.classList.remove('open');
                     if (overlay) overlay.classList.remove('show');
                     toggle.setAttribute('aria-expanded', 'false');
-                    items.forEach(item => item.classList.remove('focused'));
+                    items.forEach(item => item.classList.remove('is-highlighted'));
                     toggle.focus();
                 }
             } else if (e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'Tab') {
@@ -125,10 +133,10 @@ export function initCustomDropdowns() {
 
                     items.forEach((item, index) => {
                         if (index === focusedItemIndex) {
-                            item.classList.add('focused');
+                            item.classList.add('is-highlighted');
                             item.scrollIntoView({ block: 'nearest' });
                         } else {
-                            item.classList.remove('focused');
+                            item.classList.remove('is-highlighted');
                         }
                     });
                 } else if (e.key === 'ArrowDown') {

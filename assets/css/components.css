@@ -280,9 +280,9 @@
 }
 
 .custom-dropdown-item:hover,
-.custom-dropdown-item.focused {
-    background-color: var(--bg-hover);
-    color: var(--primary-color);
+.custom-dropdown-item.is-highlighted {
+    background-color: var(--dropdown-item-hover);
+    color: var(--text-input);
 }
 
 .custom-dropdown-item.selected {
