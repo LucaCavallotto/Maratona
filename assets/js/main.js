@@ -411,7 +411,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Global Keyboard Shortcuts
     document.addEventListener('keydown', function (e) {
         // Only ignore R and C if user is typing in an input or textarea
-        const targetTag = e.target.tagName.toLowerCase();
+        const targetTag = e.target.tagName ? e.target.tagName.toLowerCase() : '';
         const isInputFocus = targetTag === 'input' || targetTag === 'textarea';
 
         if (e.key === 'Enter') {
@@ -425,7 +425,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 handleCalculate(e);
             }
-        } else if (e.key.toLowerCase() === 'r' && !isInputFocus) {
+        } else if (e.key && e.key.toLowerCase() === 'r' && !isInputFocus) {
             const resetBtn = document.getElementById('resetBtn');
             if (resetBtn && !resetBtn.disabled) {
                 e.preventDefault();
@@ -435,7 +435,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 handleReset(e);
             }
-        } else if (e.key.toLowerCase() === 'c' && !isInputFocus) {
+        } else if (e.key && e.key.toLowerCase() === 'c' && !isInputFocus) {
             const copyBtn = document.getElementById('copyBtn');
             if (copyBtn && !copyBtn.disabled) {
                 e.preventDefault();
