@@ -88,4 +88,26 @@
     .custom-dropdown-overlay.show {
         display: block;
     }
+
+    .zone-card {
+        padding: 16px;
+    }
+}
+
+@media (max-width: 400px) {
+
+    .zone-name,
+    .race-name {
+        font-size: 13.5px;
+        letter-spacing: -0.02em;
+    }
+
+    .zone-card {
+        padding: 14px;
+    }
+
+    .zone-pace,
+    .race-pace {
+        font-size: 13px;
+    }
 }
