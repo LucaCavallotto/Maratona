@@ -270,22 +270,31 @@ export function resetUI() {
 }
 
 export function switchCalcMode(mode) {
+    // Toggle Calculator Bodies
     document.getElementById('zoneInputs').classList.add('hidden');
     document.getElementById('paceInputs').classList.add('hidden');
     document.getElementById('timeInputs').classList.add('hidden');
     document.getElementById('distanceInputs').classList.add('hidden');
     document.getElementById('converterInputs').classList.add('hidden');
 
+    // Toggle Header Hints
+    document.querySelectorAll('.input-hint').forEach(hint => hint.classList.add('hidden'));
+
     if (mode === 'zone') {
         document.getElementById('zoneInputs').classList.remove('hidden');
+        document.getElementById('hintZone').classList.remove('hidden');
     } else if (mode === 'pace') {
         document.getElementById('paceInputs').classList.remove('hidden');
+        document.getElementById('hintPace').classList.remove('hidden');
     } else if (mode === 'time') {
         document.getElementById('timeInputs').classList.remove('hidden');
+        document.getElementById('hintTime').classList.remove('hidden');
     } else if (mode === 'distance') {
         document.getElementById('distanceInputs').classList.remove('hidden');
+        document.getElementById('hintDistance').classList.remove('hidden');
     } else if (mode === 'converter') {
         document.getElementById('converterInputs').classList.remove('hidden');
+        document.getElementById('hintConverter').classList.remove('hidden');
         updateConverterLabel();
     }
     resetUI();

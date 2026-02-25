@@ -10,11 +10,13 @@
     color: var(--text-label);
 }
 
-.hint-text {
-    font-size: 13px;
+.input-hint {
+    font-size: 0.85rem;
     color: var(--text-secondary);
-    line-height: 1.5;
-    margin-bottom: 24px;
+    line-height: 1.4;
+    margin-top: 12px;
+    margin-bottom: 0;
+    opacity: 0.9;
 }
 
 .error-text {
@@ -97,6 +99,22 @@
 
 .hidden {
     display: none !important;
+}
+
+.calculator-body {
+    animation: contentFade 0.3s ease-out;
+}
+
+@keyframes contentFade {
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .original-select {
@@ -340,4 +358,3 @@
         transform: translate(-50%, -50%) scale(1);
     }
 }
-

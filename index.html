@@ -58,20 +58,28 @@
                         <option value="distance">Distance Calculator</option>
                         <option value="converter">Km-Mile Converter</option>
                     </select>
+
+                    <p class="input-hint" id="hintZone">Enter your recent 10K time recorded at a steady, maximal effort
+                        (e.g., 00:44:30).</p>
+                    <p class="input-hint hidden" id="hintPace">Enter the distance and total time to calculate your
+                        average pace (e.g., 10 km, 00:45:00).</p>
+                    <p class="input-hint hidden" id="hintTime">Enter a distance and target pace to calculate total time
+                        (e.g., 5 km, 04:30/km).</p>
+                    <p class="input-hint hidden" id="hintDistance">Enter available time and average pace to calculate
+                        distance (e.g., 01:00:00, 05:00/km).</p>
+                    <p class="input-hint hidden" id="hintConverter">Select conversion type and enter a value to convert
+                        units (e.g., 10 km).</p>
                 </div>
 
                 <div class="calculator-body" id="zoneInputs">
-                    <p class="hint-text">Enter your best recent 10K time run at a steady, maximal effort.</p>
                     <div class="input-group">
                         <label class="label" for="time10k">10K Time</label>
-                        <input type="text" id="time10k" class="input-field" placeholder="HH:MM:SS, e.g. 01:44:30">
+                        <input type="text" id="time10k" class="input-field" placeholder="HH:MM:SS">
                     </div>
                     <div class="error-text" id="errorZone">Invalid format. Use MM:SS or HH:MM:SS</div>
                 </div>
 
                 <div class="calculator-body hidden" id="paceInputs">
-                    <p class="hint-text">Enter the distance you ran and the total time to calculate your average pace.
-                    </p>
                     <div class="input-group">
                         <label class="label" for="distancePace">Distance</label>
                         <div class="input-row">
@@ -106,7 +114,7 @@
                                 <option value="21.0975">Half Marathon</option>
                                 <option value="42.195">Marathon</option>
                             </select>
-                            <input type="text" id="distancePace" class="input-field" placeholder="km, e.g. 10">
+                            <input type="text" id="distancePace" class="input-field" placeholder="km">
                         </div>
                     </div>
                     <div class="input-group">
@@ -117,7 +125,6 @@
                 </div>
 
                 <div class="calculator-body hidden" id="timeInputs">
-                    <p class="hint-text">Enter a distance and a target pace to calculate the total time.</p>
                     <div class="input-group">
                         <label class="label" for="distanceTime">Distance</label>
                         <div class="input-row">
@@ -152,33 +159,29 @@
                                 <option value="21.0975">Half Marathon</option>
                                 <option value="42.195">Marathon</option>
                             </select>
-                            <input type="text" id="distanceTime" class="input-field" placeholder="km, e.g. 10.8">
+                            <input type="text" id="distanceTime" class="input-field" placeholder="km">
                         </div>
                     </div>
                     <div class="input-group">
                         <label class="label" for="paceTime">Pace per km</label>
-                        <input type="text" id="paceTime" class="input-field" placeholder="MM:SS, e.g. 04:30">
+                        <input type="text" id="paceTime" class="input-field" placeholder="MM:SS">
                     </div>
                     <div class="error-text" id="errorTime">Invalid input. Check distance and pace format</div>
                 </div>
 
                 <div class="calculator-body hidden" id="distanceInputs">
-                    <p class="hint-text">Enter the available time and your average pace to calculate the distance
-                        covered.
-                    </p>
                     <div class="input-group">
                         <label class="label" for="timeDistance">Total Time</label>
-                        <input type="text" id="timeDistance" class="input-field" placeholder="HH:MM:SS, e.g. 01:44:30">
+                        <input type="text" id="timeDistance" class="input-field" placeholder="HH:MM:SS">
                     </div>
                     <div class="input-group">
                         <label class="label" for="paceDistance">Pace per km</label>
-                        <input type="text" id="paceDistance" class="input-field" placeholder="MM:SS, e.g. 04:30">
+                        <input type="text" id="paceDistance" class="input-field" placeholder="MM:SS">
                     </div>
                     <div class="error-text" id="errorDistance">Invalid input. Check time and pace format</div>
                 </div>
 
                 <div class="calculator-body hidden" id="converterInputs">
-                    <p class="hint-text">Select what to convert, enter a value, then switch units if you want.</p>
                     <div class="input-group">
                         <label class="label" for="convType">Conversion Type</label>
                         <div class="custom-dropdown" id="convTypeDropdown">
@@ -203,7 +206,7 @@
                     <div class="input-group">
                         <label class="label" for="convValue">Value</label>
                         <div class="input-with-toggle">
-                            <input type="text" id="convValue" class="input-field" placeholder="10, e.g. 10.8">
+                            <input type="text" id="convValue" class="input-field" placeholder="10">
                             <div class="unit-toggle">
                                 <button class="toggle-btn active" data-value="km">Km</button>
                                 <button class="toggle-btn" data-value="mi">Mi</button>
