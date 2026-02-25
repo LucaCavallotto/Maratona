@@ -168,6 +168,9 @@ export async function clearOldResults(appLayout) {
 }
 
 export function showResultsGrid(appLayout) {
+    // Force DOM layout recalculation so display: block propagates before opacity fades in
+    void appLayout.offsetWidth;
+
     appLayout.classList.add('results-ready');
     UIState.isCalculated = true;
 

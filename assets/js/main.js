@@ -256,8 +256,30 @@ async function handleCalculate(e) {
     showResultsGrid(appLayout);
 }
 
-function handleReset(e) {
+async function handleReset(e) {
     if (e) e.preventDefault();
+
+    document.getElementById('copyBtn').disabled = true;
+    document.getElementById('resetBtn').disabled = true;
+    document.getElementById('calculateBtn').disabled = true;
+
+    const appLayout = document.querySelector('.app-layout');
+
+    // Fade out results first
+    if (appLayout && appLayout.classList.contains('results-ready')) {
+        await clearOldResults(appLayout);
+    }
+
+    // Collapse results container
+    resetResultsDisplay();
+
+    // Slide layout back to center
+    if (appLayout && appLayout.classList.contains('state-results')) {
+        appLayout.classList.remove('state-results');
+        // Wait for the slide transition to complete
+        await new Promise(r => setTimeout(r, 600));
+    }
+
     resetUI();
 }
 
