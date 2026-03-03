@@ -10,9 +10,20 @@ export function normalizeInput(str) {
 }
 
 export function validateTime(timeStr, allowHours = true) {
+    if (!timeStr || typeof timeStr !== 'string') return false;
+
+    // Ensure the string only contains digits and colons
+    if (!/^[\d:]+$/.test(timeStr)) return false;
+
     const parts = timeStr.split(':');
     if (!allowHours && parts.length !== 2) return false;
     if (allowHours && (parts.length !== 2 && parts.length !== 3)) return false;
+
+    // First part must have at least 1 digit. Other parts MUST be exactly 2 digits.
+    if (parts[0].length === 0) return false;
+    for (let i = 1; i < parts.length; i++) {
+        if (parts[i].length !== 2) return false;
+    }
 
     try {
         if (parts.length === 2) {

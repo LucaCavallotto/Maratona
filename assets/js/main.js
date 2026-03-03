@@ -58,7 +58,7 @@ function validateInputsForMode(mode) {
         const inputString = normalizeInput(document.getElementById('convValue').value.trim());
         if (conversionType === 'distance') {
             const numericValue = parseFloat(inputString);
-            if (isNaN(numericValue) || numericValue < 0) {
+            if (isNaN(numericValue) || numericValue <= 0) {
                 document.getElementById('errorConverter').style.display = 'block';
                 return false;
             }
