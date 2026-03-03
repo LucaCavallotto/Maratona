@@ -116,6 +116,10 @@
     border: 1px solid var(--card-border);
 }
 
+.results-section {
+    margin-bottom: 24px;
+}
+
 .result-card {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
