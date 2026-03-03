@@ -262,8 +262,13 @@ async function handleCalculate(e) {
     showResultsGrid(appLayout);
 }
 
+let isAnimatingReset = false;
+
 async function handleReset(e) {
     if (e) e.preventDefault();
+    if (isAnimatingReset) return;
+
+    isAnimatingReset = true;
 
     document.getElementById('copyBtn').disabled = true;
     document.getElementById('resetBtn').disabled = true;
@@ -286,6 +291,7 @@ async function handleReset(e) {
         await new Promise(r => setTimeout(r, 600));
     }
 
+    isAnimatingReset = false;
     resetUI();
 }
 
@@ -391,8 +397,34 @@ document.addEventListener('DOMContentLoaded', () => {
     if (copyBtn) copyBtn.addEventListener('click', handleCopy);
 
     // Dropdown Form Triggers
-    document.getElementById('calcMode').addEventListener('change', function () {
-        switchCalcMode(this.value);
+    document.getElementById('calcMode').addEventListener('change', async function () {
+        const newMode = this.value;
+        const appLayout = document.querySelector('.app-layout');
+        const hasResults = appLayout && (appLayout.classList.contains('state-results') || appLayout.classList.contains('results-ready'));
+
+        switchCalcMode(newMode, hasResults);
+
+        if (hasResults) {
+            if (isAnimatingReset) return;
+            isAnimatingReset = true;
+
+            document.getElementById('copyBtn').disabled = true;
+            document.getElementById('resetBtn').disabled = true;
+            document.getElementById('calculateBtn').disabled = true;
+
+            if (appLayout.classList.contains('results-ready')) {
+                await clearOldResults(appLayout);
+            }
+            resetResultsDisplay();
+
+            if (appLayout.classList.contains('state-results')) {
+                appLayout.classList.remove('state-results');
+                await new Promise(r => setTimeout(r, 600));
+            }
+
+            isAnimatingReset = false;
+            document.getElementById('calculateBtn').disabled = false;
+        }
     });
 
     document.getElementById('convType').addEventListener('change', updateConverterLabel);

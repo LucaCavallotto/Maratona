@@ -314,7 +314,7 @@ export function renderPaceTimeResults(container, metrics, splits) {
     container.classList.remove('hidden');
 }
 
-export function resetUI() {
+export function resetUI(skipLayoutReset = false) {
     document.getElementById('time10k').value = '';
     document.getElementById('distancePresetPace').value = 'custom';
     document.getElementById('distancePace').value = '';
@@ -328,7 +328,10 @@ export function resetUI() {
 
     hideAllErrors();
     document.getElementById('successMsg').style.display = 'none';
-    resetResultsDisplay();
+
+    if (!skipLayoutReset) {
+        resetResultsDisplay();
+    }
 
     document.getElementById('copyBtn').disabled = true;
     document.getElementById('resetBtn').disabled = true;
@@ -339,13 +342,15 @@ export function resetUI() {
 
     updateDistanceInput(document.getElementById('calcMode').value);
 
-    const appLayout = document.querySelector('.app-layout');
-    if (appLayout) {
-        appLayout.classList.remove('state-results', 'results-ready');
+    if (!skipLayoutReset) {
+        const appLayout = document.querySelector('.app-layout');
+        if (appLayout) {
+            appLayout.classList.remove('state-results', 'results-ready');
+        }
     }
 }
 
-export function switchCalcMode(mode) {
+export function switchCalcMode(mode, skipLayoutReset = false) {
     // Toggle Calculator Bodies
     document.getElementById('zoneInputs').classList.add('hidden');
     document.getElementById('paceInputs').classList.add('hidden');
@@ -373,5 +378,5 @@ export function switchCalcMode(mode) {
         document.getElementById('hintConverter').classList.remove('hidden');
         updateConverterLabel();
     }
-    resetUI();
+    resetUI(skipLayoutReset);
 }
