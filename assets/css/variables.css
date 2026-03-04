@@ -1,0 +1,107 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Roboto+Mono:wght@400;500;600&display=swap');
+
+:root {
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-mono: 'Roboto Mono', monospace;
+    /* New Mono Font */
+
+    /* Color Palette - Light Mode Default */
+    --bg-body: #FAFAFA;
+    --bg-container: #FFFFFF;
+
+    --text-primary: #1C1C1E;
+    --text-header: #000000;
+    --text-secondary: #8E8E93;
+    --text-label: #3A3A3C;
+    --text-input: #000000;
+    --text-placeholder: #AEAEB2;
+
+    --divider-color: #E5E5EA;
+
+    --input-bg: #F2F2F7;
+    --input-border: transparent;
+    --input-focus-bg: #FFFFFF;
+    --input-focus-border: #000000;
+
+    --btn-primary-bg: #000000;
+    --btn-primary-text: #FFFFFF;
+    --btn-primary-hover: #333333;
+
+    --btn-secondary-bg: #FFFFFF;
+    --btn-secondary-text: #000000;
+    --btn-secondary-border: #E5E5EA;
+    --btn-secondary-hover-bg: #F2F2F7;
+    --btn-secondary-hover-border: #D1D1D6;
+
+    --card-bg: #FFFFFF;
+    --card-border: #F2F2F7;
+
+    --zone-pace-color: #3A3A3C;
+
+    --error-color: #FF3B30;
+    --success-color: #34C759;
+
+    --dropdown-bg: rgba(255, 255, 255, 0.95);
+    --dropdown-border: rgba(0, 0, 0, 0.05);
+    --dropdown-shadow: rgba(0, 0, 0, 0.1);
+    --dropdown-item-hover: #F2F2F7;
+    --dropdown-item-selected-bg: #F2F2F7;
+
+    --toggle-active-bg: #FFFFFF;
+
+    --splits-bg: #FAFAFA;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        /* Color Palette - Dark Mode Override */
+        --bg-body: #000000;
+        --bg-container: #1C1C1E;
+
+        --text-primary: #E5E5EA;
+        --text-header: #FFFFFF;
+        --text-secondary: #8E8E93;
+        --text-label: #E5E5EA;
+        --text-input: #FFFFFF;
+        --text-placeholder: #636366;
+
+        --divider-color: #2C2C2E;
+
+        --input-bg: #1C1C1E;
+        --input-border: #2C2C2E;
+        --input-focus-bg: #2C2C2E;
+        --input-focus-border: #FFFFFF;
+
+        --btn-primary-bg: #FFFFFF;
+        --btn-primary-text: #000000;
+        --btn-primary-hover: #F2F2F7;
+
+        --btn-secondary-bg: transparent;
+        --btn-secondary-text: #FFFFFF;
+        --btn-secondary-border: #3A3A3C;
+        --btn-secondary-hover-bg: #2C2C2E;
+        --btn-secondary-hover-border: #48484A;
+
+        --card-bg: #1C1C1E;
+        --card-border: #2C2C2E;
+
+        --zone-pace-color: #E5E5EA;
+
+        --error-color: #FF453A;
+        --success-color: #32D74B;
+
+        --dropdown-bg: rgba(28, 28, 30, 0.95);
+        --dropdown-border: rgba(255, 255, 255, 0.1);
+        --dropdown-shadow: rgba(0, 0, 0, 0.5);
+        --dropdown-item-hover: #2C2C2E;
+        --dropdown-item-selected-bg: #2C2C2E;
+
+
+
+        --toggle-active-bg: #636366;
+        /* Adjusted for visibility in dark mode */
+
+        --splits-bg: #1C1C1E;
+    }
+}
+

@@ -9,220 +9,270 @@
         content="Maratona - A comprehensive running calculator for training zones, pace, time, distance, and unit conversions.">
     <link rel="icon"
         href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏃</text></svg>">
-    <link rel="stylesheet" href="assets/style.css" />
-    <script src="assets/app.js" defer></script>
+    <link rel="stylesheet" href="assets/css/variables.css" />
+    <link rel="stylesheet" href="assets/css/base.css" />
+    <link rel="stylesheet" href="assets/css/layout.css" />
+    <link rel="stylesheet" href="assets/css/components.css" />
+    <link rel="stylesheet" href="assets/css/results.css" />
+    <link rel="stylesheet" href="assets/css/mobile.css" />
+    <script type="module" src="assets/js/main.js"></script>
 </head>
 
 <body>
-    <div class="container">
-        <header class="header">
-            <h1 class="header-title">Maratona</h1>
-            <p class="header-subtitle">Running calculators, done right</p>
-        </header>
+    <div class="container app-layout">
+        <aside class="sidebar">
+            <header class="header">
+                <h1 class="header-title">Maratona</h1>
+                <p class="header-subtitle">Running calculators, done right</p>
+            </header>
 
-        <div class="section selector-header">
-            <label class="label" for="calcMode">Mode</label>
-            <div class="custom-dropdown" id="calcModeDropdown">
-                <div class="custom-dropdown-toggle" id="calcModeToggle" role="combobox" aria-expanded="false"
-                    aria-haspopup="listbox" aria-controls="calcModeMenu" tabindex="0">
-                    Training Zones Calculator
-                </div>
-                <div class="custom-dropdown-menu" id="calcModeMenu" role="listbox">
-                    <div class="custom-dropdown-item selected" data-value="zone" role="option" aria-selected="true">
-                        Training Zones Calculator</div>
-                    <div class="custom-dropdown-item" data-value="pace" role="option" aria-selected="false">Pace
-                        Calculator</div>
-                    <div class="custom-dropdown-item" data-value="time" role="option" aria-selected="false">Time
-                        Calculator</div>
-                    <div class="custom-dropdown-item" data-value="distance" role="option" aria-selected="false">Distance
-                        Calculator</div>
-                    <div class="custom-dropdown-item" data-value="converter" role="option" aria-selected="false">Km-Mile
-                        Converter</div>
-                </div>
-            </div>
-            <select id="calcMode" class="original-select">
-                <option value="zone">Training Zones Calculator</option>
-                <option value="pace">Pace Calculator</option>
-                <option value="time">Time Calculator</option>
-                <option value="distance">Distance Calculator</option>
-                <option value="converter">Km-Mile Converter</option>
-            </select>
-        </div>
-
-        <div class="section calculator-body" id="zoneInputs">
-            <p class="hint-text">Enter your best recent 10K time run at a steady, maximal effort.</p>
-            <label class="label" for="time10k">10K Time</label>
-            <input type="text" id="time10k" class="input-field" placeholder="HH:MM:SS, e.g. 01:44:30">
-            <div class="error-text" id="errorZone">Invalid format. Use MM:SS or HH:MM:SS</div>
-        </div>
-
-        <div class="section calculator-body hidden" id="paceInputs">
-            <p class="hint-text">Enter the distance you ran and the total time to calculate your average pace.
-            </p>
-            <div class="input-group">
-                <label class="label" for="distancePace">Distance</label>
-                <div class="input-row">
-                    <div class="custom-dropdown" id="distancePresetPaceDropdown">
-                        <div class="custom-dropdown-toggle" id="distancePresetPaceToggle" role="combobox"
-                            aria-expanded="false" aria-haspopup="listbox" aria-controls="distancePresetPaceMenu"
-                            tabindex="0">
-                            Custom
+            <div class="form-grid">
+                <div class="selector-header">
+                    <label class="label" for="calcMode">Mode</label>
+                    <div class="custom-dropdown" id="calcModeDropdown">
+                        <div class="custom-dropdown-toggle" id="calcModeToggle" role="combobox" aria-expanded="false"
+                            aria-haspopup="listbox" aria-controls="calcModeMenu" tabindex="0">
+                            Training Zones Calculator
                         </div>
-                        <div class="custom-dropdown-menu" id="distancePresetPaceMenu" role="listbox">
-                            <div class="custom-dropdown-item selected" data-value="custom" role="option"
-                                aria-selected="true">Custom</div>
-                            <div class="custom-dropdown-item" data-value="5" role="option" aria-selected="false">5K
-                            </div>
-                            <div class="custom-dropdown-item" data-value="10" role="option" aria-selected="false">10K
-                            </div>
-                            <div class="custom-dropdown-item" data-value="21.0975" role="option" aria-selected="false">
-                                Half Marathon</div>
-                            <div class="custom-dropdown-item" data-value="42.195" role="option" aria-selected="false">
-                                Marathon</div>
+                        <div class="custom-dropdown-menu" id="calcModeMenu" role="listbox">
+                            <div class="custom-dropdown-item selected" data-value="zone" role="option"
+                                aria-selected="true">
+                                Training Zones Calculator</div>
+                            <div class="custom-dropdown-item" data-value="pace" role="option" aria-selected="false">Pace
+                                Calculator</div>
+                            <div class="custom-dropdown-item" data-value="time" role="option" aria-selected="false">Time
+                                Calculator</div>
+                            <div class="custom-dropdown-item" data-value="distance" role="option" aria-selected="false">
+                                Distance
+                                Calculator</div>
+                            <div class="custom-dropdown-item" data-value="converter" role="option"
+                                aria-selected="false">
+                                Km-Mile
+                                Converter</div>
                         </div>
                     </div>
-                    <select id="distancePresetPace" class="original-select">
-                        <option value="custom">Custom</option>
-                        <option value="5">5K</option>
-                        <option value="10">10K</option>
-                        <option value="21.0975">Half Marathon</option>
-                        <option value="42.195">Marathon</option>
+                    <select id="calcMode" class="original-select">
+                        <option value="zone">Training Zones Calculator</option>
+                        <option value="pace">Pace Calculator</option>
+                        <option value="time">Time Calculator</option>
+                        <option value="distance">Distance Calculator</option>
+                        <option value="converter">Km-Mile Converter</option>
                     </select>
-                    <input type="text" id="distancePace" class="input-field" placeholder="km, e.g. 10">
-                </div>
-            </div>
-            <div class="input-group">
-                <label class="label" for="timePace">Time</label>
-                <input type="text" id="timePace" class="input-field" placeholder="HH:MM:SS">
-            </div>
-            <div class="error-text" id="errorPace">Invalid input. Check distance and time format</div>
-        </div>
 
-        <div class="section calculator-body hidden" id="timeInputs">
-            <p class="hint-text">Enter a distance and a target pace to calculate the total time.</p>
-            <div class="input-group">
-                <label class="label" for="distanceTime">Distance</label>
-                <div class="input-row">
-                    <div class="custom-dropdown" id="distancePresetTimeDropdown">
-                        <div class="custom-dropdown-toggle" id="distancePresetTimeToggle" role="combobox"
-                            aria-expanded="false" aria-haspopup="listbox" aria-controls="distancePresetTimeMenu"
-                            tabindex="0">
-                            Custom
-                        </div>
-                        <div class="custom-dropdown-menu" id="distancePresetTimeMenu" role="listbox">
-                            <div class="custom-dropdown-item selected" data-value="custom" role="option"
-                                aria-selected="true">Custom</div>
-                            <div class="custom-dropdown-item" data-value="5" role="option" aria-selected="false">5K
+                    <p class="input-hint" id="hintZone">Enter your recent 10K time recorded at a steady, maximal effort
+                        (e.g., 00:44:30).</p>
+                    <p class="input-hint hidden" id="hintPace">Enter the distance and total time to calculate your
+                        average pace (e.g., 10 km, 00:45:00).</p>
+                    <p class="input-hint hidden" id="hintTime">Enter a distance and target pace to calculate total time
+                        (e.g., 5 km, 04:30/km).</p>
+                    <p class="input-hint hidden" id="hintDistance">Enter available time and average pace to calculate
+                        distance (e.g., 01:00:00, 05:00/km).</p>
+                    <p class="input-hint hidden" id="hintConverter">Select conversion type and enter a value to convert
+                        units (e.g., 10 km).</p>
+                </div>
+
+                <div class="calculator-body" id="zoneInputs">
+                    <div class="input-group">
+                        <label class="label" for="time10k">10K Time</label>
+                        <input type="text" id="time10k" name="time10k" class="input-field" placeholder="HH:MM:SS">
+                    </div>
+                    <div class="error-text" id="errorZone">Invalid format. Use MM:SS or HH:MM:SS</div>
+                </div>
+
+                <div class="calculator-body hidden" id="paceInputs">
+                    <div class="input-group">
+                        <label class="label" for="distancePace">Distance</label>
+                        <div class="input-row">
+                            <div class="custom-dropdown" id="distancePresetPaceDropdown">
+                                <div class="custom-dropdown-toggle" id="distancePresetPaceToggle" role="combobox"
+                                    aria-expanded="false" aria-haspopup="listbox" aria-controls="distancePresetPaceMenu"
+                                    tabindex="0">
+                                    Custom
+                                </div>
+                                <div class="custom-dropdown-menu" id="distancePresetPaceMenu" role="listbox">
+                                    <div class="custom-dropdown-item selected" data-value="custom" role="option"
+                                        aria-selected="true">Custom</div>
+                                    <div class="custom-dropdown-item" data-value="5" role="option"
+                                        aria-selected="false">5K
+                                    </div>
+                                    <div class="custom-dropdown-item" data-value="10" role="option"
+                                        aria-selected="false">
+                                        10K
+                                    </div>
+                                    <div class="custom-dropdown-item" data-value="21.0975" role="option"
+                                        aria-selected="false">
+                                        Half Marathon</div>
+                                    <div class="custom-dropdown-item" data-value="42.195" role="option"
+                                        aria-selected="false">
+                                        Marathon</div>
+                                </div>
                             </div>
-                            <div class="custom-dropdown-item" data-value="10" role="option" aria-selected="false">10K
+                            <select id="distancePresetPace" class="original-select">
+                                <option value="custom">Custom</option>
+                                <option value="5">5K</option>
+                                <option value="10">10K</option>
+                                <option value="21.0975">Half Marathon</option>
+                                <option value="42.195">Marathon</option>
+                            </select>
+                            <input type="text" id="distancePace" name="distance" class="input-field" placeholder="km">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label class="label" for="timePace">Time</label>
+                        <input type="text" id="timePace" name="time" class="input-field" placeholder="HH:MM:SS">
+                    </div>
+                    <div class="error-text" id="errorPace">Invalid input. Check distance and time format</div>
+                </div>
+
+                <div class="calculator-body hidden" id="timeInputs">
+                    <div class="input-group">
+                        <label class="label" for="distanceTime">Distance</label>
+                        <div class="input-row">
+                            <div class="custom-dropdown" id="distancePresetTimeDropdown">
+                                <div class="custom-dropdown-toggle" id="distancePresetTimeToggle" role="combobox"
+                                    aria-expanded="false" aria-haspopup="listbox" aria-controls="distancePresetTimeMenu"
+                                    tabindex="0">
+                                    Custom
+                                </div>
+                                <div class="custom-dropdown-menu" id="distancePresetTimeMenu" role="listbox">
+                                    <div class="custom-dropdown-item selected" data-value="custom" role="option"
+                                        aria-selected="true">Custom</div>
+                                    <div class="custom-dropdown-item" data-value="5" role="option"
+                                        aria-selected="false">5K
+                                    </div>
+                                    <div class="custom-dropdown-item" data-value="10" role="option"
+                                        aria-selected="false">
+                                        10K
+                                    </div>
+                                    <div class="custom-dropdown-item" data-value="21.0975" role="option"
+                                        aria-selected="false">
+                                        Half Marathon</div>
+                                    <div class="custom-dropdown-item" data-value="42.195" role="option"
+                                        aria-selected="false">
+                                        Marathon</div>
+                                </div>
                             </div>
-                            <div class="custom-dropdown-item" data-value="21.0975" role="option" aria-selected="false">
-                                Half Marathon</div>
-                            <div class="custom-dropdown-item" data-value="42.195" role="option" aria-selected="false">
-                                Marathon</div>
+                            <select id="distancePresetTime" class="original-select">
+                                <option value="custom">Custom</option>
+                                <option value="5">5K</option>
+                                <option value="10">10K</option>
+                                <option value="21.0975">Half Marathon</option>
+                                <option value="42.195">Marathon</option>
+                            </select>
+                            <input type="text" id="distanceTime" name="distance" class="input-field" placeholder="km">
                         </div>
                     </div>
-                    <select id="distancePresetTime" class="original-select">
-                        <option value="custom">Custom</option>
-                        <option value="5">5K</option>
-                        <option value="10">10K</option>
-                        <option value="21.0975">Half Marathon</option>
-                        <option value="42.195">Marathon</option>
-                    </select>
-                    <input type="text" id="distanceTime" class="input-field" placeholder="km, e.g. 10.8">
-                </div>
-            </div>
-            <div class="input-group">
-                <label class="label" for="paceTime">Pace per km</label>
-                <input type="text" id="paceTime" class="input-field" placeholder="MM:SS, e.g. 04:30">
-            </div>
-            <div class="error-text" id="errorTime">Invalid input. Check distance and pace format</div>
-        </div>
-
-        <div class="section calculator-body hidden" id="distanceInputs">
-            <p class="hint-text">Enter the available time and your average pace to calculate the distance covered.</p>
-            <div class="input-group">
-                <label class="label" for="timeDistance">Total Time</label>
-                <input type="text" id="timeDistance" class="input-field" placeholder="HH:MM:SS, e.g. 01:44:30">
-            </div>
-            <div class="input-group">
-                <label class="label" for="paceDistance">Pace per km</label>
-                <input type="text" id="paceDistance" class="input-field" placeholder="MM:SS, e.g. 04:30">
-            </div>
-            <div class="error-text" id="errorDistance">Invalid input. Check time and pace format</div>
-        </div>
-
-        <div class="section calculator-body hidden" id="converterInputs">
-            <p class="hint-text">Select what to convert, enter a value, then switch units if you want.</p>
-            <div class="input-group">
-                <label class="label" for="convType">Conversion Type</label>
-                <div class="custom-dropdown" id="convTypeDropdown">
-                    <div class="custom-dropdown-toggle" id="convTypeToggle" role="combobox" aria-expanded="false"
-                        aria-haspopup="listbox" aria-controls="convTypeMenu" tabindex="0">
-                        Distance
+                    <div class="input-group">
+                        <label class="label" for="paceTime">Pace per km</label>
+                        <input type="text" id="paceTime" name="pace" class="input-field" placeholder="MM:SS">
                     </div>
-                    <div class="custom-dropdown-menu" id="convTypeMenu" role="listbox">
-                        <div class="custom-dropdown-item selected" data-value="distance" role="option"
-                            aria-selected="true">Distance</div>
-                        <div class="custom-dropdown-item" data-value="pace" role="option" aria-selected="false">Pace
+                    <div class="error-text" id="errorTime">Invalid input. Check distance and pace format</div>
+                </div>
+
+                <div class="calculator-body hidden" id="distanceInputs">
+                    <div class="input-group">
+                        <label class="label" for="timeDistance">Total Time</label>
+                        <input type="text" id="timeDistance" name="time" class="input-field" placeholder="HH:MM:SS">
+                    </div>
+                    <div class="input-group">
+                        <label class="label" for="paceDistance">Pace per km</label>
+                        <input type="text" id="paceDistance" name="pace" class="input-field" placeholder="MM:SS">
+                    </div>
+                    <div class="error-text" id="errorDistance">Invalid input. Check time and pace format</div>
+                </div>
+
+                <div class="calculator-body hidden" id="converterInputs">
+                    <div class="input-group">
+                        <label class="label" for="convType">Conversion Type</label>
+                        <div class="custom-dropdown" id="convTypeDropdown">
+                            <div class="custom-dropdown-toggle" id="convTypeToggle" role="combobox"
+                                aria-expanded="false" aria-haspopup="listbox" aria-controls="convTypeMenu" tabindex="0">
+                                Distance
+                            </div>
+                            <div class="custom-dropdown-menu" id="convTypeMenu" role="listbox">
+                                <div class="custom-dropdown-item selected" data-value="distance" role="option"
+                                    aria-selected="true">Distance</div>
+                                <div class="custom-dropdown-item" data-value="pace" role="option" aria-selected="false">
+                                    Pace
+                                </div>
+                            </div>
+                        </div>
+                        <select id="convType" class="original-select">
+                            <option value="distance">Distance</option>
+                            <option value="pace">Pace</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="label" for="convValue">Value</label>
+                        <div class="input-with-toggle">
+                            <input type="text" id="convValue" name="value" class="input-field" placeholder="10">
+                            <div class="unit-toggle">
+                                <button class="toggle-btn active" data-value="km">Km</button>
+                                <button class="toggle-btn" data-value="mi">Mi</button>
+                            </div>
                         </div>
                     </div>
+                    <div class="error-text" id="errorConverter">Invalid input format</div>
                 </div>
-                <select id="convType" class="original-select">
-                    <option value="distance">Distance</option>
-                    <option value="pace">Pace</option>
-                </select>
+
             </div>
 
-            <div class="input-group">
-                <label class="label" for="convValue">Value</label>
-                <div class="input-with-toggle">
-                    <input type="text" id="convValue" class="input-field" placeholder="10, e.g. 10.8">
-                    <div class="unit-toggle">
-                        <button class="toggle-btn active" data-value="km">Km</button>
-                        <button class="toggle-btn" data-value="mi">Mi</button>
-                    </div>
-                </div>
+            <div class="success-text" id="successMsg">Copied results to clipboard</div>
+
+            <div class="button-group">
+                <button class="btn btn-primary" id="calculateBtn">Calculate</button>
+                <button class="btn btn-secondary" id="resetBtn" disabled>Reset</button>
+                <button class="btn btn-secondary" id="copyBtn" disabled>Copy</button>
             </div>
-            <div class="error-text" id="errorConverter">Invalid input format</div>
-        </div>
+        </aside>
 
-        <div class="success-text" id="successMsg">Copied results to clipboard</div>
-
-        <div class="button-group">
-            <button class="btn btn-primary" onclick="calculate()">Calculate</button>
-            <button class="btn btn-secondary" onclick="reset()">Reset</button>
-            <button class="btn btn-secondary" id="copyBtn" onclick="copyResults()" disabled>Copy</button>
-        </div>
-
-        <div class="results" id="results">
-            <div id="zoneResults" class="hidden">
-                <div class="metrics-grid">
-                    <div class="metric-card">
-                        <div class="metric-label">10K Time</div>
-                        <div class="metric-value" id="refTime"></div>
+        <main class="main-content">
+            <div class="results" id="results">
+                <div id="zoneResults" class="hidden">
+                    <div class="results-section">
+                        <div class="section-title">Result</div>
+                        <div class="metrics-grid">
+                            <div class="metric-card">
+                                <div class="metric-label">
+                                    <svg class="icon-svg" viewBox="0 0 24 24">
+                                        <path
+                                            d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z" />
+                                        <path d="M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z" />
+                                    </svg>
+                                    10K Time
+                                </div>
+                                <div class="metric-value" id="refTime"></div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-label">
+                                    <svg class="icon-svg" viewBox="0 0 24 24">
+                                        <path
+                                            d="M15 1H9v2h6V1zm-4 13h2V8h-2v6zm8.03-6.61l1.42-1.42c-.43-.51-.9-.99-1.41-1.41l-1.42 1.42A8.962 8.962 0 0012 4c-4.97 0-9 4.03-9 9s4.02 9 9 9a8.994 8.994 0 007.03-14.61zM12 20c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z" />
+                                    </svg>
+                                    Threshold Pace
+                                </div>
+                                <div class="metric-value" id="refPace"></div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="metric-card">
-                        <div class="metric-label">Threshold Pace</div>
-                        <div class="metric-value" id="refPace"></div>
+
+                    <div class="section">
+                        <h2 class="section-title">Training Zones</h2>
+                        <div class="zones-grid" id="zones"></div>
+                    </div>
+
+                    <div class="section">
+                        <h2 class="section-title">Race Predictions</h2>
+                        <div class="races-grid" id="races"></div>
                     </div>
                 </div>
 
-                <div class="section">
-                    <h2 class="section-title">Training Zones</h2>
-                    <div class="zones-grid" id="zones"></div>
-                </div>
+                <div id="paceTimeResults" class="hidden"></div>
 
-                <div class="section">
-                    <h2 class="section-title">Race Predictions</h2>
-                    <div class="races-grid" id="races"></div>
-                </div>
+                <div id="converterResults" class="hidden"></div>
             </div>
-
-            <div id="paceTimeResults" class="hidden"></div>
-
-            <div id="converterResults" class="hidden"></div>
-        </div>
+        </main>
     </div>
 
     <div class="custom-dropdown-overlay" id="dropdownOverlay"></div>
