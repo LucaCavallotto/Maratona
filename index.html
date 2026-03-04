@@ -74,7 +74,7 @@
                 <div class="calculator-body" id="zoneInputs">
                     <div class="input-group">
                         <label class="label" for="time10k">10K Time</label>
-                        <input type="text" id="time10k" class="input-field" placeholder="HH:MM:SS">
+                        <input type="text" id="time10k" name="time10k" class="input-field" placeholder="HH:MM:SS">
                     </div>
                     <div class="error-text" id="errorZone">Invalid format. Use MM:SS or HH:MM:SS</div>
                 </div>
@@ -114,12 +114,12 @@
                                 <option value="21.0975">Half Marathon</option>
                                 <option value="42.195">Marathon</option>
                             </select>
-                            <input type="text" id="distancePace" class="input-field" placeholder="km">
+                            <input type="text" id="distancePace" name="distance" class="input-field" placeholder="km">
                         </div>
                     </div>
                     <div class="input-group">
                         <label class="label" for="timePace">Time</label>
-                        <input type="text" id="timePace" class="input-field" placeholder="HH:MM:SS">
+                        <input type="text" id="timePace" name="time" class="input-field" placeholder="HH:MM:SS">
                     </div>
                     <div class="error-text" id="errorPace">Invalid input. Check distance and time format</div>
                 </div>
@@ -159,12 +159,12 @@
                                 <option value="21.0975">Half Marathon</option>
                                 <option value="42.195">Marathon</option>
                             </select>
-                            <input type="text" id="distanceTime" class="input-field" placeholder="km">
+                            <input type="text" id="distanceTime" name="distance" class="input-field" placeholder="km">
                         </div>
                     </div>
                     <div class="input-group">
                         <label class="label" for="paceTime">Pace per km</label>
-                        <input type="text" id="paceTime" class="input-field" placeholder="MM:SS">
+                        <input type="text" id="paceTime" name="pace" class="input-field" placeholder="MM:SS">
                     </div>
                     <div class="error-text" id="errorTime">Invalid input. Check distance and pace format</div>
                 </div>
@@ -172,11 +172,11 @@
                 <div class="calculator-body hidden" id="distanceInputs">
                     <div class="input-group">
                         <label class="label" for="timeDistance">Total Time</label>
-                        <input type="text" id="timeDistance" class="input-field" placeholder="HH:MM:SS">
+                        <input type="text" id="timeDistance" name="time" class="input-field" placeholder="HH:MM:SS">
                     </div>
                     <div class="input-group">
                         <label class="label" for="paceDistance">Pace per km</label>
-                        <input type="text" id="paceDistance" class="input-field" placeholder="MM:SS">
+                        <input type="text" id="paceDistance" name="pace" class="input-field" placeholder="MM:SS">
                     </div>
                     <div class="error-text" id="errorDistance">Invalid input. Check time and pace format</div>
                 </div>
@@ -206,7 +206,7 @@
                     <div class="input-group">
                         <label class="label" for="convValue">Value</label>
                         <div class="input-with-toggle">
-                            <input type="text" id="convValue" class="input-field" placeholder="10">
+                            <input type="text" id="convValue" name="value" class="input-field" placeholder="10">
                             <div class="unit-toggle">
                                 <button class="toggle-btn active" data-value="km">Km</button>
                                 <button class="toggle-btn" data-value="mi">Mi</button>
