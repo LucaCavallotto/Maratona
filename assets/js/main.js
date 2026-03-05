@@ -319,7 +319,7 @@ function handleCopy(e) {
         });
         text += `\nRACE PREDICTIONS\n`;
         races.forEach(r => {
-            text += `${r.name}: ${r.pace}/km (${r.totalSeconds})\n`;
+            text += `${r.name}: ${r.pace}/km (${secondsToTime(r.totalSeconds)})\n`;
         });
     } else if (currentResults.mode === 'pace') {
         const { distance, distanceLabel, time, pace, splits, speedKmH, speedMS } = currentResults;
