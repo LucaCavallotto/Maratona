@@ -284,9 +284,17 @@ export function renderPaceTimeResults(container, metrics, splits) {
     const metricsHtml = metrics.map(metric => {
         const valueNum = typeof metric.value === 'object' ? metric.value.num : metric.value;
         const valueUnit = typeof metric.value === 'object' ? metric.value.unit : '';
-        const subValNum = metric.subValue && typeof metric.subValue === 'object' ? metric.subValue.num : metric.subValue;
-        const subValUnit = metric.subValue && typeof metric.subValue === 'object' ? metric.subValue.unit : '';
         const icon = iconMap[metric.label] || '';
+
+        let subValuesHtml = '';
+        if (metric.subValue) {
+            const subs = Array.isArray(metric.subValue) ? metric.subValue : [metric.subValue];
+            subValuesHtml = subs.map(sv => {
+                const subValNum = typeof sv === 'object' ? sv.num : sv;
+                const subValUnit = typeof sv === 'object' ? sv.unit : '';
+                return `<span class="metric-sub-value"><span class="metric-num">${subValNum}</span><span class="metric-unit">${subValUnit}</span></span>`;
+            }).join('');
+        }
 
         return `
         <div class="result-item">
@@ -296,7 +304,7 @@ export function renderPaceTimeResults(container, metrics, splits) {
             </div>
             <div class="metric-value">
                 <span class="metric-num">${valueNum}</span><span class="metric-unit">${valueUnit}</span>
-                ${metric.subValue ? `<span class="metric-sub-value"><span class="metric-num">${subValNum}</span><span class="metric-unit">${subValUnit}</span></span>` : ''}
+                ${subValuesHtml}
             </div>
         </div>
     `}).join('');

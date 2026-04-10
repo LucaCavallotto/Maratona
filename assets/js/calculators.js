@@ -64,8 +64,11 @@ export function calculatePaceMetrics(distanceValue, timeString) {
     const splits = calculateSplits(paceSeconds, distanceValue);
     const speedKmH = (3600 / paceSeconds).toFixed(2);
     const speedMS = (1000 / paceSeconds).toFixed(2);
+    const speedMpH = (speedKmH * 0.621371).toFixed(2);
+    const distanceMiles = (distanceValue * 0.621371).toFixed(2);
+    const paceMinMile = secondsToPace(paceSeconds * 1.60934);
 
-    return { paceSeconds, paceString, speedKmH, speedMS, splits };
+    return { paceSeconds, paceString, speedKmH, speedMS, speedMpH, splits, distanceMiles, paceMinMile };
 }
 
 export function calculateTimeMetrics(distanceValue, paceString) {
@@ -75,8 +78,11 @@ export function calculateTimeMetrics(distanceValue, paceString) {
     const splits = calculateSplits(paceSeconds, distanceValue);
     const speedKmH = (3600 / paceSeconds).toFixed(2);
     const speedMS = (1000 / paceSeconds).toFixed(2);
+    const speedMpH = (speedKmH * 0.621371).toFixed(2);
+    const distanceMiles = (distanceValue * 0.621371).toFixed(2);
+    const paceMinMile = secondsToPace(paceSeconds * 1.60934);
 
-    return { totalSeconds, totalTime, speedKmH, speedMS, splits };
+    return { totalSeconds, totalTime, speedKmH, speedMS, speedMpH, splits, distanceMiles, paceMinMile };
 }
 
 export function calculateDistanceMetrics(timeString, paceString) {
@@ -87,8 +93,11 @@ export function calculateDistanceMetrics(timeString, paceString) {
     const splits = calculateSplits(paceSeconds, distanceValue);
     const speedKmH = (3600 / paceSeconds).toFixed(2);
     const speedMS = (1000 / paceSeconds).toFixed(2);
+    const speedMpH = (speedKmH * 0.621371).toFixed(2);
+    const distanceMiles = (distanceValue * 0.621371).toFixed(2);
+    const paceMinMile = secondsToPace(paceSeconds * 1.60934);
 
-    return { distanceValue, distanceLabel, speedKmH, speedMS, splits };
+    return { distanceValue, distanceLabel, speedKmH, speedMS, speedMpH, splits, distanceMiles, paceMinMile };
 }
 
 export function calculateConverterMetrics(numericValue, type, unit) {
