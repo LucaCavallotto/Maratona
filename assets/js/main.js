@@ -108,10 +108,10 @@ async function handleCalculate(e) {
         const thresholdPace = calculateThresholdPace(timeInput);
         const zones = calculateZones(thresholdPace);
         const races = [
-            [5, "5K"],
-            [10, "10K"],
-            [21.0975, "Half Marathon"],
-            [42.195, "Marathon"]
+            [5, "5K (3.11 mi)"],
+            [10, "10K (6.21 mi)"],
+            [21.0975, "Half Marathon (13.11 mi)"],
+            [42.195, "Marathon (26.22 mi)"]
         ].map(([distanceInKm, raceName]) => ({
             name: raceName,
             ...estimateRacePace(thresholdPace, distanceInKm)
