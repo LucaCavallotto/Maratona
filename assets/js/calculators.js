@@ -19,6 +19,8 @@ export function calculateZones(thresholdPace) {
         name,
         lower: secondsToPace(thresholdPace * upper),
         upper: secondsToPace(thresholdPace * lower),
+        lowerMiles: secondsToPace((thresholdPace * upper) * 1.60934),
+        upperMiles: secondsToPace((thresholdPace * lower) * 1.60934),
         description: desc
     }));
 }
@@ -31,8 +33,9 @@ export function estimateRacePace(thresholdPace, distance) {
     else multiplier = 1.08;
 
     const pace = secondsToPace(thresholdPace * multiplier);
+    const paceMiles = secondsToPace(thresholdPace * multiplier * 1.60934);
     const totalSeconds = thresholdPace * multiplier * distance;
-    return { pace, totalSeconds };
+    return { pace, paceMiles, totalSeconds };
 }
 
 export function calculateSplits(paceSeconds, totalDistance) {

@@ -121,25 +121,35 @@ async function handleCalculate(e) {
 
         // Output to specific unique UI elements (Zones isn't natively built on the 2x2 generalized renderer)
         document.getElementById('refTime').innerHTML = `<span class="metric-num">${timeInput}</span>`;
-        document.getElementById('refPace').innerHTML = `<span class="metric-num">${secondsToPace(thresholdPace)}</span><span class="metric-unit">/km</span>`;
+        document.getElementById('refPace').innerHTML = `<span class="metric-num">${secondsToPace(thresholdPace)}</span><span class="metric-unit">/km</span> <span class="metric-sub-value" style="font-size: 13px; margin-top: 2px;"><span class="metric-num">${secondsToPace(thresholdPace * 1.60934)}</span><span class="metric-unit">/mi</span></span>`;
 
         document.getElementById('zones').innerHTML = zones.map(zone => `
             <div class="zone-card">
                 <div class="zone-header">
-                    <div class="zone-name">${zone.name}</div>
-                    <div class="zone-pace"><span class="metric-num">${zone.lower}</span><span class="metric-unit">/km – </span><span class="metric-num">${zone.upper}</span><span class="metric-unit">/km</span></div>
+                    <div>
+                        <div class="zone-name">${zone.name}</div>
+                        <div class="zone-desc">${zone.description}</div>
+                    </div>
+                    <div class="zone-pace" style="text-align: right;">
+                        <div><span class="metric-num">${zone.lower}</span><span class="metric-unit">/km – </span><span class="metric-num">${zone.upper}</span><span class="metric-unit">/km</span></div>
+                        <div class="metric-sub-value" style="font-size: 13px; margin-top: 2px;"><span class="metric-num">${zone.lowerMiles}</span><span class="metric-unit">/mi – </span><span class="metric-num">${zone.upperMiles}</span><span class="metric-unit">/mi</span></div>
+                    </div>
                 </div>
-                <div class="zone-desc">${zone.description}</div>
             </div>
         `).join('');
 
         document.getElementById('races').innerHTML = races.map(racePrediction => {
             return `
                 <div class="zone-card race-card">
-                    <div class="race-name">${racePrediction.name}</div>
-                    <div class="race-details">
-                        <div class="race-pace"><span class="metric-num">${racePrediction.pace}</span><span class="metric-unit">/km</span></div>
+                    <div>
+                        <div class="race-name">${racePrediction.name}</div>
                         <div class="race-time"><span class="metric-num">${secondsToTime(racePrediction.totalSeconds)}</span></div>
+                    </div>
+                    <div class="race-details">
+                        <div class="race-pace" style="text-align: right;">
+                            <div><span class="metric-num">${racePrediction.pace}</span><span class="metric-unit">/km</span></div>
+                            <div class="metric-sub-value" style="font-size: 12px; margin-top: 1px;"><span class="metric-num">${racePrediction.paceMiles}</span><span class="metric-unit">/mi</span></div>
+                        </div>
                     </div>
                 </div>
             `;
@@ -311,15 +321,15 @@ function handleCopy(e) {
         const { timeInput, thresholdPace, zones, races } = currentResults;
         const currentDate = new Date().toLocaleDateString();
         text = `Maratona - ZONE CALCULATOR - ${currentDate}\n\n`;
-        text += `10K Time: ${timeInput}\n`;
-        text += `Threshold Pace: ${secondsToPace(thresholdPace)}/km\n\n`;
+        text += `10K (6.21 mi) Time: ${timeInput}\n`;
+        text += `Threshold Pace: ${secondsToPace(thresholdPace)}/km (${secondsToPace(thresholdPace * 1.60934)}/mi)\n\n`;
         text += `TRAINING ZONES\n`;
         zones.forEach(z => {
-            text += `${z.name}: ${z.lower} – ${z.upper} — ${z.description}\n`;
+            text += `${z.name}: ${z.lower} – ${z.upper}/km (${z.lowerMiles} – ${z.upperMiles}/mi) — ${z.description}\n`;
         });
         text += `\nRACE PREDICTIONS\n`;
         races.forEach(r => {
-            text += `${r.name}: ${r.pace}/km (${secondsToTime(r.totalSeconds)})\n`;
+            text += `${r.name}: ${r.pace}/km (${r.paceMiles}/mi) (${secondsToTime(r.totalSeconds)})\n`;
         });
     } else if (currentResults.mode === 'pace') {
         const { distance, distanceLabel, distanceMiles, time, pace, paceMinMile, splits, speedKmH, speedMS, speedMpH } = currentResults;

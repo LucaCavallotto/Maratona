@@ -129,9 +129,9 @@
 .zone-header {
     display: flex;
     justify-content: space-between;
-    align-items: baseline;
+    align-items: center;
     gap: 12px;
-    margin-bottom: 8px;
+    margin-bottom: 0px;
 }
 
 .zone-name,
@@ -156,6 +156,7 @@
     font-weight: 400;
     line-height: 1.5;
     color: var(--text-secondary);
+    margin-top: 4px;
 }
 
 .race-card {
@@ -172,7 +173,7 @@
     font-family: var(--font-sans);
     font-size: 13px;
     font-weight: 400;
-    margin-top: 2px;
+    margin-top: 4px;
     color: var(--text-secondary);
     /* Implicitly inherited usually, but good to set */
 }
