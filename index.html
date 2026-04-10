@@ -59,7 +59,8 @@
                         <option value="converter">Km-Mile Converter</option>
                     </select>
 
-                    <p class="input-hint" id="hintZone">Enter your recent 10K (6.21 mi) time recorded at a steady, maximal effort
+                    <p class="input-hint" id="hintZone">Enter your recent 10K (6.21 mi) time recorded at a steady,
+                        maximal effort
                         (e.g., 00:44:30).</p>
                     <p class="input-hint hidden" id="hintPace">Enter the distance and total time to calculate your
                         average pace (e.g., 10 km, 00:45:00).</p>
@@ -76,7 +77,6 @@
                         <label class="label" for="time10k">10K (6.21 mi) Time</label>
                         <input type="text" id="time10k" name="time10k" class="input-field" placeholder="HH:MM:SS">
                     </div>
-                    <div class="error-text" id="errorZone">Invalid format. Use MM:SS or HH:MM:SS</div>
                 </div>
 
                 <div class="calculator-body hidden" id="paceInputs">
@@ -121,7 +121,6 @@
                         <label class="label" for="timePace">Time</label>
                         <input type="text" id="timePace" name="time" class="input-field" placeholder="HH:MM:SS">
                     </div>
-                    <div class="error-text" id="errorPace">Invalid input. Check distance and time format</div>
                 </div>
 
                 <div class="calculator-body hidden" id="timeInputs">
@@ -166,7 +165,6 @@
                         <label class="label" for="paceTime">Pace per km</label>
                         <input type="text" id="paceTime" name="pace" class="input-field" placeholder="MM:SS">
                     </div>
-                    <div class="error-text" id="errorTime">Invalid input. Check distance and pace format</div>
                 </div>
 
                 <div class="calculator-body hidden" id="distanceInputs">
@@ -178,7 +176,6 @@
                         <label class="label" for="paceDistance">Pace per km</label>
                         <input type="text" id="paceDistance" name="pace" class="input-field" placeholder="MM:SS">
                     </div>
-                    <div class="error-text" id="errorDistance">Invalid input. Check time and pace format</div>
                 </div>
 
                 <div class="calculator-body hidden" id="converterInputs">
@@ -213,18 +210,22 @@
                             </div>
                         </div>
                     </div>
-                    <div class="error-text" id="errorConverter">Invalid input format</div>
                 </div>
 
             </div>
-
-            <div class="success-text" id="successMsg">Copied results to clipboard</div>
 
             <div class="button-group">
                 <button class="btn btn-primary" id="calculateBtn">Calculate</button>
                 <button class="btn btn-secondary" id="resetBtn" disabled>Reset</button>
                 <button class="btn btn-secondary" id="copyBtn" disabled>Copy</button>
             </div>
+            
+            <div class="error-text" id="errorZone">Invalid format. Use MM:SS or HH:MM:SS</div>
+            <div class="error-text" id="errorPace">Invalid input. Check distance and time format</div>
+            <div class="error-text" id="errorTime">Invalid input. Check distance and pace format</div>
+            <div class="error-text" id="errorDistance">Invalid input. Check time and pace format</div>
+            <div class="error-text" id="errorConverter">Invalid input format</div>
+            <div class="success-text" id="successMsg">Copied results to clipboard</div>
         </aside>
 
         <main class="main-content">

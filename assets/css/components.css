@@ -21,19 +21,20 @@
 
 .error-text {
     font-size: 13px;
-    font-weight: 400;
-    margin-top: 8px;
+    font-weight: 500;
+    margin-top: 24px;
     display: none;
     color: var(--error-color);
+    text-align: center;
 }
 
 .success-text {
     font-size: 13px;
-    font-weight: 400;
-    margin-top: 8px;
+    font-weight: 500;
+    margin-top: 24px;
     color: var(--success-color);
     display: none;
-    /* hidden by default */
+    text-align: center;
 }
 
 /* Inputs & Form Elements */
