@@ -173,8 +173,8 @@ async function handleCalculate(e) {
 
         renderPaceTimeResults(document.getElementById('paceTimeResults'), [
             { label: 'Distance', value: { num: distanceValue, unit: ' km' }, subValue: { num: payload.distanceMiles, unit: ' mi' } },
-            { label: 'Pace', value: { num: paceString, unit: '/km' }, subValue: { num: payload.paceMinMile, unit: '/mi' } },
             { label: 'Total Time', value: { num: payload.totalTime, unit: '' } },
+            { label: 'Pace', value: { num: paceString, unit: '/km' }, subValue: { num: payload.paceMinMile, unit: '/mi' } },
             { label: 'Speed', value: { num: payload.speedKmH, unit: ' km/h' }, subValue: [{ num: payload.speedMS, unit: ' m/s' }, { num: payload.speedMpH, unit: ' mph' }] }
         ], payload.splits);
 
@@ -186,9 +186,9 @@ async function handleCalculate(e) {
         UIState.currentResults = { mode: 'distance', time: timeString, pace: paceString, distance: payload.distanceValue, distanceLabel: payload.distanceLabel, distanceMiles: payload.distanceMiles, paceMinMile: payload.paceMinMile, speedKmH: payload.speedKmH, speedMS: payload.speedMS, speedMpH: payload.speedMpH, splits: payload.splits };
 
         renderPaceTimeResults(document.getElementById('paceTimeResults'), [
+            { label: 'Distance', value: { num: payload.distanceValue.toFixed(2), unit: ' km' }, subValue: { num: payload.distanceMiles, unit: ' mi' } },
             { label: 'Total Time', value: { num: timeString, unit: '' } },
             { label: 'Pace', value: { num: paceString, unit: '/km' }, subValue: { num: payload.paceMinMile, unit: '/mi' } },
-            { label: 'Distance', value: { num: payload.distanceValue.toFixed(2), unit: ' km' }, subValue: { num: payload.distanceMiles, unit: ' mi' } },
             { label: 'Speed', value: { num: payload.speedKmH, unit: ' km/h' }, subValue: [{ num: payload.speedMS, unit: ' m/s' }, { num: payload.speedMpH, unit: ' mph' }] }
         ], payload.splits);
 
@@ -341,8 +341,8 @@ function handleCopy(e) {
         const { distanceLabel, distanceMiles, pace, paceMinMile, totalTime, splits, speedKmH, speedMS, speedMpH } = currentResults;
         text = `Maratona - TIME CALCULATOR\n\n`;
         text += `Distance: ${distanceLabel} (${distanceMiles} mi)\n`;
-        text += `Pace: ${pace}/km (${paceMinMile}/mi)\n`;
         text += `Total Time: ${totalTime}\n`;
+        text += `Pace: ${pace}/km (${paceMinMile}/mi)\n`;
         text += `Speed: ${speedKmH} km/h (${speedMS} m/s | ${speedMpH} mph)\n`;
         if (splits) {
             text += `\nSPLITS\n`;
@@ -355,9 +355,9 @@ function handleCopy(e) {
     } else if (currentResults.mode === 'distance') {
         const { time, pace, paceMinMile, distanceLabel, distanceMiles, splits, speedKmH, speedMS, speedMpH } = currentResults;
         text = `Maratona - DISTANCE CALCULATOR\n\n`;
+        text += `Distance: ${distanceLabel} (${distanceMiles} mi)\n`;
         text += `Total Time: ${time}\n`;
         text += `Pace: ${pace}/km (${paceMinMile}/mi)\n`;
-        text += `Distance: ${distanceLabel} (${distanceMiles} mi)\n`;
         text += `Speed: ${speedKmH} km/h (${speedMS} m/s | ${speedMpH} mph)\n`;
         if (splits) {
             text += `\nSPLITS\n`;
