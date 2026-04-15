@@ -377,7 +377,8 @@
     position: absolute;
     top: 30px;
     right: 32px;
-    z-index: 500; /* Must be higher than custom-dropdown (200) */
+    z-index: 500;
+    /* Must be higher than custom-dropdown (200) */
     width: 38px;
     height: 38px;
     border: none;
@@ -394,10 +395,11 @@
     border: 1px solid var(--card-border);
 }
 
-.btn-flip svg {
-    width: 18px;
-    height: 18px;
-    display: block;
+.btn-flip i {
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .btn-flip:hover {
@@ -460,7 +462,8 @@
     transition: background 0.2s;
     /* Webkit progress fill via a CSS gradient trick */
     background-image: linear-gradient(var(--btn-primary-bg), var(--btn-primary-bg));
-    background-size: 50% 100%; /* overridden via JS inline style */
+    background-size: 50% 100%;
+    /* overridden via JS inline style */
     background-repeat: no-repeat;
 }
 
@@ -534,6 +537,15 @@
 }
 
 @keyframes livePulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50%       { opacity: 0.4; transform: scale(0.7); }
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.4;
+        transform: scale(0.7);
+    }
 }

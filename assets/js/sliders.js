@@ -190,6 +190,7 @@ export function syncSlidersToFront() {
 
 /** Which slider was last touched — used to decide which value is "fixed" */
 let lastTouched = 'pace'; // 'distance' | 'time' | 'pace'
+let isSliderInteracted = false;
 
 /**
  * Recompute the "third" variable and update slider + output.
@@ -200,6 +201,7 @@ let lastTouched = 'pace'; // 'distance' | 'time' | 'pace'
  */
 function recomputeSliders(changed) {
     lastTouched = changed;
+    isSliderInteracted = true;
 
     let { distKm, timeMins, paceSecs } = readSliders();
 
@@ -296,6 +298,7 @@ export const isFlipped = () => flipper()?.classList.contains('flipped');
 
 export function flipToBack() {
     if (isFlipped()) return;
+    isSliderInteracted = false; // Reset interaction flag when entering sliders
     syncFrontToSliders();
     flipper().classList.add('flipped');
     // If already calculated, run slider calc immediately for live preview
@@ -306,8 +309,14 @@ export function flipToBack() {
 
 export function flipToFront() {
     if (!isFlipped()) return;
-    syncSlidersToFront();
+    
+    // Only sync back if the user actually modified something on the sliders side
+    if (isSliderInteracted) {
+        syncSlidersToFront();
+    }
+    
     flipper().classList.remove('flipped');
+    isSliderInteracted = false;
 }
 
 // ──────────────────────────────────────────────────────────
