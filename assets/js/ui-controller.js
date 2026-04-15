@@ -249,8 +249,8 @@ export function showResultsGrid(appLayout) {
     appLayout.classList.add('results-ready');
     UIState.isCalculated = true;
 
-    document.getElementById('copyBtn').disabled = false;
-    document.getElementById('resetBtn').disabled = false;
+    document.querySelectorAll('.copyBtn').forEach(btn => btn.disabled = false);
+    document.querySelectorAll('.resetBtn').forEach(btn => btn.disabled = false);
 
     // Show live badge if on the back sidebar
     const liveBadge = document.getElementById('liveBadge');
@@ -350,9 +350,9 @@ export function resetUI(skipLayoutReset = false) {
         resetResultsDisplay();
     }
 
-    document.getElementById('copyBtn').disabled = true;
-    document.getElementById('resetBtn').disabled = true;
-    document.getElementById('calculateBtn').disabled = false;
+    document.querySelectorAll('.copyBtn').forEach(btn => btn.disabled = true);
+    document.querySelectorAll('.resetBtn').forEach(btn => btn.disabled = true);
+    document.querySelectorAll('.calculateBtn').forEach(btn => btn.disabled = false);
 
     UIState.currentResults = null;
     UIState.isCalculated = false;

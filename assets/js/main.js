@@ -305,23 +305,25 @@ async function handleReset(e) {
 
     const appLayout = document.querySelector('.app-layout');
 
-    // Fade out results first
-    if (appLayout && appLayout.classList.contains('results-ready')) {
-        await clearOldResults(appLayout);
+    try {
+        // Fade out results first
+        if (appLayout && appLayout.classList.contains('results-ready')) {
+            await clearOldResults(appLayout);
+        }
+
+        // Collapse results container
+        resetResultsDisplay();
+
+        // Slide layout back to center
+        if (appLayout && appLayout.classList.contains('state-results')) {
+            appLayout.classList.remove('state-results');
+            // Wait for the slide transition to complete
+            await new Promise(r => setTimeout(r, 600));
+        }
+    } finally {
+        isAnimatingReset = false;
+        resetUI();
     }
-
-    // Collapse results container
-    resetResultsDisplay();
-
-    // Slide layout back to center
-    if (appLayout && appLayout.classList.contains('state-results')) {
-        appLayout.classList.remove('state-results');
-        // Wait for the slide transition to complete
-        await new Promise(r => setTimeout(r, 600));
-    }
-
-    isAnimatingReset = false;
-    resetUI();
 }
 
 function handleCopy(e) {
@@ -476,23 +478,27 @@ document.addEventListener('DOMContentLoaded', () => {
         const isInputFocus = ['input', 'textarea', 'select'].includes(targetTag);
 
         if (e.key === 'Enter') {
-            const calcBtn = document.getElementById('calculateBtn');
+            const calcBtn = document.querySelectorAll('.calculateBtn')[0];
             if (calcBtn && !calcBtn.disabled) {
-                e.preventDefault(); // Prevent default form submission or other unintended actions
+                e.preventDefault(); 
 
-                // Visual feedback
-                calcBtn.classList.add('active-shortcut');
-                setTimeout(() => calcBtn.classList.remove('active-shortcut'), 200);
+                // Visual feedback on all calculate buttons
+                document.querySelectorAll('.calculateBtn').forEach(btn => {
+                    btn.classList.add('active-shortcut');
+                    setTimeout(() => btn.classList.remove('active-shortcut'), 200);
+                });
 
                 handleCalculate(e);
             }
         } else if (e.key && e.key.toLowerCase() === 'r' && !isInputFocus) {
-            const resetBtn = document.getElementById('resetBtn');
+            const resetBtn = document.querySelectorAll('.resetBtn')[0];
             if (resetBtn && !resetBtn.disabled) {
                 e.preventDefault();
-                // Visual feedback
-                resetBtn.classList.add('active-shortcut');
-                setTimeout(() => resetBtn.classList.remove('active-shortcut'), 200);
+                // Visual feedback on all reset buttons
+                document.querySelectorAll('.resetBtn').forEach(btn => {
+                    btn.classList.add('active-shortcut');
+                    setTimeout(() => btn.classList.remove('active-shortcut'), 200);
+                });
 
                 handleReset(e);
             }

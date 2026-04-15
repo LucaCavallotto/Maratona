@@ -282,8 +282,8 @@ async function runSliderCalculation() {
         showResultsGrid(appLayout);
 
         // Enable copy/reset buttons
-        document.getElementById('copyBtn').disabled  = false;
-        document.getElementById('resetBtn').disabled = false;
+        document.querySelectorAll('.copyBtn').forEach(btn => btn.disabled = false);
+        document.querySelectorAll('.resetBtn').forEach(btn => btn.disabled = false);
 
     } catch (err) {
         console.warn('[Slider calc error]', err);
