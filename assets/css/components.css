@@ -61,7 +61,7 @@
 .custom-dropdown-toggle:focus,
 .custom-dropdown-toggle.open {
     background-color: var(--input-focus-bg);
-    box-shadow: 0 0 0 3px var(--card-border);
+    border-color: var(--btn-primary-bg);
 }
 
 .input-field::placeholder {
@@ -232,8 +232,7 @@
 
 .custom-dropdown-toggle.open {
     background-color: var(--input-focus-bg);
-    box-shadow: 0 0 0 3px var(--card-border);
-    /* Subtle ring effect using card-border as a proxy for a neutral highlight */
+    border-color: var(--btn-primary-bg);
 }
 
 .custom-dropdown-toggle.open::after {
@@ -258,7 +257,7 @@
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border: 1px solid var(--dropdown-border);
-    box-shadow: 0 10px 25px -5px var(--dropdown-shadow), 0 8px 10px -6px var(--dropdown-shadow);
+    box-shadow: none;
     padding: 4px;
 }
 
@@ -335,13 +334,14 @@
     background-color: var(--bg-container);
     /* Usually white or dark grey */
     color: var(--text-primary);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    box-shadow: none;
+    border: 1px solid var(--card-border);
 }
 
 .btn:active,
 .btn.active-shortcut {
     transform: translateY(1px);
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    box-shadow: none;
 }
 
 @keyframes dropdownEnter {
@@ -365,5 +365,166 @@
     to {
         opacity: 1;
         transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+/* ============================================================
+   Flip Card – Sidebar
+   ============================================================ */
+
+/* Flip trigger button */
+.btn-flip {
+    position: absolute;
+    top: 30px;
+    right: 32px;
+    z-index: 500;
+    /* Must be higher than custom-dropdown (200) */
+    width: 38px;
+    height: 38px;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--card-bg);
+    color: var(--text-primary);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 0;
+    box-shadow: none;
+    border: 1px solid var(--card-border);
+}
+
+.btn-flip i {
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-flip:hover {
+    background-color: var(--btn-primary-bg);
+    color: var(--btn-primary-text);
+    transform: rotate(180deg) scale(1.1);
+}
+
+.btn-flip:active {
+    transform: rotate(180deg) scale(0.95);
+}
+
+/* ============================================================
+   Slider Panel Styles
+   ============================================================ */
+
+.slider-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.slider-group {
+    margin-bottom: 28px;
+}
+
+.slider-label-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 14px;
+}
+
+.slider-label-row .label {
+    margin-bottom: 0;
+}
+
+.slider-output {
+    font-family: var(--font-mono);
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text-header);
+    letter-spacing: -0.01em;
+    background-color: var(--input-bg);
+    padding: 3px 10px;
+    border-radius: 8px;
+    white-space: nowrap;
+}
+
+/* Range input — full custom styling */
+.form-range {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 6px;
+    background: var(--divider-color);
+    border-radius: 6px;
+    outline: none;
+    cursor: pointer;
+    transition: background 0.2s;
+    /* Webkit progress fill via a CSS gradient trick */
+    background-image: linear-gradient(var(--btn-primary-bg), var(--btn-primary-bg));
+    background-size: 50% 100%;
+    /* overridden via JS inline style */
+    background-repeat: no-repeat;
+}
+
+/* Thumb – Chrome / Safari */
+.form-range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--btn-primary-bg);
+    border: 3px solid var(--bg-container);
+    box-shadow: none;
+    cursor: pointer;
+    transition: transform 0.15s ease;
+}
+
+.form-range::-webkit-slider-thumb:hover {
+    transform: scale(1.15);
+    box-shadow: none;
+}
+
+.form-range::-webkit-slider-thumb:active {
+    transform: scale(1.25);
+}
+
+/* Thumb – Firefox */
+.form-range::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--btn-primary-bg);
+    border: 3px solid var(--bg-container);
+    box-shadow: none;
+    cursor: pointer;
+    transition: transform 0.15s ease;
+}
+
+.form-range::-moz-range-thumb:hover {
+    transform: scale(1.15);
+}
+
+/* Firefox track fill */
+.form-range::-moz-range-progress {
+    background: var(--btn-primary-bg);
+    height: 6px;
+    border-radius: 6px;
+}
+
+
+
+@keyframes livePulse {
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.4;
+        transform: scale(0.7);
     }
 }

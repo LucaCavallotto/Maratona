@@ -27,6 +27,7 @@ Instantly convert distances and paces between kilometers and miles.
     -   Press **`Enter`** at any time to calculate your results.
     -   Press **`R`** (when not typing in an input) to instantly reset the calculator and hide results.
     -   Press **`C`** (when not typing in an input) to copy your formatted calculation results to the clipboard.
+    -   Press **`F`** (when not typing in an input) to flip between the standard form and interactive sliders (for Pace, Time, and Distance modes).
     -   **`Arrow Keys`** + **`Enter`** / **`Escape`** can be used to fully navigate and select options within the dropdown menus.
 -   **Race Predictions:** Estimates your potential performance across various distances.
 -   **Split Times:** Automatically generates 1km split tables for pace, time, and distance calculations.

@@ -23,34 +23,42 @@ import {
     UIState,
     resetResultsDisplay
 } from './ui-controller.js';
+import { initSliders, updateFlipButtonVisibility, flipToFront, flipToBack, isFlipped, syncSlidersToFront, syncFrontToSliders } from './sliders.js';
 
 // Validation Decoupler
 function validateInputsForMode(mode) {
+    const showError = (id) => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = 'block';
+        const elBack = document.getElementById(id + 'Back');
+        if (elBack) elBack.style.display = 'block';
+    };
+
     if (mode === 'zone') {
         const timeInput = normalizeInput(document.getElementById('time10k').value.trim());
         if (!validateTime(timeInput)) {
-            document.getElementById('errorZone').style.display = 'block';
+            showError('errorZone');
             return false;
         }
     } else if (mode === 'pace') {
         const distanceValue = parseFloat(normalizeInput(document.getElementById('distancePace').value.trim()));
         const timeString = normalizeInput(document.getElementById('timePace').value.trim());
         if (isNaN(distanceValue) || distanceValue <= 0 || !validateTime(timeString)) {
-            document.getElementById('errorPace').style.display = 'block';
+            showError('errorPace');
             return false;
         }
     } else if (mode === 'time') {
         const distanceValue = parseFloat(normalizeInput(document.getElementById('distanceTime').value.trim()));
         const paceString = normalizeInput(document.getElementById('paceTime').value.trim());
         if (isNaN(distanceValue) || distanceValue <= 0 || !validateTime(paceString, false)) {
-            document.getElementById('errorTime').style.display = 'block';
+            showError('errorTime');
             return false;
         }
     } else if (mode === 'distance') {
         const timeString = normalizeInput(document.getElementById('timeDistance').value.trim());
         const paceString = normalizeInput(document.getElementById('paceDistance').value.trim());
         if (!validateTime(timeString) || !validateTime(paceString, false)) {
-            document.getElementById('errorDistance').style.display = 'block';
+            showError('errorDistance');
             return false;
         }
     } else if (mode === 'converter') {
@@ -59,12 +67,12 @@ function validateInputsForMode(mode) {
         if (conversionType === 'distance') {
             const numericValue = parseFloat(inputString);
             if (isNaN(numericValue) || numericValue <= 0) {
-                document.getElementById('errorConverter').style.display = 'block';
+                showError('errorConverter');
                 return false;
             }
         } else {
             if (!validateTime(inputString, false)) {
-                document.getElementById('errorConverter').style.display = 'block';
+                showError('errorConverter');
                 return false;
             }
         }
@@ -76,9 +84,14 @@ function validateInputsForMode(mode) {
 async function handleCalculate(e) {
     if (e) e.preventDefault();
 
-    // UX Fix: Force blur on any active input to dismiss keyboard and enable global R/C shortcuts
+    // Force blur on any active input
     if (document.activeElement && document.activeElement.blur) {
         document.activeElement.blur();
+    }
+
+    // Sync sliders TO front inputs before calculation if we are on the back panel
+    if (isFlipped()) {
+        syncSlidersToFront();
     }
 
     const mode = document.getElementById('calcMode').value;
@@ -91,11 +104,11 @@ async function handleCalculate(e) {
     }
 
     document.getElementById('successMsg').style.display = 'none';
-    document.getElementById('copyBtn').disabled = true;
-    document.getElementById('resetBtn').disabled = true;
+    document.querySelectorAll('.copyBtn').forEach(btn => btn.disabled = true);
+    document.querySelectorAll('.resetBtn').forEach(btn => btn.disabled = true);
 
     // Trigger Spinner
-    setLoadingState(true, 'calculateBtn');
+    setLoadingState(true);
 
     // UI Animations Staggering
     await clearOldResults(appLayout);
@@ -274,7 +287,7 @@ async function handleCalculate(e) {
     }
 
     // Trigger Fade-In Response
-    setLoadingState(false, 'calculateBtn');
+    setLoadingState(false);
     showResultsGrid(appLayout);
 }
 
@@ -286,29 +299,31 @@ async function handleReset(e) {
 
     isAnimatingReset = true;
 
-    document.getElementById('copyBtn').disabled = true;
-    document.getElementById('resetBtn').disabled = true;
-    document.getElementById('calculateBtn').disabled = true;
+    document.querySelectorAll('.copyBtn').forEach(btn => btn.disabled = true);
+    document.querySelectorAll('.resetBtn').forEach(btn => btn.disabled = true);
+    document.querySelectorAll('.calculateBtn').forEach(btn => btn.disabled = true);
 
     const appLayout = document.querySelector('.app-layout');
 
-    // Fade out results first
-    if (appLayout && appLayout.classList.contains('results-ready')) {
-        await clearOldResults(appLayout);
+    try {
+        // Fade out results first
+        if (appLayout && appLayout.classList.contains('results-ready')) {
+            await clearOldResults(appLayout);
+        }
+
+        // Collapse results container
+        resetResultsDisplay();
+
+        // Slide layout back to center
+        if (appLayout && appLayout.classList.contains('state-results')) {
+            appLayout.classList.remove('state-results');
+            // Wait for the slide transition to complete
+            await new Promise(r => setTimeout(r, 600));
+        }
+    } finally {
+        isAnimatingReset = false;
+        resetUI();
     }
-
-    // Collapse results container
-    resetResultsDisplay();
-
-    // Slide layout back to center
-    if (appLayout && appLayout.classList.contains('state-results')) {
-        appLayout.classList.remove('state-results');
-        // Wait for the slide transition to complete
-        await new Promise(r => setTimeout(r, 600));
-    }
-
-    isAnimatingReset = false;
-    resetUI();
 }
 
 function handleCopy(e) {
@@ -401,16 +416,13 @@ function handleCopy(e) {
 document.addEventListener('DOMContentLoaded', () => {
     initCustomDropdowns();
     updateDistanceInput(document.getElementById('calcMode').value);
+    initSliders();
+    updateFlipButtonVisibility(document.getElementById('calcMode').value);
 
     // Event Attachment Architecture
-    const calcBtn = document.getElementById('calculateBtn');
-    if (calcBtn) calcBtn.addEventListener('click', handleCalculate);
-
-    const resetBtn = document.getElementById('resetBtn');
-    if (resetBtn) resetBtn.addEventListener('click', handleReset);
-
-    const copyBtn = document.getElementById('copyBtn');
-    if (copyBtn) copyBtn.addEventListener('click', handleCopy);
+    document.querySelectorAll('.calculateBtn').forEach(btn => btn.addEventListener('click', handleCalculate));
+    document.querySelectorAll('.resetBtn').forEach(btn => btn.addEventListener('click', handleReset));
+    document.querySelectorAll('.copyBtn').forEach(btn => btn.addEventListener('click', handleCopy));
 
     // Dropdown Form Triggers
     document.getElementById('calcMode').addEventListener('change', async function () {
@@ -418,15 +430,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const appLayout = document.querySelector('.app-layout');
         const hasResults = appLayout && (appLayout.classList.contains('state-results') || appLayout.classList.contains('results-ready'));
 
+        // Always flip back to front when mode changes
+        flipToFront();
         switchCalcMode(newMode, hasResults);
+        updateFlipButtonVisibility(newMode);
 
         if (hasResults) {
             if (isAnimatingReset) return;
             isAnimatingReset = true;
 
-            document.getElementById('copyBtn').disabled = true;
-            document.getElementById('resetBtn').disabled = true;
-            document.getElementById('calculateBtn').disabled = true;
+            document.querySelectorAll('.copyBtn').forEach(btn => btn.disabled = true);
+            document.querySelectorAll('.resetBtn').forEach(btn => btn.disabled = true);
+            document.querySelectorAll('.calculateBtn').forEach(btn => btn.disabled = true);
 
             if (appLayout.classList.contains('results-ready')) {
                 await clearOldResults(appLayout);
@@ -439,7 +454,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             isAnimatingReset = false;
-            document.getElementById('calculateBtn').disabled = false;
+            document.querySelectorAll('.calculateBtn').forEach(btn => btn.disabled = false);
         }
     });
 
@@ -460,38 +475,55 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('keydown', function (e) {
         // Only ignore R and C if user is typing in an input or textarea
         const targetTag = e.target.tagName ? e.target.tagName.toLowerCase() : '';
-        const isInputFocus = targetTag === 'input' || targetTag === 'textarea';
+        const isInputFocus = ['input', 'textarea', 'select'].includes(targetTag);
 
         if (e.key === 'Enter') {
-            const calcBtn = document.getElementById('calculateBtn');
+            const calcBtn = document.querySelectorAll('.calculateBtn')[0];
             if (calcBtn && !calcBtn.disabled) {
-                e.preventDefault(); // Prevent default form submission or other unintended actions
+                e.preventDefault(); 
 
-                // Visual feedback
-                calcBtn.classList.add('active-shortcut');
-                setTimeout(() => calcBtn.classList.remove('active-shortcut'), 200);
+                // Visual feedback on all calculate buttons
+                document.querySelectorAll('.calculateBtn').forEach(btn => {
+                    btn.classList.add('active-shortcut');
+                    setTimeout(() => btn.classList.remove('active-shortcut'), 200);
+                });
 
                 handleCalculate(e);
             }
         } else if (e.key && e.key.toLowerCase() === 'r' && !isInputFocus) {
-            const resetBtn = document.getElementById('resetBtn');
+            const resetBtn = document.querySelectorAll('.resetBtn')[0];
             if (resetBtn && !resetBtn.disabled) {
                 e.preventDefault();
-                // Visual feedback
-                resetBtn.classList.add('active-shortcut');
-                setTimeout(() => resetBtn.classList.remove('active-shortcut'), 200);
+                // Visual feedback on all reset buttons
+                document.querySelectorAll('.resetBtn').forEach(btn => {
+                    btn.classList.add('active-shortcut');
+                    setTimeout(() => btn.classList.remove('active-shortcut'), 200);
+                });
 
                 handleReset(e);
             }
         } else if (e.key && e.key.toLowerCase() === 'c' && !isInputFocus) {
-            const copyBtn = document.getElementById('copyBtn');
+            const copyBtn = document.querySelectorAll('.copyBtn')[0]; // Target one of the copy buttons
             if (copyBtn && !copyBtn.disabled) {
                 e.preventDefault();
-                // Visual feedback
-                copyBtn.classList.add('active-shortcut');
-                setTimeout(() => copyBtn.classList.remove('active-shortcut'), 200);
+                // Visual feedback on all copy buttons
+                document.querySelectorAll('.copyBtn').forEach(btn => {
+                    btn.classList.add('active-shortcut');
+                    setTimeout(() => btn.classList.remove('active-shortcut'), 200);
+                });
 
                 handleCopy(e);
+            }
+        } else if (e.key && e.key.toLowerCase() === 'f' && !isInputFocus) {
+            // Check if flip is allowed for current mode
+            const mode = document.getElementById('calcMode').value;
+            if (['pace', 'time', 'distance'].includes(mode)) {
+                e.preventDefault();
+                if (isFlipped()) {
+                    flipToFront();
+                } else {
+                    flipToBack();
+                }
             }
         }
     });
