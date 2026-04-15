@@ -14,33 +14,51 @@ export function initCustomDropdowns() {
     dropdowns.forEach(dropdown => {
         const toggle = dropdown.querySelector('.custom-dropdown-toggle');
         const menu = dropdown.querySelector('.custom-dropdown-menu');
-        const hiddenSelect = dropdown.nextElementSibling;
+        
+        let focusedItemIndex = -1;
+        const items = Array.from(menu.querySelectorAll('.custom-dropdown-item'));
+
+        // Find selecting standard <select> element that's normally hidden
+        const hiddenSelect = dropdown.nextElementSibling?.tagName === 'SELECT' 
+                             ? dropdown.nextElementSibling 
+                             : document.getElementById(dropdown.id.replace('Dropdown', ''));
 
         toggle.addEventListener('click', function (e) {
+            e.preventDefault();
             e.stopPropagation();
 
+            const isOpening = !menu.classList.contains('show');
+            
+            // Close all other dropdowns
             document.querySelectorAll('.custom-dropdown-menu.show').forEach(otherMenu => {
                 if (otherMenu !== menu) {
                     otherMenu.classList.remove('show');
-                    if (otherMenu.parentElement) {
-                        otherMenu.parentElement.querySelector('.custom-dropdown-toggle').classList.remove('open');
-                    }
+                    otherMenu.parentElement.querySelector('.custom-dropdown-toggle').classList.remove('open');
                 }
             });
 
-            const isOpening = !menu.classList.contains('show');
-            menu.classList.toggle('show');
-            toggle.classList.toggle('open');
+            menu.classList.toggle('show', isOpening);
+            toggle.classList.toggle('open', isOpening);
             toggle.setAttribute('aria-expanded', isOpening);
 
             if (isOpening) {
-                toggle.focus(); // Force focus capture when opening via mouse
-            }
+                // Focus the toggle and highlight existing selection
+                toggle.focus();
+                focusedItemIndex = items.findIndex(item => item.classList.contains('selected'));
+                if (focusedItemIndex === -1 && items.length > 0) focusedItemIndex = 0;
+                
+                items.forEach((item, index) => {
+                    item.classList.toggle('is-highlighted', index === focusedItemIndex);
+                    if (index === focusedItemIndex) {
+                        setTimeout(() => item.scrollIntoView({ block: 'nearest' }), 10);
+                    }
+                });
 
-            if (window.innerWidth <= 640) {
-                if (isOpening) {
+                if (window.innerWidth <= 640 && overlay) {
                     overlay.classList.add('show');
-                } else {
+                }
+            } else {
+                if (window.innerWidth <= 640 && overlay) {
                     overlay.classList.remove('show');
                 }
             }
@@ -56,7 +74,7 @@ export function initCustomDropdowns() {
 
                 menu.classList.remove('show');
                 toggle.classList.remove('open');
-                overlay.classList.remove('show');
+                if(overlay) overlay.classList.remove('show');
 
                 hiddenSelect.dispatchEvent(new Event('change'));
 
@@ -68,9 +86,6 @@ export function initCustomDropdowns() {
         });
 
         // Keyboard navigation support
-        let focusedItemIndex = -1;
-        const items = Array.from(menu.querySelectorAll('.custom-dropdown-item'));
-
         // Clear keyboard focus when mouse takes over for seamless UX
         menu.addEventListener('mousemove', function () {
             if (focusedItemIndex !== -1) {
@@ -79,23 +94,7 @@ export function initCustomDropdowns() {
             }
         });
 
-        // Reset and set initial focus when opening
-        toggle.addEventListener('click', function () {
-            if (menu.classList.contains('show')) {
-                focusedItemIndex = items.findIndex(item => item.classList.contains('selected'));
-                if (focusedItemIndex === -1 && items.length > 0) focusedItemIndex = 0;
-
-                items.forEach((item, index) => {
-                    item.classList.toggle('is-highlighted', index === focusedItemIndex);
-                    if (index === focusedItemIndex) {
-                        setTimeout(() => item.scrollIntoView({ block: 'nearest' }), 10);
-                    }
-                });
-            } else {
-                items.forEach(item => item.classList.remove('is-highlighted'));
-                focusedItemIndex = -1;
-            }
-        });
+        // Removed redundant second click listener as logic is now unified above.
 
         toggle.addEventListener('keydown', function (e) {
             const isOpen = menu.classList.contains('show');
@@ -274,7 +273,7 @@ export function renderPaceTimeResults(container, metrics, splits) {
     `;
 
     const iconMap = {
-        'Distance': '<svg class="icon-svg" viewBox="0 0 24 24"><path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 10H3V8h2v4h2V8h2v4h2V8h2v4h2V8h2v8z"/></svg>',
+        'Distance': '<svg class="icon-svg" viewBox="0 0 24 24"><path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 10H3V8h2v4h2V8h2v4h2V8h2v4h2V8h2v4h2V8h2v8z"/></svg>',
         'Pace': '<svg class="icon-svg" viewBox="0 0 24 24"><path d="M15 1H9v2h6V1zm-4 13h2V8h-2v6zm8.03-6.61l1.42-1.42c-.43-.51-.9-.99-1.41-1.41l-1.42 1.42A8.962 8.962 0 0012 4c-4.97 0-9 4.03-9 9s4.02 9 9 9a8.994 8.994 0 007.03-14.61zM12 20c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/></svg>',
         'Time': '<svg class="icon-svg" viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/><path d="M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>',
         'Speed': '<svg class="icon-svg" viewBox="0 0 24 24"><path d="M2.5 11h14.8c.6 0 1.1-.5 1.1-1.1s-.5-1.1-1.1-1.1-1.1.5-1.1 1.1h-2.2c0-1.8 1.5-3.3 3.3-3.3s3.3 1.5 3.3 3.3-1.5 3.3-3.3 3.3H2.5v-2.2zm0 4.4h11.2c.6 0 1.1-.5 1.1-1.1s-.5-1.1-1.1-1.1-1.1.5-1.1 1.1H10.4c0-1.8 1.5-3.3 3.3-3.3s3.3 1.5 3.3 3.3-1.5 3.3-3.3 3.3H2.5v-2.2zm0-8.8h7.5c.6 0 1.1-.5 1.1-1.1S10.6 4.4 10 4.4s-1.1.5-1.1 1.1H6.7C6.7 3.7 8.2 2.2 10 2.2s3.3 1.5 3.3 3.3-1.5 3.3-3.3 3.3H2.5V6.6z"/></svg>',
@@ -297,17 +296,18 @@ export function renderPaceTimeResults(container, metrics, splits) {
         }
 
         return `
-        <div class="result-item">
-            <div class="metric-label">
-                ${icon}
-                ${metric.label}
+            <div class="result-item">
+                <div class="metric-label">
+                    ${icon}
+                    ${metric.label}
+                </div>
+                <div class="metric-value">
+                    <span class="metric-num">${valueNum}</span><span class="metric-unit">${valueUnit}</span>
+                    ${subValuesHtml}
+                </div>
             </div>
-            <div class="metric-value">
-                <span class="metric-num">${valueNum}</span><span class="metric-unit">${valueUnit}</span>
-                ${subValuesHtml}
-            </div>
-        </div>
-    `}).join('');
+        `;
+    }).join('');
 
     container.innerHTML = `
         <div class="result-grid">
@@ -323,6 +323,8 @@ export function renderPaceTimeResults(container, metrics, splits) {
 
     document.getElementById('results').style.display = 'block';
     container.classList.remove('hidden');
+    // Ensure parent results container is visible
+    void container.offsetHeight; 
 }
 
 export function resetUI(skipLayoutReset = false) {

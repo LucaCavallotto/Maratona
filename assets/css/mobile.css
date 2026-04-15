@@ -92,6 +92,35 @@
     .zone-card {
         padding: 16px;
     }
+
+    /* Mobile: flip via simple show/hide since 3D transforms are unreliable
+       with dropdowns/fixed modals on small screens */
+    .sidebar-flipper {
+        min-height: unset;
+        transform: none !important;
+        transition: none !important;
+    }
+
+    .sidebar-back {
+        display: none;
+        position: static;
+        transform: none;
+        padding: 0;
+    }
+
+    .sidebar-flipper.flipped .sidebar-front {
+        display: none;
+    }
+
+    .sidebar-flipper.flipped .sidebar-back {
+        display: block;
+        padding: 0;
+    }
+
+    .btn-flip {
+        top: 12px;
+        right: 12px;
+    }
 }
 
 @media (max-width: 400px) {

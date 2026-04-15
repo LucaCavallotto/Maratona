@@ -367,3 +367,173 @@
         transform: translate(-50%, -50%) scale(1);
     }
 }
+
+/* ============================================================
+   Flip Card – Sidebar
+   ============================================================ */
+
+/* Flip trigger button */
+.btn-flip {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    z-index: 500; /* Must be higher than custom-dropdown (200) */
+    width: 38px;
+    height: 38px;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--card-bg);
+    color: var(--text-primary);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--card-border);
+}
+
+.btn-flip svg {
+    width: 18px;
+    height: 18px;
+    display: block;
+}
+
+.btn-flip:hover {
+    background-color: var(--btn-primary-bg);
+    color: var(--btn-primary-text);
+    transform: rotate(180deg) scale(1.1);
+}
+
+.btn-flip:active {
+    transform: rotate(180deg) scale(0.95);
+}
+
+/* ============================================================
+   Slider Panel Styles
+   ============================================================ */
+
+.slider-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.slider-group {
+    margin-bottom: 28px;
+}
+
+.slider-label-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 14px;
+}
+
+.slider-label-row .label {
+    margin-bottom: 0;
+}
+
+.slider-output {
+    font-family: var(--font-mono);
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text-header);
+    letter-spacing: -0.01em;
+    background-color: var(--input-bg);
+    padding: 3px 10px;
+    border-radius: 8px;
+    white-space: nowrap;
+}
+
+/* Range input — full custom styling */
+.form-range {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 6px;
+    background: var(--divider-color);
+    border-radius: 6px;
+    outline: none;
+    cursor: pointer;
+    transition: background 0.2s;
+    /* Webkit progress fill via a CSS gradient trick */
+    background-image: linear-gradient(var(--btn-primary-bg), var(--btn-primary-bg));
+    background-size: 50% 100%; /* overridden via JS inline style */
+    background-repeat: no-repeat;
+}
+
+/* Thumb – Chrome / Safari */
+.form-range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--btn-primary-bg);
+    border: 3px solid var(--bg-container);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.form-range::-webkit-slider-thumb:hover {
+    transform: scale(1.15);
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.3);
+}
+
+.form-range::-webkit-slider-thumb:active {
+    transform: scale(1.25);
+}
+
+/* Thumb – Firefox */
+.form-range::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--btn-primary-bg);
+    border: 3px solid var(--bg-container);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: transform 0.15s ease;
+}
+
+.form-range::-moz-range-thumb:hover {
+    transform: scale(1.15);
+}
+
+/* Firefox track fill */
+.form-range::-moz-range-progress {
+    background: var(--btn-primary-bg);
+    height: 6px;
+    border-radius: 6px;
+}
+
+/* Live preview badge */
+.slider-live-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--success-color);
+    opacity: 0.85;
+    margin-top: 8px;
+}
+
+.live-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background-color: var(--success-color);
+    border-radius: 50%;
+    animation: livePulse 1.8s ease-in-out infinite;
+}
+
+@keyframes livePulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%       { opacity: 0.4; transform: scale(0.7); }
+}

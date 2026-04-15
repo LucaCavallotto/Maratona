@@ -23,6 +23,7 @@ import {
     UIState,
     resetResultsDisplay
 } from './ui-controller.js';
+import { initSliders, updateFlipButtonVisibility, flipToFront } from './sliders.js';
 
 // Validation Decoupler
 function validateInputsForMode(mode) {
@@ -401,6 +402,8 @@ function handleCopy(e) {
 document.addEventListener('DOMContentLoaded', () => {
     initCustomDropdowns();
     updateDistanceInput(document.getElementById('calcMode').value);
+    initSliders();
+    updateFlipButtonVisibility(document.getElementById('calcMode').value);
 
     // Event Attachment Architecture
     const calcBtn = document.getElementById('calculateBtn');
@@ -418,7 +421,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const appLayout = document.querySelector('.app-layout');
         const hasResults = appLayout && (appLayout.classList.contains('state-results') || appLayout.classList.contains('results-ready'));
 
+        // Always flip back to front when mode changes
+        flipToFront();
         switchCalcMode(newMode, hasResults);
+        updateFlipButtonVisibility(newMode);
 
         if (hasResults) {
             if (isAnimatingReset) return;
