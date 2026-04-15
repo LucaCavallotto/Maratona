@@ -74,14 +74,13 @@
         top: 40px;
         height: max-content;
         max-height: calc(100vh - 80px);
-        /* overflow-y:auto is moved to .sidebar-front/.sidebar-back so the 3D perspective is not clipped */
-        overflow: visible;
-        background-color: var(--card-bg);
-        border: 1px solid var(--card-border);
-        border-radius: 16px;
-        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+        /* Transparency allows the inner flipping card to hold the visual identity */
+        background-color: transparent;
+        border: none;
+        box-shadow: none;
         perspective: 2000px;
         z-index: 100;
+        overflow: visible;
     }
 
     .sidebar-flipper {
@@ -109,6 +108,12 @@
         padding: 32px;
         overflow-y: auto;
         max-height: 100%;
+
+        /* The 'Card' identity is now on the faces themselves */
+        background-color: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 16px;
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
     }
 
     /* Front panel is the positioning context for btn-flip */
