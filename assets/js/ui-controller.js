@@ -214,18 +214,18 @@ export function updateConverterLabel() {
     }
 }
 
-export function setLoadingState(isLoading, btnId) {
-    const calcBtn = document.getElementById(btnId);
-    if (!calcBtn) return;
-
-    if (isLoading) {
-        calcBtn.dataset.originalText = calcBtn.textContent;
-        calcBtn.innerHTML = '<span class="spinner"></span>';
-        calcBtn.disabled = true;
-    } else {
-        calcBtn.textContent = calcBtn.dataset.originalText || 'Calculate';
-        calcBtn.disabled = false;
-    }
+export function setLoadingState(isLoading) {
+    const btns = document.querySelectorAll('.calculateBtn');
+    btns.forEach(btn => {
+        if (isLoading) {
+            btn.dataset.originalText = btn.dataset.originalText || btn.textContent;
+            btn.innerHTML = '<span class="spinner"></span>';
+            btn.disabled = true;
+        } else {
+            btn.textContent = btn.dataset.originalText || 'Calculate';
+            btn.disabled = false;
+        }
+    });
 }
 
 export async function triggerSlideTransition(appLayout) {
@@ -251,6 +251,10 @@ export function showResultsGrid(appLayout) {
 
     document.getElementById('copyBtn').disabled = false;
     document.getElementById('resetBtn').disabled = false;
+
+    // Show live badge if on the back sidebar
+    const liveBadge = document.getElementById('liveBadge');
+    if (liveBadge) liveBadge.classList.remove('hidden');
 }
 
 export function renderPaceTimeResults(container, metrics, splits) {
@@ -360,6 +364,9 @@ export function resetUI(skipLayoutReset = false) {
         if (appLayout) {
             appLayout.classList.remove('state-results', 'results-ready');
         }
+        // Hide live badge on reset
+        const liveBadge = document.getElementById('liveBadge');
+        if (liveBadge) liveBadge.classList.add('hidden');
     }
 }
 

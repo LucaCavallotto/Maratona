@@ -139,4 +139,11 @@
     .race-pace {
         font-size: 13px;
     }
+
+    /* Ensure footer actions follow mobile padding */
+    .sidebar-actions {
+        padding: 24px;
+        background: var(--card-bg);
+        border-radius: 0 0 16px 16px;
+    }
 }

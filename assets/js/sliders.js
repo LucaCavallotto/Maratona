@@ -168,7 +168,7 @@ export function syncFrontToSliders() {
 // Sync: sliders → text inputs (called when flipping back to front)
 // ──────────────────────────────────────────────────────────
 
-function syncSlidersToFront() {
+export function syncSlidersToFront() {
     const { distKm, timeMins, paceSecs } = readSliders();
     const paceStr = secondsToPaceStr(paceSecs);
     const timeStr = minutesToTimeString(timeMins);
@@ -227,15 +227,15 @@ function recomputeSliders(changed) {
         paceSecs: parseFloat(sliderPace().value),
     });
 
-    // Trigger live calculation
-    runSliderCalculation();
+    // Removed runSliderCalculation() call from here — 
+    // user wants to manually click 'Calculate' to see results.
 }
 
-// ──────────────────────────────────────────────────────────
-// Run calculation from slider state → update results pane
-// ──────────────────────────────────────────────────────────
-
+// Trigger live calculation
 async function runSliderCalculation() {
+    // This is still needed for when internal slider logic wants a preview,
+    // but the actual manual calculation is now gated by the button click
+    // as per user request.
     const distKm   = parseFloat(sliderDist().value);
     const timeMins = parseFloat(sliderTime().value);
     const timeStr  = minutesToTimeString(timeMins);
@@ -292,9 +292,7 @@ async function runSliderCalculation() {
 // Flip toggle
 // ──────────────────────────────────────────────────────────
 
-function isFlipped() {
-    return flipper().classList.contains('flipped');
-}
+export const isFlipped = () => flipper()?.classList.contains('flipped');
 
 export function flipToBack() {
     if (isFlipped()) return;

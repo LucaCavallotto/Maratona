@@ -23,35 +23,42 @@ import {
     UIState,
     resetResultsDisplay
 } from './ui-controller.js';
-import { initSliders, updateFlipButtonVisibility, flipToFront } from './sliders.js';
+import { initSliders, updateFlipButtonVisibility, flipToFront, isFlipped, syncSlidersToFront, syncFrontToSliders } from './sliders.js';
 
 // Validation Decoupler
 function validateInputsForMode(mode) {
+    const showError = (id) => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = 'block';
+        const elBack = document.getElementById(id + 'Back');
+        if (elBack) elBack.style.display = 'block';
+    };
+
     if (mode === 'zone') {
         const timeInput = normalizeInput(document.getElementById('time10k').value.trim());
         if (!validateTime(timeInput)) {
-            document.getElementById('errorZone').style.display = 'block';
+            showError('errorZone');
             return false;
         }
     } else if (mode === 'pace') {
         const distanceValue = parseFloat(normalizeInput(document.getElementById('distancePace').value.trim()));
         const timeString = normalizeInput(document.getElementById('timePace').value.trim());
         if (isNaN(distanceValue) || distanceValue <= 0 || !validateTime(timeString)) {
-            document.getElementById('errorPace').style.display = 'block';
+            showError('errorPace');
             return false;
         }
     } else if (mode === 'time') {
         const distanceValue = parseFloat(normalizeInput(document.getElementById('distanceTime').value.trim()));
         const paceString = normalizeInput(document.getElementById('paceTime').value.trim());
         if (isNaN(distanceValue) || distanceValue <= 0 || !validateTime(paceString, false)) {
-            document.getElementById('errorTime').style.display = 'block';
+            showError('errorTime');
             return false;
         }
     } else if (mode === 'distance') {
         const timeString = normalizeInput(document.getElementById('timeDistance').value.trim());
         const paceString = normalizeInput(document.getElementById('paceDistance').value.trim());
         if (!validateTime(timeString) || !validateTime(paceString, false)) {
-            document.getElementById('errorDistance').style.display = 'block';
+            showError('errorDistance');
             return false;
         }
     } else if (mode === 'converter') {
@@ -60,12 +67,12 @@ function validateInputsForMode(mode) {
         if (conversionType === 'distance') {
             const numericValue = parseFloat(inputString);
             if (isNaN(numericValue) || numericValue <= 0) {
-                document.getElementById('errorConverter').style.display = 'block';
+                showError('errorConverter');
                 return false;
             }
         } else {
             if (!validateTime(inputString, false)) {
-                document.getElementById('errorConverter').style.display = 'block';
+                showError('errorConverter');
                 return false;
             }
         }
@@ -77,9 +84,14 @@ function validateInputsForMode(mode) {
 async function handleCalculate(e) {
     if (e) e.preventDefault();
 
-    // UX Fix: Force blur on any active input to dismiss keyboard and enable global R/C shortcuts
+    // Force blur on any active input
     if (document.activeElement && document.activeElement.blur) {
         document.activeElement.blur();
+    }
+
+    // Sync sliders TO front inputs before calculation if we are on the back panel
+    if (isFlipped()) {
+        syncSlidersToFront();
     }
 
     const mode = document.getElementById('calcMode').value;
@@ -92,11 +104,11 @@ async function handleCalculate(e) {
     }
 
     document.getElementById('successMsg').style.display = 'none';
-    document.getElementById('copyBtn').disabled = true;
-    document.getElementById('resetBtn').disabled = true;
+    document.querySelectorAll('.copyBtn').forEach(btn => btn.disabled = true);
+    document.querySelectorAll('.resetBtn').forEach(btn => btn.disabled = true);
 
     // Trigger Spinner
-    setLoadingState(true, 'calculateBtn');
+    setLoadingState(true);
 
     // UI Animations Staggering
     await clearOldResults(appLayout);
@@ -275,7 +287,7 @@ async function handleCalculate(e) {
     }
 
     // Trigger Fade-In Response
-    setLoadingState(false, 'calculateBtn');
+    setLoadingState(false);
     showResultsGrid(appLayout);
 }
 
@@ -287,9 +299,9 @@ async function handleReset(e) {
 
     isAnimatingReset = true;
 
-    document.getElementById('copyBtn').disabled = true;
-    document.getElementById('resetBtn').disabled = true;
-    document.getElementById('calculateBtn').disabled = true;
+    document.querySelectorAll('.copyBtn').forEach(btn => btn.disabled = true);
+    document.querySelectorAll('.resetBtn').forEach(btn => btn.disabled = true);
+    document.querySelectorAll('.calculateBtn').forEach(btn => btn.disabled = true);
 
     const appLayout = document.querySelector('.app-layout');
 
@@ -406,14 +418,9 @@ document.addEventListener('DOMContentLoaded', () => {
     updateFlipButtonVisibility(document.getElementById('calcMode').value);
 
     // Event Attachment Architecture
-    const calcBtn = document.getElementById('calculateBtn');
-    if (calcBtn) calcBtn.addEventListener('click', handleCalculate);
-
-    const resetBtn = document.getElementById('resetBtn');
-    if (resetBtn) resetBtn.addEventListener('click', handleReset);
-
-    const copyBtn = document.getElementById('copyBtn');
-    if (copyBtn) copyBtn.addEventListener('click', handleCopy);
+    document.querySelectorAll('.calculateBtn').forEach(btn => btn.addEventListener('click', handleCalculate));
+    document.querySelectorAll('.resetBtn').forEach(btn => btn.addEventListener('click', handleReset));
+    document.querySelectorAll('.copyBtn').forEach(btn => btn.addEventListener('click', handleCopy));
 
     // Dropdown Form Triggers
     document.getElementById('calcMode').addEventListener('change', async function () {
@@ -430,9 +437,9 @@ document.addEventListener('DOMContentLoaded', () => {
             if (isAnimatingReset) return;
             isAnimatingReset = true;
 
-            document.getElementById('copyBtn').disabled = true;
-            document.getElementById('resetBtn').disabled = true;
-            document.getElementById('calculateBtn').disabled = true;
+            document.querySelectorAll('.copyBtn').forEach(btn => btn.disabled = true);
+            document.querySelectorAll('.resetBtn').forEach(btn => btn.disabled = true);
+            document.querySelectorAll('.calculateBtn').forEach(btn => btn.disabled = true);
 
             if (appLayout.classList.contains('results-ready')) {
                 await clearOldResults(appLayout);
@@ -445,7 +452,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             isAnimatingReset = false;
-            document.getElementById('calculateBtn').disabled = false;
+            document.querySelectorAll('.calculateBtn').forEach(btn => btn.disabled = false);
         }
     });
 

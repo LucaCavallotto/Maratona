@@ -220,17 +220,18 @@
                     </div><!-- END .form-grid -->
 
                     <div class="button-group">
-                        <button class="btn btn-primary" id="calculateBtn">Calculate</button>
-                        <button class="btn btn-secondary" id="resetBtn" disabled>Reset</button>
-                        <button class="btn btn-secondary" id="copyBtn" disabled>Copy</button>
+                        <button class="btn btn-primary calculateBtn" id="calculateBtn">Calculate</button>
+                        <button class="btn btn-secondary resetBtn" id="resetBtn" disabled>Reset</button>
+                        <button class="btn btn-secondary copyBtn" id="copyBtn" disabled>Copy</button>
                     </div>
 
-                    <div class="error-text" id="errorZone">Invalid format. Use MM:SS or HH:MM:SS</div>
-                    <div class="error-text" id="errorPace">Invalid input. Check distance and time format</div>
-                    <div class="error-text" id="errorTime">Invalid input. Check distance and pace format</div>
-                    <div class="error-text" id="errorDistance">Invalid input. Check time and pace format</div>
-                    <div class="error-text" id="errorConverter">Invalid input format</div>
-
+                    <div class="error-container">
+                        <div class="error-text" id="errorZone">Invalid format. Use MM:SS or HH:MM:SS</div>
+                        <div class="error-text" id="errorPace">Invalid input. Check distance and time format</div>
+                        <div class="error-text" id="errorTime">Invalid input. Check distance and pace format</div>
+                        <div class="error-text" id="errorDistance">Invalid input. Check time and pace format</div>
+                        <div class="error-text" id="errorConverter">Invalid input format</div>
+                    </div>
                 </div><!-- END .sidebar-front -->
 
                 <!-- ═══════════════════════════════════ BACK SIDE -->
@@ -285,12 +286,24 @@
                                 value="300">
                         </div>
 
-                        <div class="slider-live-badge">
+                        <div class="slider-live-badge hidden" id="liveBadge">
                             <span class="live-dot"></span> Live Preview
                         </div>
 
                     </div><!-- END .slider-form -->
 
+                    <div class="button-group">
+                        <button class="btn btn-primary calculateBtn" id="calculateBtnBack">Calculate</button>
+                        <button class="btn btn-secondary resetBtn" id="resetBtnBack" disabled>Reset</button>
+                        <button class="btn btn-secondary copyBtn" id="copyBtnBack" disabled>Copy</button>
+                    </div>
+
+                    <!-- Errors shared on back face as well -->
+                    <div class="error-container">
+                        <div class="error-text" id="errorPaceBack">Invalid input. Check distance and time format</div>
+                        <div class="error-text" id="errorTimeBack">Invalid input. Check distance and pace format</div>
+                        <div class="error-text" id="errorDistanceBack">Invalid input. Check time and pace format</div>
+                    </div>
                 </div><!-- END .sidebar-back -->
 
             </div><!-- END .sidebar-flipper -->
