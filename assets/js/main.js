@@ -23,7 +23,7 @@ import {
     UIState,
     resetResultsDisplay
 } from './ui-controller.js';
-import { initSliders, updateFlipButtonVisibility, flipToFront, isFlipped, syncSlidersToFront, syncFrontToSliders } from './sliders.js';
+import { initSliders, updateFlipButtonVisibility, flipToFront, flipToBack, isFlipped, syncSlidersToFront, syncFrontToSliders } from './sliders.js';
 
 // Validation Decoupler
 function validateInputsForMode(mode) {
@@ -473,7 +473,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('keydown', function (e) {
         // Only ignore R and C if user is typing in an input or textarea
         const targetTag = e.target.tagName ? e.target.tagName.toLowerCase() : '';
-        const isInputFocus = targetTag === 'input' || targetTag === 'textarea';
+        const isInputFocus = ['input', 'textarea', 'select'].includes(targetTag);
 
         if (e.key === 'Enter') {
             const calcBtn = document.getElementById('calculateBtn');
@@ -497,14 +497,27 @@ document.addEventListener('DOMContentLoaded', () => {
                 handleReset(e);
             }
         } else if (e.key && e.key.toLowerCase() === 'c' && !isInputFocus) {
-            const copyBtn = document.getElementById('copyBtn');
+            const copyBtn = document.querySelectorAll('.copyBtn')[0]; // Target one of the copy buttons
             if (copyBtn && !copyBtn.disabled) {
                 e.preventDefault();
-                // Visual feedback
-                copyBtn.classList.add('active-shortcut');
-                setTimeout(() => copyBtn.classList.remove('active-shortcut'), 200);
+                // Visual feedback on all copy buttons
+                document.querySelectorAll('.copyBtn').forEach(btn => {
+                    btn.classList.add('active-shortcut');
+                    setTimeout(() => btn.classList.remove('active-shortcut'), 200);
+                });
 
                 handleCopy(e);
+            }
+        } else if (e.key && e.key.toLowerCase() === 'f' && !isInputFocus) {
+            // Check if flip is allowed for current mode
+            const mode = document.getElementById('calcMode').value;
+            if (['pace', 'time', 'distance'].includes(mode)) {
+                e.preventDefault();
+                if (isFlipped()) {
+                    flipToFront();
+                } else {
+                    flipToBack();
+                }
             }
         }
     });
