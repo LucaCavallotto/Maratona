@@ -252,9 +252,6 @@ export function showResultsGrid(appLayout) {
     document.querySelectorAll('.copyBtn').forEach(btn => btn.disabled = false);
     document.querySelectorAll('.resetBtn').forEach(btn => btn.disabled = false);
 
-    // Show live badge if on the back sidebar
-    const liveBadge = document.getElementById('liveBadge');
-    if (liveBadge) liveBadge.classList.remove('hidden');
 }
 
 export function renderPaceTimeResults(container, metrics, splits) {
@@ -364,9 +361,6 @@ export function resetUI(skipLayoutReset = false) {
         if (appLayout) {
             appLayout.classList.remove('state-results', 'results-ready');
         }
-        // Hide live badge on reset
-        const liveBadge = document.getElementById('liveBadge');
-        if (liveBadge) liveBadge.classList.add('hidden');
     }
 }
 

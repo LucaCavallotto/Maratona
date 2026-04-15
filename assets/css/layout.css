@@ -113,7 +113,7 @@
         background-color: var(--card-bg);
         border: 1px solid var(--card-border);
         border-radius: 16px;
-        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+        box-shadow: none;
     }
 
     /* Front panel is the positioning context for btn-flip */
