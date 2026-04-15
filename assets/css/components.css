@@ -61,7 +61,8 @@
 .custom-dropdown-toggle:focus,
 .custom-dropdown-toggle.open {
     background-color: var(--input-focus-bg);
-    border-color: var(--btn-primary-bg);
+    border-color: var(--input-border);
+    box-shadow: 0 0 0 3px var(--card-border);
 }
 
 .input-field::placeholder {
@@ -232,7 +233,6 @@
 
 .custom-dropdown-toggle.open {
     background-color: var(--input-focus-bg);
-    border-color: var(--btn-primary-bg);
 }
 
 .custom-dropdown-toggle.open::after {
@@ -256,8 +256,8 @@
     background-color: var(--dropdown-bg);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    border: 1px solid var(--dropdown-border);
-    box-shadow: none;
+    border: 1px solid var(--card-border);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     padding: 4px;
 }
 

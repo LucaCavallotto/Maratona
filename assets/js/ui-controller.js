@@ -39,6 +39,7 @@ export function initCustomDropdowns() {
 
             menu.classList.toggle('show', isOpening);
             toggle.classList.toggle('open', isOpening);
+            dropdown.classList.toggle('is-open', isOpening);
             toggle.setAttribute('aria-expanded', isOpening);
 
             if (isOpening) {
@@ -74,6 +75,7 @@ export function initCustomDropdowns() {
 
                 menu.classList.remove('show');
                 toggle.classList.remove('open');
+                dropdown.classList.remove('is-open');
                 if(overlay) overlay.classList.remove('show');
 
                 hiddenSelect.dispatchEvent(new Event('change'));
@@ -114,6 +116,7 @@ export function initCustomDropdowns() {
                     e.stopPropagation();
                     menu.classList.remove('show');
                     toggle.classList.remove('open');
+                    dropdown.classList.remove('is-open');
                     if (overlay) overlay.classList.remove('show');
                     toggle.setAttribute('aria-expanded', 'false');
                     items.forEach(item => item.classList.remove('is-highlighted'));
@@ -153,6 +156,7 @@ export function initCustomDropdowns() {
                 menu.classList.remove('show');
                 if (menu.parentElement) {
                     menu.parentElement.querySelector('.custom-dropdown-toggle').classList.remove('open');
+                    menu.parentElement.classList.remove('is-open');
                 }
                 overlay.classList.remove('show');
             });
@@ -165,6 +169,7 @@ export function initCustomDropdowns() {
                 menu.classList.remove('show');
                 if (menu.parentElement) {
                     menu.parentElement.querySelector('.custom-dropdown-toggle').classList.remove('open');
+                    menu.parentElement.classList.remove('is-open');
                 }
             });
             overlay.classList.remove('show');

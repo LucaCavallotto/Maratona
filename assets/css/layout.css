@@ -148,10 +148,6 @@
         width: 4px;
     }
 
-    .sidebar-front .button-group,
-    .sidebar-back .button-group {
-        margin-top: auto;
-    }
 
     .sidebar::-webkit-scrollbar-track {
         background: transparent;
