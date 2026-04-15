@@ -27,13 +27,12 @@
                 <div class="sidebar-front">
 
                     <!-- Flip trigger: only shown for pace/time/distance modes -->
-                    <button class="btn-flip hidden" id="btnFlipToBack"
-                            aria-label="Switch to interactive sliders"
-                            title="Interactive Sliders">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                             stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M21.5 2v6h-6"/>
-                            <path d="M21.34 15.57a10 10 0 1 1-.57-8.38"/>
+                    <button class="btn-flip hidden" id="btnFlipToBack" aria-label="Switch to interactive sliders"
+                        title="Interactive Sliders">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21.5 2v6h-6" />
+                            <path d="M21.34 15.57a10 10 0 1 1-.57-8.38" />
                         </svg>
                     </button>
 
@@ -47,22 +46,22 @@
                             <label class="label" for="calcMode">Mode</label>
                             <div class="custom-dropdown" id="calcModeDropdown">
                                 <div class="custom-dropdown-toggle" id="calcModeToggle" role="combobox"
-                                    aria-expanded="false" aria-haspopup="listbox"
-                                    aria-controls="calcModeMenu" tabindex="0">
+                                    aria-expanded="false" aria-haspopup="listbox" aria-controls="calcModeMenu"
+                                    tabindex="0">
                                     Training Zones Calculator
                                 </div>
                                 <div class="custom-dropdown-menu" id="calcModeMenu" role="listbox">
-                                    <div class="custom-dropdown-item selected" data-value="zone"
-                                        role="option" aria-selected="true">
+                                    <div class="custom-dropdown-item selected" data-value="zone" role="option"
+                                        aria-selected="true">
                                         Training Zones Calculator</div>
-                                    <div class="custom-dropdown-item" data-value="pace"
-                                        role="option" aria-selected="false">Pace Calculator</div>
-                                    <div class="custom-dropdown-item" data-value="time"
-                                        role="option" aria-selected="false">Time Calculator</div>
-                                    <div class="custom-dropdown-item" data-value="distance"
-                                        role="option" aria-selected="false">Distance Calculator</div>
-                                    <div class="custom-dropdown-item" data-value="converter"
-                                        role="option" aria-selected="false">Km-Mile Converter</div>
+                                    <div class="custom-dropdown-item" data-value="pace" role="option"
+                                        aria-selected="false">Pace Calculator</div>
+                                    <div class="custom-dropdown-item" data-value="time" role="option"
+                                        aria-selected="false">Time Calculator</div>
+                                    <div class="custom-dropdown-item" data-value="distance" role="option"
+                                        aria-selected="false">Distance Calculator</div>
+                                    <div class="custom-dropdown-item" data-value="converter" role="option"
+                                        aria-selected="false">Km-Mile Converter</div>
                                 </div>
                             </div>
                             <select id="calcMode" class="original-select">
@@ -101,20 +100,19 @@
                                 <div class="input-row">
                                     <div class="custom-dropdown" id="distancePresetPaceDropdown">
                                         <div class="custom-dropdown-toggle" id="distancePresetPaceToggle"
-                                            role="combobox" aria-expanded="false"
-                                            aria-haspopup="listbox" aria-controls="distancePresetPaceMenu"
-                                            tabindex="0">Custom</div>
+                                            role="combobox" aria-expanded="false" aria-haspopup="listbox"
+                                            aria-controls="distancePresetPaceMenu" tabindex="0">Custom</div>
                                         <div class="custom-dropdown-menu" id="distancePresetPaceMenu" role="listbox">
-                                            <div class="custom-dropdown-item selected" data-value="custom"
-                                                role="option" aria-selected="true">Custom</div>
-                                            <div class="custom-dropdown-item" data-value="5"
-                                                role="option" aria-selected="false">5K</div>
-                                            <div class="custom-dropdown-item" data-value="10"
-                                                role="option" aria-selected="false">10K</div>
-                                            <div class="custom-dropdown-item" data-value="21.0975"
-                                                role="option" aria-selected="false">Half Marathon</div>
-                                            <div class="custom-dropdown-item" data-value="42.195"
-                                                role="option" aria-selected="false">Marathon</div>
+                                            <div class="custom-dropdown-item selected" data-value="custom" role="option"
+                                                aria-selected="true">Custom</div>
+                                            <div class="custom-dropdown-item" data-value="5" role="option"
+                                                aria-selected="false">5K</div>
+                                            <div class="custom-dropdown-item" data-value="10" role="option"
+                                                aria-selected="false">10K</div>
+                                            <div class="custom-dropdown-item" data-value="21.0975" role="option"
+                                                aria-selected="false">Half Marathon</div>
+                                            <div class="custom-dropdown-item" data-value="42.195" role="option"
+                                                aria-selected="false">Marathon</div>
                                         </div>
                                     </div>
                                     <select id="distancePresetPace" class="original-select">
@@ -124,14 +122,13 @@
                                         <option value="21.0975">Half Marathon</option>
                                         <option value="42.195">Marathon</option>
                                     </select>
-                                    <input type="text" id="distancePace" name="distance"
-                                        class="input-field" placeholder="km">
+                                    <input type="text" id="distancePace" name="distance" class="input-field"
+                                        placeholder="km">
                                 </div>
                             </div>
                             <div class="input-group">
                                 <label class="label" for="timePace">Time</label>
-                                <input type="text" id="timePace" name="time" class="input-field"
-                                    placeholder="HH:MM:SS">
+                                <input type="text" id="timePace" name="time" class="input-field" placeholder="HH:MM:SS">
                             </div>
                         </div>
 
@@ -142,20 +139,19 @@
                                 <div class="input-row">
                                     <div class="custom-dropdown" id="distancePresetTimeDropdown">
                                         <div class="custom-dropdown-toggle" id="distancePresetTimeToggle"
-                                            role="combobox" aria-expanded="false"
-                                            aria-haspopup="listbox" aria-controls="distancePresetTimeMenu"
-                                            tabindex="0">Custom</div>
+                                            role="combobox" aria-expanded="false" aria-haspopup="listbox"
+                                            aria-controls="distancePresetTimeMenu" tabindex="0">Custom</div>
                                         <div class="custom-dropdown-menu" id="distancePresetTimeMenu" role="listbox">
-                                            <div class="custom-dropdown-item selected" data-value="custom"
-                                                role="option" aria-selected="true">Custom</div>
-                                            <div class="custom-dropdown-item" data-value="5"
-                                                role="option" aria-selected="false">5K</div>
-                                            <div class="custom-dropdown-item" data-value="10"
-                                                role="option" aria-selected="false">10K</div>
-                                            <div class="custom-dropdown-item" data-value="21.0975"
-                                                role="option" aria-selected="false">Half Marathon</div>
-                                            <div class="custom-dropdown-item" data-value="42.195"
-                                                role="option" aria-selected="false">Marathon</div>
+                                            <div class="custom-dropdown-item selected" data-value="custom" role="option"
+                                                aria-selected="true">Custom</div>
+                                            <div class="custom-dropdown-item" data-value="5" role="option"
+                                                aria-selected="false">5K</div>
+                                            <div class="custom-dropdown-item" data-value="10" role="option"
+                                                aria-selected="false">10K</div>
+                                            <div class="custom-dropdown-item" data-value="21.0975" role="option"
+                                                aria-selected="false">Half Marathon</div>
+                                            <div class="custom-dropdown-item" data-value="42.195" role="option"
+                                                aria-selected="false">Marathon</div>
                                         </div>
                                     </div>
                                     <select id="distancePresetTime" class="original-select">
@@ -165,14 +161,13 @@
                                         <option value="21.0975">Half Marathon</option>
                                         <option value="42.195">Marathon</option>
                                     </select>
-                                    <input type="text" id="distanceTime" name="distance"
-                                        class="input-field" placeholder="km">
+                                    <input type="text" id="distanceTime" name="distance" class="input-field"
+                                        placeholder="km">
                                 </div>
                             </div>
                             <div class="input-group">
                                 <label class="label" for="paceTime">Pace per km</label>
-                                <input type="text" id="paceTime" name="pace" class="input-field"
-                                    placeholder="MM:SS">
+                                <input type="text" id="paceTime" name="pace" class="input-field" placeholder="MM:SS">
                             </div>
                         </div>
 
@@ -196,13 +191,13 @@
                                 <label class="label" for="convType">Conversion Type</label>
                                 <div class="custom-dropdown" id="convTypeDropdown">
                                     <div class="custom-dropdown-toggle" id="convTypeToggle" role="combobox"
-                                        aria-expanded="false" aria-haspopup="listbox"
-                                        aria-controls="convTypeMenu" tabindex="0">Distance</div>
+                                        aria-expanded="false" aria-haspopup="listbox" aria-controls="convTypeMenu"
+                                        tabindex="0">Distance</div>
                                     <div class="custom-dropdown-menu" id="convTypeMenu" role="listbox">
-                                        <div class="custom-dropdown-item selected" data-value="distance"
-                                            role="option" aria-selected="true">Distance</div>
-                                        <div class="custom-dropdown-item" data-value="pace"
-                                            role="option" aria-selected="false">Pace</div>
+                                        <div class="custom-dropdown-item selected" data-value="distance" role="option"
+                                            aria-selected="true">Distance</div>
+                                        <div class="custom-dropdown-item" data-value="pace" role="option"
+                                            aria-selected="false">Pace</div>
                                     </div>
                                 </div>
                                 <select id="convType" class="original-select">
@@ -213,8 +208,7 @@
                             <div class="input-group">
                                 <label class="label" for="convValue">Value</label>
                                 <div class="input-with-toggle">
-                                    <input type="text" id="convValue" name="value"
-                                        class="input-field" placeholder="10">
+                                    <input type="text" id="convValue" name="value" class="input-field" placeholder="10">
                                     <div class="unit-toggle">
                                         <button class="toggle-btn active" data-value="km">Km</button>
                                         <button class="toggle-btn" data-value="mi">Mi</button>
@@ -243,19 +237,18 @@
                 <div class="sidebar-back">
 
                     <!-- Back button -->
-                    <button class="btn-flip" id="btnFlipToFront"
-                            aria-label="Back to standard form"
-                            title="Standard Form">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                             stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="19" y1="12" x2="5" y2="12"/>
-                            <polyline points="12 19 5 12 12 5"/>
+                    <button class="btn-flip" id="btnFlipToFront" aria-label="Back to standard form"
+                        title="Standard Form">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="19" y1="12" x2="5" y2="12" />
+                            <polyline points="12 19 5 12 12 5" />
                         </svg>
                     </button>
 
                     <header class="header">
                         <h1 class="header-title">Live Sliders</h1>
-                        <p class="header-subtitle">Adjust any value — results update instantly</p>
+                        <p class="header-subtitle">Adjust any value - results update instantly</p>
                     </header>
 
                     <div class="slider-form">
@@ -266,8 +259,8 @@
                                 <label class="label" for="sliderDistance">Distance</label>
                                 <output class="slider-output" id="valDistance" for="sliderDistance">10.0 km</output>
                             </div>
-                            <input type="range" class="form-range" id="sliderDistance"
-                                   min="0.1" max="100" step="0.1" value="10">
+                            <input type="range" class="form-range" id="sliderDistance" min="0.1" max="100" step="0.1"
+                                value="10">
                         </div>
 
                         <!-- Time -->
@@ -277,8 +270,8 @@
                                 <output class="slider-output" id="valTime" for="sliderTime">00:50:00</output>
                             </div>
                             <!-- stored in minutes: 1–1440 -->
-                            <input type="range" class="form-range" id="sliderTime"
-                                   min="1" max="1440" step="1" value="50">
+                            <input type="range" class="form-range" id="sliderTime" min="1" max="1440" step="1"
+                                value="50">
                         </div>
 
                         <!-- Pace -->
@@ -288,8 +281,8 @@
                                 <output class="slider-output" id="valPace" for="sliderPace">05:00 /km</output>
                             </div>
                             <!-- stored in seconds/km: 120 (2:00) – 900 (15:00) -->
-                            <input type="range" class="form-range" id="sliderPace"
-                                   min="120" max="900" step="1" value="300">
+                            <input type="range" class="form-range" id="sliderPace" min="120" max="900" step="1"
+                                value="300">
                         </div>
 
                         <div class="slider-live-badge">

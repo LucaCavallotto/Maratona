@@ -375,8 +375,8 @@
 /* Flip trigger button */
 .btn-flip {
     position: absolute;
-    top: 14px;
-    right: 14px;
+    top: 30px;
+    right: 32px;
     z-index: 500; /* Must be higher than custom-dropdown (200) */
     width: 38px;
     height: 38px;
