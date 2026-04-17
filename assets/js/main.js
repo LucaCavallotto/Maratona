@@ -443,7 +443,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             document.querySelectorAll('.copyBtn').forEach(btn => btn.disabled = true);
             document.querySelectorAll('.resetBtn').forEach(btn => btn.disabled = true);
-            document.querySelectorAll('.calculateBtn').forEach(btn => btn.disabled = true);
+            enableCalculate(); 
 
             if (appLayout.classList.contains('results-ready')) {
                 await clearOldResults(appLayout);
@@ -456,14 +456,20 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             isAnimatingReset = false;
-            document.querySelectorAll('.calculateBtn').forEach(btn => btn.disabled = false);
+            enableCalculate();
         }
     });
 
     document.getElementById('convType').addEventListener('change', updateConverterLabel);
 
-    document.getElementById('distancePresetPace').addEventListener('change', () => updateDistanceInput('pace'));
-    document.getElementById('distancePresetTime').addEventListener('change', () => updateDistanceInput('time'));
+    document.getElementById('distancePresetPace').addEventListener('change', () => {
+        updateDistanceInput('pace');
+        enableCalculate();
+    });
+    document.getElementById('distancePresetTime').addEventListener('change', () => {
+        updateDistanceInput('time');
+        enableCalculate();
+    });
 
     // Enable Calculate on any input change
     document.querySelectorAll('.input-field, select').forEach(el => {

@@ -228,7 +228,7 @@ export function setLoadingState(isLoading) {
             btn.disabled = true;
         } else {
             btn.textContent = btn.dataset.originalText || 'Calculate';
-            btn.disabled = false;
+            enableCalculate(); // Use conditional logic instead of force enable
         }
     });
 }
@@ -260,7 +260,31 @@ export function showResultsGrid(appLayout) {
 }
 
 export function enableCalculate() {
-    document.querySelectorAll('.calculateBtn').forEach(btn => btn.disabled = false);
+    const mode = document.getElementById('calcMode')?.value;
+    const isFlipped = document.getElementById('sidebarFlipper')?.classList.contains('flipped');
+    let isValid = false;
+
+    if (isFlipped) {
+        // Sliders are always considered "filled" as they always have a numeric value
+        isValid = true;
+    } else {
+        if (mode === 'zone') {
+            isValid = document.getElementById('time10k').value.trim() !== '';
+        } else if (mode === 'pace') {
+            isValid = document.getElementById('distancePace').value.trim() !== '' && 
+                      document.getElementById('timePace').value.trim() !== '';
+        } else if (mode === 'time') {
+            isValid = document.getElementById('distanceTime').value.trim() !== '' && 
+                      document.getElementById('paceTime').value.trim() !== '';
+        } else if (mode === 'distance') {
+            isValid = document.getElementById('timeDistance').value.trim() !== '' && 
+                      document.getElementById('paceDistance').value.trim() !== '';
+        } else if (mode === 'converter') {
+            isValid = document.getElementById('convValue').value.trim() !== '';
+        }
+    }
+
+    document.querySelectorAll('.calculateBtn').forEach(btn => btn.disabled = !isValid);
 }
 
 export function renderPaceTimeResults(container, metrics, splits) {
@@ -379,7 +403,9 @@ export function resetUI(skipLayoutReset = false) {
 
     document.querySelectorAll('.copyBtn').forEach(btn => btn.disabled = true);
     document.querySelectorAll('.resetBtn').forEach(btn => btn.disabled = true);
-    document.querySelectorAll('.calculateBtn').forEach(btn => btn.disabled = false);
+    
+    // Calculate button should only enable if fields are filled (e.g. if presets auto-filled them)
+    enableCalculate();
 
     UIState.currentResults = null;
     UIState.isCalculated = false;
