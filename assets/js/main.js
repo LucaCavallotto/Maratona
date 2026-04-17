@@ -21,7 +21,8 @@ import {
     resetUI,
     switchCalcMode,
     UIState,
-    resetResultsDisplay
+    resetResultsDisplay,
+    enableCalculate
 } from './ui-controller.js';
 import { initSliders, updateFlipButtonVisibility, flipToFront, flipToBack, isFlipped, syncSlidersToFront, syncFrontToSliders, resetSliders } from './sliders.js';
 
@@ -464,11 +465,18 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('distancePresetPace').addEventListener('change', () => updateDistanceInput('pace'));
     document.getElementById('distancePresetTime').addEventListener('change', () => updateDistanceInput('time'));
 
+    // Enable Calculate on any input change
+    document.querySelectorAll('.input-field, select').forEach(el => {
+        el.addEventListener('input', enableCalculate);
+        el.addEventListener('change', enableCalculate);
+    });
+
     // Toggle Button Logic (Unit Converter)
     document.querySelectorAll('.toggle-btn').forEach(btn => {
         btn.addEventListener('click', function () {
             this.parentElement.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
             this.classList.add('active');
+            enableCalculate();
         });
     });
 

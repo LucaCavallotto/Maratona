@@ -256,7 +256,11 @@ export function showResultsGrid(appLayout) {
 
     document.querySelectorAll('.copyBtn').forEach(btn => btn.disabled = false);
     document.querySelectorAll('.resetBtn').forEach(btn => btn.disabled = false);
+    document.querySelectorAll('.calculateBtn').forEach(btn => btn.disabled = true);
+}
 
+export function enableCalculate() {
+    document.querySelectorAll('.calculateBtn').forEach(btn => btn.disabled = false);
 }
 
 export function renderPaceTimeResults(container, metrics, splits) {

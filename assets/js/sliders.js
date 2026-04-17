@@ -11,7 +11,7 @@
 
 import { secondsToPace, secondsToTime } from './utils.js';
 import { calculatePaceMetrics } from './calculators.js';
-import { renderPaceTimeResults, showResultsGrid, clearOldResults, triggerSlideTransition, UIState } from './ui-controller.js';
+import { renderPaceTimeResults, showResultsGrid, clearOldResults, triggerSlideTransition, UIState, enableCalculate } from './ui-controller.js';
 import { presetDistances } from './utils.js';
 
 // ──────────────────────────────────────────────────────────
@@ -202,6 +202,7 @@ let isSliderInteracted = false;
 function recomputeSliders(changed) {
     lastTouched = changed;
     isSliderInteracted = true;
+    enableCalculate();
 
     let { distKm, timeMins, paceSecs } = readSliders();
 
@@ -284,6 +285,7 @@ async function runSliderCalculation() {
         // Enable copy/reset buttons
         document.querySelectorAll('.copyBtn').forEach(btn => btn.disabled = false);
         document.querySelectorAll('.resetBtn').forEach(btn => btn.disabled = false);
+        document.querySelectorAll('.calculateBtn').forEach(btn => btn.disabled = true);
 
     } catch (err) {
         console.warn('[Slider calc error]', err);
