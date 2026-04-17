@@ -23,7 +23,7 @@ import {
     UIState,
     resetResultsDisplay
 } from './ui-controller.js';
-import { initSliders, updateFlipButtonVisibility, flipToFront, flipToBack, isFlipped, syncSlidersToFront, syncFrontToSliders } from './sliders.js';
+import { initSliders, updateFlipButtonVisibility, flipToFront, flipToBack, isFlipped, syncSlidersToFront, syncFrontToSliders, resetSliders } from './sliders.js';
 
 // Validation Decoupler
 function validateInputsForMode(mode) {
@@ -323,6 +323,7 @@ async function handleReset(e) {
     } finally {
         isAnimatingReset = false;
         resetUI();
+        resetSliders();
     }
 }
 

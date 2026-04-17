@@ -335,15 +335,36 @@ export function renderPaceTimeResults(container, metrics, splits) {
 
 export function resetUI(skipLayoutReset = false) {
     document.getElementById('time10k').value = '';
+    
+    // Reset hidden selects
     document.getElementById('distancePresetPace').value = 'custom';
     document.getElementById('distancePace').value = '';
     document.getElementById('timePace').value = '';
+    
     document.getElementById('distancePresetTime').value = 'custom';
     document.getElementById('distanceTime').value = '';
     document.getElementById('paceTime').value = '';
+    
     document.getElementById('timeDistance').value = '';
     document.getElementById('paceDistance').value = '';
+    
+    document.getElementById('convType').value = 'distance';
     document.getElementById('convValue').value = '';
+
+    // Reset Dropdown Toggles Visually
+    const pToggle = document.getElementById('distancePresetPaceToggle');
+    if (pToggle) pToggle.textContent = 'Custom';
+    const tToggle = document.getElementById('distancePresetTimeToggle');
+    if (tToggle) tToggle.textContent = 'Custom';
+    const cToggle = document.getElementById('convTypeToggle');
+    if (cToggle) cToggle.textContent = 'Distance';
+
+    // Reset Unit Toggles
+    document.querySelectorAll('.unit-toggle').forEach(container => {
+        container.querySelectorAll('.toggle-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.getAttribute('data-value') === 'km');
+        });
+    });
 
     hideAllErrors();
     document.getElementById('successMsg').style.display = 'none';

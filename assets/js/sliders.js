@@ -319,6 +319,22 @@ export function flipToFront() {
     isSliderInteracted = false;
 }
 
+/** Reset sliders to default values and clear interaction state */
+export function resetSliders() {
+    const distKm = 10;
+    const timeMins = 50;
+    const paceSecs = 300;
+
+    const sD = sliderDist(), sT = sliderTime(), sP = sliderPace();
+    if (sD) sD.value = distKm.toFixed(1);
+    if (sT) sT.value = timeMins;
+    if (sP) sP.value = paceSecs;
+
+    [sD, sT, sP].forEach(updateSliderFill);
+    updateOutputLabels({ distKm, timeMins, paceSecs });
+    isSliderInteracted = false;
+}
+
 // ──────────────────────────────────────────────────────────
 // Show/hide the flip button based on calculator mode
 // ──────────────────────────────────────────────────────────
