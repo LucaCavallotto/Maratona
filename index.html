@@ -217,7 +217,7 @@
                     </div><!-- END .form-grid -->
 
                     <div class="button-group">
-                        <button class="btn btn-primary calculateBtn" id="calculateBtn">Calculate</button>
+                        <button class="btn btn-primary calculateBtn" id="calculateBtn" disabled>Calculate</button>
                         <button class="btn btn-secondary resetBtn" id="resetBtn" disabled>Reset</button>
                         <button class="btn btn-secondary copyBtn" id="copyBtn" disabled>Copy</button>
                     </div>
@@ -229,6 +229,8 @@
                         <div class="error-text" id="errorDistance">Invalid input. Check time and pace format</div>
                         <div class="error-text" id="errorConverter">Invalid input format</div>
                     </div>
+
+                    <div class="success-text success-msg" style="display: none;">Copied results to clipboard</div>
                 </div><!-- END .sidebar-front -->
 
                 <!-- ═══════════════════════════════════ BACK SIDE -->
@@ -255,6 +257,10 @@
                             </div>
                             <input type="range" class="form-range" id="sliderDistance" min="0.1" max="100" step="0.1"
                                 value="10">
+                            <div class="slider-bounds">
+                                <span id="minDistanceLabel"></span>
+                                <span id="maxDistanceLabel"></span>
+                            </div>
                         </div>
 
                         <!-- Time -->
@@ -264,8 +270,12 @@
                                 <output class="slider-output" id="valTime" for="sliderTime">00:50:00</output>
                             </div>
                             <!-- stored in minutes: 1–1440 -->
-                            <input type="range" class="form-range" id="sliderTime" min="1" max="1440" step="1"
+                            <input type="range" class="form-range" id="sliderTime" min="1" max="1440" step="0.5"
                                 value="50">
+                            <div class="slider-bounds">
+                                <span id="minTimeLabel"></span>
+                                <span id="maxTimeLabel"></span>
+                            </div>
                         </div>
 
                         <!-- Pace -->
@@ -277,13 +287,17 @@
                             <!-- stored in seconds/km: 120 (2:00) – 900 (15:00) -->
                             <input type="range" class="form-range" id="sliderPace" min="120" max="900" step="1"
                                 value="300">
+                            <div class="slider-bounds">
+                                <span id="minPaceLabel"></span>
+                                <span id="maxPaceLabel"></span>
+                            </div>
                         </div>
 
 
                     </div><!-- END .slider-form -->
 
                     <div class="button-group">
-                        <button class="btn btn-primary calculateBtn" id="calculateBtnBack">Calculate</button>
+                        <button class="btn btn-primary calculateBtn" id="calculateBtnBack" disabled>Calculate</button>
                         <button class="btn btn-secondary resetBtn" id="resetBtnBack" disabled>Reset</button>
                         <button class="btn btn-secondary copyBtn" id="copyBtnBack" disabled>Copy</button>
                     </div>
@@ -294,11 +308,11 @@
                         <div class="error-text" id="errorTimeBack">Invalid input. Check distance and pace format</div>
                         <div class="error-text" id="errorDistanceBack">Invalid input. Check time and pace format</div>
                     </div>
+
+                    <div class="success-text success-msg" style="display: none;">Copied results to clipboard</div>
                 </div><!-- END .sidebar-back -->
 
             </div><!-- END .sidebar-flipper -->
-
-            <div class="success-text" id="successMsg">Copied results to clipboard</div>
         </aside>
 
         <main class="main-content">

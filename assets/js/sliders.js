@@ -11,7 +11,7 @@
 
 import { secondsToPace, secondsToTime } from './utils.js';
 import { calculatePaceMetrics } from './calculators.js';
-import { renderPaceTimeResults, showResultsGrid, clearOldResults, triggerSlideTransition, UIState } from './ui-controller.js';
+import { renderPaceTimeResults, showResultsGrid, clearOldResults, triggerSlideTransition, UIState, enableCalculate } from './ui-controller.js';
 import { presetDistances } from './utils.js';
 
 // ──────────────────────────────────────────────────────────
@@ -22,7 +22,7 @@ import { presetDistances } from './utils.js';
 function minutesToTimeString(totalMinutes) {
     const h = Math.floor(totalMinutes / 60);
     const m = Math.floor(totalMinutes % 60);
-    const s = 0;
+    const s = Math.round((totalMinutes % 1) * 60);
     if (h > 0) {
         return `${h}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
     }
@@ -90,6 +90,13 @@ const valDist      = () => document.getElementById('valDistance');
 const valTime      = () => document.getElementById('valTime');
 const valPace      = () => document.getElementById('valPace');
 
+const minDistLabel = () => document.getElementById('minDistanceLabel');
+const maxDistLabel = () => document.getElementById('maxDistanceLabel');
+const minTimeLabel = () => document.getElementById('minTimeLabel');
+const maxTimeLabel = () => document.getElementById('maxTimeLabel');
+const minPaceLabel = () => document.getElementById('minPaceLabel');
+const maxPaceLabel = () => document.getElementById('maxPaceLabel');
+
 // ──────────────────────────────────────────────────────────
 // State helpers
 // ──────────────────────────────────────────────────────────
@@ -110,6 +117,22 @@ function updateOutputLabels({ distKm, timeMins, paceSecs }) {
     valDist().textContent = `${distKm.toFixed(1)} km`;
     valTime().textContent = minutesToTimeString(timeMins);
     valPace().textContent = `${secondsToPaceStr(paceSecs)} /km`;
+}
+
+function updateBoundsLabels() {
+    const sD = sliderDist(), sT = sliderTime(), sP = sliderPace();
+    if (sD && minDistLabel() && maxDistLabel()) {
+        minDistLabel().textContent = `${parseFloat(sD.min).toFixed(1)} km`;
+        maxDistLabel().textContent = `${parseFloat(sD.max).toFixed(1)} km`;
+    }
+    if (sT && minTimeLabel() && maxTimeLabel()) {
+        minTimeLabel().textContent = minutesToTimeString(parseFloat(sT.min));
+        maxTimeLabel().textContent = minutesToTimeString(parseFloat(sT.max));
+    }
+    if (sP && minPaceLabel() && maxPaceLabel()) {
+        minPaceLabel().textContent = `${secondsToPaceStr(parseInt(sP.min))} /km`;
+        maxPaceLabel().textContent = `${secondsToPaceStr(parseInt(sP.max))} /km`;
+    }
 }
 
 // ──────────────────────────────────────────────────────────
@@ -150,18 +173,37 @@ export function syncFrontToSliders() {
         }
     }
 
-    // Clamp to slider ranges: Distance (0.1-100km), Time (1-600m), Pace (120-900s)
-    distKm   = clamp(distKm,   0.1, 100);
-    timeMins = clamp(timeMins, 1,   1440); // 1 to 24h as per slider max
-    paceSecs = clamp(paceSecs, 120, 900);
-
     const sD = sliderDist(), sT = sliderTime(), sP = sliderPace();
-    if (sD) sD.value = distKm.toFixed(1);
-    if (sT) sT.value = Math.round(timeMins);
-    if (sP) sP.value = Math.round(paceSecs);
+
+    // Dynamically adjust the min and max limits based on +-50% of the inserted values
+    if (sD) {
+        let minD = Math.max(0.1, distKm * 0.5);
+        let maxD = distKm * 1.5;
+        sD.min = minD.toFixed(1);
+        sD.max = maxD.toFixed(1);
+        distKm = clamp(distKm, minD, maxD);
+        sD.value = distKm.toFixed(1);
+    }
+    if (sT) {
+        let minT = Math.max(1, Math.round(timeMins * 0.5 * 2) / 2);
+        let maxT = Math.round(timeMins * 1.5 * 2) / 2;
+        sT.min = minT;
+        sT.max = maxT;
+        timeMins = clamp(timeMins, minT, maxT);
+        sT.value = Math.round(timeMins * 2) / 2;
+    }
+    if (sP) {
+        let minP = Math.max(90, Math.round(paceSecs / 3));
+        let maxP = Math.round(paceSecs * 3);
+        sP.min = minP;
+        sP.max = maxP;
+        paceSecs = clamp(paceSecs, minP, maxP);
+        sP.value = Math.round(paceSecs);
+    }
 
     [sD, sT, sP].forEach(updateSliderFill);
     updateOutputLabels({ distKm, timeMins, paceSecs });
+    updateBoundsLabels();
 }
 
 // ──────────────────────────────────────────────────────────
@@ -202,6 +244,7 @@ let isSliderInteracted = false;
 function recomputeSliders(changed) {
     lastTouched = changed;
     isSliderInteracted = true;
+    enableCalculate();
 
     let { distKm, timeMins, paceSecs } = readSliders();
 
@@ -209,13 +252,18 @@ function recomputeSliders(changed) {
         // Recompute pace  (sec/km) = (timeMins * 60) / distKm
         if (distKm > 0) {
             paceSecs = (timeMins * 60) / distKm;
-            paceSecs = clamp(Math.round(paceSecs), 120, 900);
+            let minP = parseFloat(sliderPace().min) || 120;
+            let maxP = parseFloat(sliderPace().max) || 900;
+            paceSecs = clamp(Math.round(paceSecs), minP, maxP);
             sliderPace().value = paceSecs;
         }
     } else if (changed === 'pace') {
         // Recompute time  (mins) = distKm * paceSecs / 60
         timeMins = (distKm * paceSecs) / 60;
-        timeMins = clamp(Math.round(timeMins), 1, 1440);
+        let minT = parseFloat(sliderTime().min) || 1;
+        let maxT = parseFloat(sliderTime().max) || 1440;
+        timeMins = Math.round(timeMins * 2) / 2;
+        timeMins = clamp(timeMins, minT, maxT);
         sliderTime().value = timeMins;
     }
 
@@ -284,6 +332,7 @@ async function runSliderCalculation() {
         // Enable copy/reset buttons
         document.querySelectorAll('.copyBtn').forEach(btn => btn.disabled = false);
         document.querySelectorAll('.resetBtn').forEach(btn => btn.disabled = false);
+        document.querySelectorAll('.calculateBtn').forEach(btn => btn.disabled = true);
 
     } catch (err) {
         console.warn('[Slider calc error]', err);
@@ -319,6 +368,35 @@ export function flipToFront() {
     isSliderInteracted = false;
 }
 
+/** Reset sliders to default values and clear interaction state */
+export function resetSliders() {
+    const distKm = 10;
+    const timeMins = 50;
+    const paceSecs = 300;
+
+    const sD = sliderDist(), sT = sliderTime(), sP = sliderPace();
+    if (sD) {
+        sD.min = 0.1;
+        sD.max = 100;
+        sD.value = distKm.toFixed(1);
+    }
+    if (sT) {
+        sT.min = 1;
+        sT.max = 1440;
+        sT.value = timeMins;
+    }
+    if (sP) {
+        sP.min = 120;
+        sP.max = 900;
+        sP.value = paceSecs;
+    }
+
+    [sD, sT, sP].forEach(updateSliderFill);
+    updateOutputLabels({ distKm, timeMins, paceSecs });
+    updateBoundsLabels();
+    isSliderInteracted = false;
+}
+
 // ──────────────────────────────────────────────────────────
 // Show/hide the flip button based on calculator mode
 // ──────────────────────────────────────────────────────────
@@ -328,7 +406,7 @@ export function updateFlipButtonVisibility(mode) {
     if (!btn) return;
 
     const SLIDER_MODES = ['pace', 'time', 'distance'];
-    if (SLIDER_MODES.includes(mode)) {
+    if (SLIDER_MODES.includes(mode) && UIState.isCalculated) {
         btn.classList.remove('hidden');
     } else {
         btn.classList.add('hidden');
@@ -347,6 +425,7 @@ export function initSliders() {
 
     // Initial output labels
     updateOutputLabels(readSliders());
+    updateBoundsLabels();
 
     // Slider input listeners
     sliderDist().addEventListener('input', () => recomputeSliders('distance'));

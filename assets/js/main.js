@@ -21,9 +21,10 @@ import {
     resetUI,
     switchCalcMode,
     UIState,
-    resetResultsDisplay
+    resetResultsDisplay,
+    enableCalculate
 } from './ui-controller.js';
-import { initSliders, updateFlipButtonVisibility, flipToFront, flipToBack, isFlipped, syncSlidersToFront, syncFrontToSliders } from './sliders.js';
+import { initSliders, updateFlipButtonVisibility, flipToFront, flipToBack, isFlipped, syncSlidersToFront, syncFrontToSliders, resetSliders } from './sliders.js';
 
 // Validation Decoupler
 function validateInputsForMode(mode) {
@@ -103,7 +104,7 @@ async function handleCalculate(e) {
         return;
     }
 
-    document.getElementById('successMsg').style.display = 'none';
+    document.querySelectorAll('.success-msg').forEach(msg => msg.style.display = 'none');
     document.querySelectorAll('.copyBtn').forEach(btn => btn.disabled = true);
     document.querySelectorAll('.resetBtn').forEach(btn => btn.disabled = true);
 
@@ -289,6 +290,7 @@ async function handleCalculate(e) {
     // Trigger Fade-In Response
     setLoadingState(false);
     showResultsGrid(appLayout);
+    updateFlipButtonVisibility(mode);
 }
 
 let isAnimatingReset = false;
@@ -323,6 +325,8 @@ async function handleReset(e) {
     } finally {
         isAnimatingReset = false;
         resetUI();
+        resetSliders();
+        updateFlipButtonVisibility(document.getElementById('calcMode').value);
     }
 }
 
@@ -400,11 +404,12 @@ function handleCopy(e) {
     }
 
     navigator.clipboard.writeText(text).then(() => {
-        const successMsg = document.getElementById('successMsg');
-        successMsg.style.display = 'block';
-        setTimeout(() => {
-            successMsg.style.display = 'none';
-        }, 2500);
+        document.querySelectorAll('.success-msg').forEach(successMsg => {
+            successMsg.style.display = 'block';
+            setTimeout(() => {
+                successMsg.style.display = 'none';
+            }, 2500);
+        });
     }).catch(err => {
         alert('Failed to copy to clipboard');
     });
@@ -441,7 +446,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             document.querySelectorAll('.copyBtn').forEach(btn => btn.disabled = true);
             document.querySelectorAll('.resetBtn').forEach(btn => btn.disabled = true);
-            document.querySelectorAll('.calculateBtn').forEach(btn => btn.disabled = true);
+            enableCalculate();
 
             if (appLayout.classList.contains('results-ready')) {
                 await clearOldResults(appLayout);
@@ -454,20 +459,33 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             isAnimatingReset = false;
-            document.querySelectorAll('.calculateBtn').forEach(btn => btn.disabled = false);
+            enableCalculate();
         }
     });
 
     document.getElementById('convType').addEventListener('change', updateConverterLabel);
 
-    document.getElementById('distancePresetPace').addEventListener('change', () => updateDistanceInput('pace'));
-    document.getElementById('distancePresetTime').addEventListener('change', () => updateDistanceInput('time'));
+    document.getElementById('distancePresetPace').addEventListener('change', () => {
+        updateDistanceInput('pace');
+        enableCalculate();
+    });
+    document.getElementById('distancePresetTime').addEventListener('change', () => {
+        updateDistanceInput('time');
+        enableCalculate();
+    });
+
+    // Enable Calculate on any input change
+    document.querySelectorAll('.input-field, select').forEach(el => {
+        el.addEventListener('input', enableCalculate);
+        el.addEventListener('change', enableCalculate);
+    });
 
     // Toggle Button Logic (Unit Converter)
     document.querySelectorAll('.toggle-btn').forEach(btn => {
         btn.addEventListener('click', function () {
             this.parentElement.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
             this.classList.add('active');
+            enableCalculate();
         });
     });
 
@@ -480,7 +498,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.key === 'Enter') {
             const calcBtn = document.querySelectorAll('.calculateBtn')[0];
             if (calcBtn && !calcBtn.disabled) {
-                e.preventDefault(); 
+                e.preventDefault();
 
                 // Visual feedback on all calculate buttons
                 document.querySelectorAll('.calculateBtn').forEach(btn => {

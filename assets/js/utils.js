@@ -19,10 +19,9 @@ export function validateTime(timeStr, allowHours = true) {
     if (!allowHours && parts.length !== 2) return false;
     if (allowHours && (parts.length !== 2 && parts.length !== 3)) return false;
 
-    // First part must have at least 1 digit. Other parts MUST be exactly 2 digits.
-    if (parts[0].length === 0) return false;
-    for (let i = 1; i < parts.length; i++) {
-        if (parts[i].length !== 2) return false;
+    // Every part must have at least 1 digit.
+    for (let i = 0; i < parts.length; i++) {
+        if (parts[i].length === 0) return false;
     }
 
     try {

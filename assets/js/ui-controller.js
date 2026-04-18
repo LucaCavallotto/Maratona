@@ -14,21 +14,21 @@ export function initCustomDropdowns() {
     dropdowns.forEach(dropdown => {
         const toggle = dropdown.querySelector('.custom-dropdown-toggle');
         const menu = dropdown.querySelector('.custom-dropdown-menu');
-        
+
         let focusedItemIndex = -1;
         const items = Array.from(menu.querySelectorAll('.custom-dropdown-item'));
 
         // Find selecting standard <select> element that's normally hidden
-        const hiddenSelect = dropdown.nextElementSibling?.tagName === 'SELECT' 
-                             ? dropdown.nextElementSibling 
-                             : document.getElementById(dropdown.id.replace('Dropdown', ''));
+        const hiddenSelect = dropdown.nextElementSibling?.tagName === 'SELECT'
+            ? dropdown.nextElementSibling
+            : document.getElementById(dropdown.id.replace('Dropdown', ''));
 
         toggle.addEventListener('click', function (e) {
             e.preventDefault();
             e.stopPropagation();
 
             const isOpening = !menu.classList.contains('show');
-            
+
             // Close all other dropdowns
             document.querySelectorAll('.custom-dropdown-menu.show').forEach(otherMenu => {
                 if (otherMenu !== menu) {
@@ -47,7 +47,7 @@ export function initCustomDropdowns() {
                 toggle.focus();
                 focusedItemIndex = items.findIndex(item => item.classList.contains('selected'));
                 if (focusedItemIndex === -1 && items.length > 0) focusedItemIndex = 0;
-                
+
                 items.forEach((item, index) => {
                     item.classList.toggle('is-highlighted', index === focusedItemIndex);
                     if (index === focusedItemIndex) {
@@ -76,7 +76,7 @@ export function initCustomDropdowns() {
                 menu.classList.remove('show');
                 toggle.classList.remove('open');
                 dropdown.classList.remove('is-open');
-                if(overlay) overlay.classList.remove('show');
+                if (overlay) overlay.classList.remove('show');
 
                 hiddenSelect.dispatchEvent(new Event('change'));
 
@@ -228,7 +228,7 @@ export function setLoadingState(isLoading) {
             btn.disabled = true;
         } else {
             btn.textContent = btn.dataset.originalText || 'Calculate';
-            btn.disabled = false;
+            enableCalculate(); // Use conditional logic instead of force enable
         }
     });
 }
@@ -256,7 +256,35 @@ export function showResultsGrid(appLayout) {
 
     document.querySelectorAll('.copyBtn').forEach(btn => btn.disabled = false);
     document.querySelectorAll('.resetBtn').forEach(btn => btn.disabled = false);
+    document.querySelectorAll('.calculateBtn').forEach(btn => btn.disabled = true);
+}
 
+export function enableCalculate() {
+    const mode = document.getElementById('calcMode')?.value;
+    const isFlipped = document.getElementById('sidebarFlipper')?.classList.contains('flipped');
+    let isValid = false;
+
+    if (isFlipped) {
+        // Sliders are always considered "filled" as they always have a numeric value
+        isValid = true;
+    } else {
+        if (mode === 'zone') {
+            isValid = document.getElementById('time10k').value.trim() !== '';
+        } else if (mode === 'pace') {
+            isValid = document.getElementById('distancePace').value.trim() !== '' &&
+                document.getElementById('timePace').value.trim() !== '';
+        } else if (mode === 'time') {
+            isValid = document.getElementById('distanceTime').value.trim() !== '' &&
+                document.getElementById('paceTime').value.trim() !== '';
+        } else if (mode === 'distance') {
+            isValid = document.getElementById('timeDistance').value.trim() !== '' &&
+                document.getElementById('paceDistance').value.trim() !== '';
+        } else if (mode === 'converter') {
+            isValid = document.getElementById('convValue').value.trim() !== '';
+        }
+    }
+
+    document.querySelectorAll('.calculateBtn').forEach(btn => btn.disabled = !isValid);
 }
 
 export function renderPaceTimeResults(container, metrics, splits) {
@@ -330,23 +358,44 @@ export function renderPaceTimeResults(container, metrics, splits) {
     document.getElementById('results').style.display = 'block';
     container.classList.remove('hidden');
     // Ensure parent results container is visible
-    void container.offsetHeight; 
+    void container.offsetHeight;
 }
 
 export function resetUI(skipLayoutReset = false) {
     document.getElementById('time10k').value = '';
+
+    // Reset hidden selects
     document.getElementById('distancePresetPace').value = 'custom';
     document.getElementById('distancePace').value = '';
     document.getElementById('timePace').value = '';
+
     document.getElementById('distancePresetTime').value = 'custom';
     document.getElementById('distanceTime').value = '';
     document.getElementById('paceTime').value = '';
+
     document.getElementById('timeDistance').value = '';
     document.getElementById('paceDistance').value = '';
+
+    document.getElementById('convType').value = 'distance';
     document.getElementById('convValue').value = '';
 
+    // Reset Dropdown Toggles Visually
+    const pToggle = document.getElementById('distancePresetPaceToggle');
+    if (pToggle) pToggle.textContent = 'Custom';
+    const tToggle = document.getElementById('distancePresetTimeToggle');
+    if (tToggle) tToggle.textContent = 'Custom';
+    const cToggle = document.getElementById('convTypeToggle');
+    if (cToggle) cToggle.textContent = 'Distance';
+
+    // Reset Unit Toggles
+    document.querySelectorAll('.unit-toggle').forEach(container => {
+        container.querySelectorAll('.toggle-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.getAttribute('data-value') === 'km');
+        });
+    });
+
     hideAllErrors();
-    document.getElementById('successMsg').style.display = 'none';
+    document.querySelectorAll('.success-msg').forEach(msg => msg.style.display = 'none');
 
     if (!skipLayoutReset) {
         resetResultsDisplay();
@@ -354,7 +403,9 @@ export function resetUI(skipLayoutReset = false) {
 
     document.querySelectorAll('.copyBtn').forEach(btn => btn.disabled = true);
     document.querySelectorAll('.resetBtn').forEach(btn => btn.disabled = true);
-    document.querySelectorAll('.calculateBtn').forEach(btn => btn.disabled = false);
+
+    // Calculate button should only enable if fields are filled (e.g. if presets auto-filled them)
+    enableCalculate();
 
     UIState.currentResults = null;
     UIState.isCalculated = false;
