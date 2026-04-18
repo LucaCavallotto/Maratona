@@ -290,6 +290,7 @@ async function handleCalculate(e) {
     // Trigger Fade-In Response
     setLoadingState(false);
     showResultsGrid(appLayout);
+    updateFlipButtonVisibility(mode);
 }
 
 let isAnimatingReset = false;
@@ -325,6 +326,7 @@ async function handleReset(e) {
         isAnimatingReset = false;
         resetUI();
         resetSliders();
+        updateFlipButtonVisibility(document.getElementById('calcMode').value);
     }
 }
 
