@@ -104,7 +104,7 @@ async function handleCalculate(e) {
         return;
     }
 
-    document.getElementById('successMsg').style.display = 'none';
+    document.querySelectorAll('.success-msg').forEach(msg => msg.style.display = 'none');
     document.querySelectorAll('.copyBtn').forEach(btn => btn.disabled = true);
     document.querySelectorAll('.resetBtn').forEach(btn => btn.disabled = true);
 
@@ -404,11 +404,12 @@ function handleCopy(e) {
     }
 
     navigator.clipboard.writeText(text).then(() => {
-        const successMsg = document.getElementById('successMsg');
-        successMsg.style.display = 'block';
-        setTimeout(() => {
-            successMsg.style.display = 'none';
-        }, 2500);
+        document.querySelectorAll('.success-msg').forEach(successMsg => {
+            successMsg.style.display = 'block';
+            setTimeout(() => {
+                successMsg.style.display = 'none';
+            }, 2500);
+        });
     }).catch(err => {
         alert('Failed to copy to clipboard');
     });
@@ -445,7 +446,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             document.querySelectorAll('.copyBtn').forEach(btn => btn.disabled = true);
             document.querySelectorAll('.resetBtn').forEach(btn => btn.disabled = true);
-            enableCalculate(); 
+            enableCalculate();
 
             if (appLayout.classList.contains('results-ready')) {
                 await clearOldResults(appLayout);
@@ -497,7 +498,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.key === 'Enter') {
             const calcBtn = document.querySelectorAll('.calculateBtn')[0];
             if (calcBtn && !calcBtn.disabled) {
-                e.preventDefault(); 
+                e.preventDefault();
 
                 // Visual feedback on all calculate buttons
                 document.querySelectorAll('.calculateBtn').forEach(btn => {
