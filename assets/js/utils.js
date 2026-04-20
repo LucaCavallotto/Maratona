@@ -65,3 +65,24 @@ export function secondsToTime(seconds) {
         return `${minutes}:${secs.toString().padStart(2, '0')}`;
     }
 }
+
+export function formatTimeComponent(timeStr) {
+    if (!timeStr || typeof timeStr !== 'string') return timeStr;
+
+    // Only process if it contains colons and digits
+    if (!/^[\d:]+$/.test(timeStr)) return timeStr;
+
+    const parts = timeStr.split(':');
+    // We only format if it has 2 or 3 parts (MM:SS or HH:MM:SS)
+    if (parts.length < 2 || parts.length > 3) return timeStr;
+
+    const formattedParts = parts.map(part => {
+        // Pad single digits with leading zero
+        if (part.length === 1 && /^\d$/.test(part)) {
+            return `0${part}`;
+        }
+        return part;
+    });
+
+    return formattedParts.join(':');
+}

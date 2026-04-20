@@ -1,4 +1,4 @@
-import { normalizeInput, validateTime, secondsToTime, secondsToPace, presetDistances } from './utils.js';
+import { normalizeInput, validateTime, secondsToTime, secondsToPace, presetDistances, formatTimeComponent } from './utils.js';
 import {
     calculateThresholdPace,
     calculateZones,
@@ -478,6 +478,21 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.input-field, select').forEach(el => {
         el.addEventListener('input', enableCalculate);
         el.addEventListener('change', enableCalculate);
+
+        // Auto-formatting for time fields on blur
+        if (el.tagName === 'INPUT' && (el.placeholder.includes(':') || el.id.toLowerCase().includes('time') || el.id.toLowerCase().includes('pace'))) {
+            el.addEventListener('blur', function () {
+                const originalValue = this.value.trim();
+                if (originalValue) {
+                    const formattedValue = formatTimeComponent(originalValue);
+                    if (formattedValue !== originalValue) {
+                        this.value = formattedValue;
+                        // Trigger input event to re-validate and enable buttons
+                        this.dispatchEvent(new Event('input'));
+                    }
+                }
+            });
+        }
     });
 
     // Toggle Button Logic (Unit Converter)
