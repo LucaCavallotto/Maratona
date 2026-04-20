@@ -191,7 +191,7 @@
 
 .result-item.is-highlighted {
     background-color: var(--card-border);
-    border: none;
+    border: 1px solid var(--divider-color);
 }
 
 .splits-section {
