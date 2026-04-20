@@ -110,11 +110,21 @@
         transition: none !important;
     }
 
+    @keyframes mobileFadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .sidebar-front {
+        animation: mobileFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
     .sidebar-back {
         display: none;
         position: static;
         transform: none;
         padding: 0;
+        animation: mobileFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
 
     .sidebar-flipper.flipped .sidebar-front {
