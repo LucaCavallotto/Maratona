@@ -252,3 +252,44 @@
     position: relative;
     z-index: 200;
 }
+
+.app-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 2px 32px;
+    background: linear-gradient(to top, var(--bg-container) 60%, transparent);
+    z-index: 1000;
+    pointer-events: none;
+    text-align: center;
+}
+
+.app-footer p {
+    font-family: var(--font-sans);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    opacity: 0.5;
+    margin: 0;
+}
+
+@media (max-width: 991px) {
+    .app-footer {
+        position: relative;
+        padding: 40px 24px;
+        background: transparent;
+    }
+}
+
+
+@media (min-width: 992px) {
+
+    .sidebar-front,
+    .sidebar-back {
+        padding-bottom: 60px;
+        /* Space for footer */
+    }
+}
