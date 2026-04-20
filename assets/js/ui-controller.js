@@ -263,28 +263,43 @@ export function enableCalculate() {
     const mode = document.getElementById('calcMode')?.value;
     const isFlipped = document.getElementById('sidebarFlipper')?.classList.contains('flipped');
     let isValid = false;
+    let hasValue = false;
 
     if (isFlipped) {
         // Sliders are always considered "filled" as they always have a numeric value
         isValid = true;
+        hasValue = true;
     } else {
         if (mode === 'zone') {
-            isValid = document.getElementById('time10k').value.trim() !== '';
+            const val = document.getElementById('time10k').value.trim();
+            isValid = val !== '';
+            hasValue = isValid;
         } else if (mode === 'pace') {
-            isValid = document.getElementById('distancePace').value.trim() !== '' &&
-                document.getElementById('timePace').value.trim() !== '';
+            const d = document.getElementById('distancePace').value.trim();
+            const t = document.getElementById('timePace').value.trim();
+            isValid = d !== '' && t !== '';
+            hasValue = d !== '' || t !== '';
         } else if (mode === 'time') {
-            isValid = document.getElementById('distanceTime').value.trim() !== '' &&
-                document.getElementById('paceTime').value.trim() !== '';
+            const d = document.getElementById('distanceTime').value.trim();
+            const p = document.getElementById('paceTime').value.trim();
+            isValid = d !== '' && p !== '';
+            hasValue = d !== '' || p !== '';
         } else if (mode === 'distance') {
-            isValid = document.getElementById('timeDistance').value.trim() !== '' &&
-                document.getElementById('paceDistance').value.trim() !== '';
+            const t = document.getElementById('timeDistance').value.trim();
+            const p = document.getElementById('paceDistance').value.trim();
+            isValid = t !== '' && p !== '';
+            hasValue = t !== '' || p !== '';
         } else if (mode === 'converter') {
-            isValid = document.getElementById('convValue').value.trim() !== '';
+            const val = document.getElementById('convValue').value.trim();
+            isValid = val !== '';
+            hasValue = isValid;
         }
     }
 
     document.querySelectorAll('.calculateBtn').forEach(btn => btn.disabled = !isValid);
+    document.querySelectorAll('.resetBtn').forEach(btn => {
+        btn.disabled = !(hasValue || UIState.isCalculated);
+    });
 }
 
 export function renderPaceTimeResults(container, metrics, splits, highlightLabel = null) {
