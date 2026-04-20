@@ -40,3 +40,8 @@ Switch between the standard input form and interactive range sliders (Distance, 
 -   **Race Predictions:** Estimates your potential performance across various distances based on threshold pace.
 -   **Split Times:** Automatically generates detailed 1km split tables for precise race planning.
 -   **Modern Responsive Design:** Fully optimized for both desktop and mobile use, featuring smooth cross-fade transitions on smaller screens.
+
+---
+
+> [!NOTE]
+> All data provided are mathematical estimates. Actual performance, training zones, and converted metrics may vary based on individual physiology, terrain, conditions and rounding.
