@@ -101,6 +101,8 @@ const maxPaceLabel = () => document.getElementById('maxPaceLabel');
 // State helpers
 // ──────────────────────────────────────────────────────────
 
+let timeSliderAnchor = null;
+
 /**
  * Read slider values and update the output labels. Returns the
  * current {distKm, timeMins, paceSecs} so callers can react to changes.
@@ -185,12 +187,13 @@ export function syncFrontToSliders() {
         sD.value = distKm.toFixed(1);
     }
     if (sT) {
-        let minT = Math.max(1, Math.round(timeMins * 0.8 * 60) / 60);
-        let maxT = Math.round(timeMins * 1.2 * 60) / 60;
+        let minT = Math.max(1, Math.round(timeMins * 0.8 * 6) / 6);
+        let maxT = Math.round(timeMins * 1.2 * 6) / 6;
         sT.min = minT;
         sT.max = maxT;
         timeMins = clamp(timeMins, minT, maxT);
-        sT.value = Math.round(timeMins * 60) / 60;
+        sT.value = Math.round(timeMins * 60) / 60; // 1s exact precision
+        timeSliderAnchor = parseFloat(sT.value);
     }
     if (sP) {
         let minP = Math.max(90, Math.round(paceSecs * 0.8));
@@ -246,6 +249,20 @@ function recomputeSliders(changed) {
     isSliderInteracted = true;
     enableCalculate();
 
+    // If the user manually scrubs the Time slider, enforce 10-second granular steps relative to its anchor!
+    if (changed === 'time') {
+        let sT = sliderTime();
+        let val = parseFloat(sT.value);
+        if (timeSliderAnchor !== null) {
+            let delta = val - timeSliderAnchor;
+            let snappedDelta = Math.round(delta * 6) / 6;
+            sT.value = timeSliderAnchor + snappedDelta;
+        } else {
+            timeSliderAnchor = val;
+            sT.value = val;
+        }
+    }
+
     let { distKm, timeMins, paceSecs } = readSliders();
     const mode = document.getElementById('calcMode')?.value || 'pace';
 
@@ -279,16 +296,17 @@ function recomputeSliders(changed) {
     } else if (dependentVar === 'time') {
         // Recompute time
         timeMins = (distKm * paceSecs) / 60;
-        timeMins = Math.round(timeMins * 60) / 60;
+        timeMins = Math.round(timeMins * 60) / 60; // 1-second precision
         let sT = sliderTime();
         let minT = parseFloat(sT.min);
         let maxT = parseFloat(sT.max);
         
-        // Expand boundaries dynamically instead of clamping
-        if (timeMins < minT) sT.min = timeMins;
-        if (timeMins > maxT) sT.max = timeMins;
+        // Expand boundaries dynamically instead of clamping, snapping to 10s grid
+        if (timeMins < minT) sT.min = Math.floor(timeMins * 6) / 6;
+        if (timeMins > maxT) sT.max = Math.ceil(timeMins * 6) / 6;
         
-        sT.value = timeMins;
+        sT.value = timeMins; // Programmable value retains 1s precision
+        timeSliderAnchor = timeMins;
     } else if (dependentVar === 'distance') {
         // Recompute distance
         if (paceSecs > 0) {
@@ -423,6 +441,7 @@ export function resetSliders() {
         sT.min = 1;
         sT.max = 1440;
         sT.value = timeMins;
+        timeSliderAnchor = timeMins;
     }
     if (sP) {
         sP.min = 120;
