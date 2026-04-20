@@ -175,26 +175,26 @@ export function syncFrontToSliders() {
 
     const sD = sliderDist(), sT = sliderTime(), sP = sliderPace();
 
-    // Dynamically adjust the min and max limits based on +-50% of the inserted values
+    // Dynamically adjust the min and max limits based on +-20% of the inserted values
     if (sD) {
-        let minD = Math.max(0.1, distKm * 0.5);
-        let maxD = distKm * 1.5;
+        let minD = Math.max(0.1, distKm * 0.8);
+        let maxD = distKm * 1.2;
         sD.min = minD.toFixed(1);
         sD.max = maxD.toFixed(1);
         distKm = clamp(distKm, minD, maxD);
         sD.value = distKm.toFixed(1);
     }
     if (sT) {
-        let minT = Math.max(1, Math.round(timeMins * 0.5 * 2) / 2);
-        let maxT = Math.round(timeMins * 1.5 * 2) / 2;
+        let minT = Math.max(1, Math.round(timeMins * 0.8 * 60) / 60);
+        let maxT = Math.round(timeMins * 1.2 * 60) / 60;
         sT.min = minT;
         sT.max = maxT;
         timeMins = clamp(timeMins, minT, maxT);
-        sT.value = Math.round(timeMins * 2) / 2;
+        sT.value = Math.round(timeMins * 60) / 60;
     }
     if (sP) {
-        let minP = Math.max(90, Math.round(paceSecs / 3));
-        let maxP = Math.round(paceSecs * 3);
+        let minP = Math.max(90, Math.round(paceSecs * 0.8));
+        let maxP = Math.round(paceSecs * 1.2);
         sP.min = minP;
         sP.max = maxP;
         paceSecs = clamp(paceSecs, minP, maxP);
@@ -247,27 +247,66 @@ function recomputeSliders(changed) {
     enableCalculate();
 
     let { distKm, timeMins, paceSecs } = readSliders();
+    const mode = document.getElementById('calcMode')?.value || 'pace';
 
-    if (changed === 'distance' || changed === 'time') {
-        // Recompute pace  (sec/km) = (timeMins * 60) / distKm
-        if (distKm > 0) {
-            paceSecs = (timeMins * 60) / distKm;
-            let minP = parseFloat(sliderPace().min) || 120;
-            let maxP = parseFloat(sliderPace().max) || 900;
-            paceSecs = clamp(Math.round(paceSecs), minP, maxP);
-            sliderPace().value = paceSecs;
-        }
-    } else if (changed === 'pace') {
-        // Recompute time  (mins) = distKm * paceSecs / 60
-        timeMins = (distKm * paceSecs) / 60;
-        let minT = parseFloat(sliderTime().min) || 1;
-        let maxT = parseFloat(sliderTime().max) || 1440;
-        timeMins = Math.round(timeMins * 2) / 2;
-        timeMins = clamp(timeMins, minT, maxT);
-        sliderTime().value = timeMins;
+    // Determine which variable mathematically depends on the others based on selected mode
+    let dependentVar = 'pace';
+    if (mode === 'pace') dependentVar = 'pace';
+    else if (mode === 'time') dependentVar = 'time';
+    else if (mode === 'distance') dependentVar = 'distance';
+
+    // If the user drags the dependent variable itself, we must fix one and recompute another
+    if (changed === dependentVar) {
+        if (dependentVar === 'pace') dependentVar = 'time';
+        else if (dependentVar === 'time') dependentVar = 'pace';
+        else if (dependentVar === 'distance') dependentVar = 'time'; // fix pace, change time
     }
 
-    // Refresh fill for all three
+    if (dependentVar === 'pace') {
+        // Recompute pace
+        if (distKm > 0) {
+            paceSecs = (timeMins * 60) / distKm;
+            let sP = sliderPace();
+            let minP = parseFloat(sP.min);
+            let maxP = parseFloat(sP.max);
+            
+            // Expand boundaries dynamically instead of clamping
+            if (paceSecs < minP) sP.min = Math.floor(paceSecs);
+            if (paceSecs > maxP) sP.max = Math.ceil(paceSecs);
+            
+            sP.value = Math.round(paceSecs);
+        }
+    } else if (dependentVar === 'time') {
+        // Recompute time
+        timeMins = (distKm * paceSecs) / 60;
+        timeMins = Math.round(timeMins * 60) / 60;
+        let sT = sliderTime();
+        let minT = parseFloat(sT.min);
+        let maxT = parseFloat(sT.max);
+        
+        // Expand boundaries dynamically instead of clamping
+        if (timeMins < minT) sT.min = timeMins;
+        if (timeMins > maxT) sT.max = timeMins;
+        
+        sT.value = timeMins;
+    } else if (dependentVar === 'distance') {
+        // Recompute distance
+        if (paceSecs > 0) {
+            distKm = (timeMins * 60) / paceSecs;
+            let sD = sliderDist();
+            let minD = parseFloat(sD.min);
+            let maxD = parseFloat(sD.max);
+            
+            // Expand boundaries dynamically instead of clamping
+            if (distKm < minD) sD.min = Math.max(0.1, Math.floor(distKm * 10) / 10).toFixed(1);
+            if (distKm > maxD) sD.max = (Math.ceil(distKm * 10) / 10).toFixed(1);
+            
+            sD.value = distKm.toFixed(2);
+        }
+    }
+
+    // Process new boundaries and visually refresh the slider fills
+    updateBoundsLabels();
     [sliderDist(), sliderTime(), sliderPace()].forEach(updateSliderFill);
 
     // Update visible labels
