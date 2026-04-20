@@ -185,7 +185,7 @@ async function handleCalculate(e) {
             { label: 'Time', value: { num: timeString, unit: '' } },
             { label: 'Pace', value: { num: payload.paceString, unit: '/km' }, subValue: { num: payload.paceMinMile, unit: '/mi' } },
             { label: 'Speed', value: { num: payload.speedKmH, unit: ' km/h' }, subValue: [{ num: payload.speedMS, unit: ' m/s' }, { num: payload.speedMpH, unit: ' mph' }] }
-        ], payload.splits);
+        ], payload.splits, 'Pace');
 
     } else if (mode === 'time') {
         const distanceString = normalizeInput(document.getElementById('distanceTime').value.trim());
@@ -200,7 +200,7 @@ async function handleCalculate(e) {
             { label: 'Total Time', value: { num: payload.totalTime, unit: '' } },
             { label: 'Pace', value: { num: paceString, unit: '/km' }, subValue: { num: payload.paceMinMile, unit: '/mi' } },
             { label: 'Speed', value: { num: payload.speedKmH, unit: ' km/h' }, subValue: [{ num: payload.speedMS, unit: ' m/s' }, { num: payload.speedMpH, unit: ' mph' }] }
-        ], payload.splits);
+        ], payload.splits, 'Total Time');
 
     } else if (mode === 'distance') {
         const timeString = normalizeInput(document.getElementById('timeDistance').value.trim());
@@ -214,7 +214,7 @@ async function handleCalculate(e) {
             { label: 'Total Time', value: { num: timeString, unit: '' } },
             { label: 'Pace', value: { num: paceString, unit: '/km' }, subValue: { num: payload.paceMinMile, unit: '/mi' } },
             { label: 'Speed', value: { num: payload.speedKmH, unit: ' km/h' }, subValue: [{ num: payload.speedMS, unit: ' m/s' }, { num: payload.speedMpH, unit: ' mph' }] }
-        ], payload.splits);
+        ], payload.splits, 'Distance');
 
     } else if (mode === 'converter') {
         const conversionType = document.getElementById('convType').value;

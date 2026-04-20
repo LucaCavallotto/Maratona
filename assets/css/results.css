@@ -186,6 +186,12 @@
     align-items: center;
     justify-content: center;
     text-align: center;
+    transition: all 0.2s ease;
+}
+
+.result-item.is-highlighted {
+    background-color: var(--card-border);
+    border: none;
 }
 
 .splits-section {

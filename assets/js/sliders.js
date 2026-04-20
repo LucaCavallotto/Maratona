@@ -373,7 +373,7 @@ async function runSliderCalculation() {
             { label: 'Time',     value: { num: timeStr, unit: '' } },
             { label: 'Pace',     value: { num: payload.paceString, unit: '/km' }, subValue: { num: payload.paceMinMile, unit: '/mi' } },
             { label: 'Speed',    value: { num: payload.speedKmH, unit: ' km/h' }, subValue: [{ num: payload.speedMS, unit: ' m/s' }, { num: payload.speedMpH, unit: ' mph' }] },
-        ], payload.splits);
+        ], payload.splits, 'Pace');
 
         // Expand results panel if not already shown
         if (!appLayout.classList.contains('state-results')) {

@@ -287,7 +287,7 @@ export function enableCalculate() {
     document.querySelectorAll('.calculateBtn').forEach(btn => btn.disabled = !isValid);
 }
 
-export function renderPaceTimeResults(container, metrics, splits) {
+export function renderPaceTimeResults(container, metrics, splits, highlightLabel = null) {
     const splitsHtml = `
         <div class="splits-section">
             <div class="section-title">Splits</div>
@@ -329,8 +329,11 @@ export function renderPaceTimeResults(container, metrics, splits) {
             }).join('');
         }
 
+        const isHighlighted = highlightLabel && metric.label && metric.label.toLowerCase() === highlightLabel.toLowerCase();
+        const highlightClass = isHighlighted ? ' is-highlighted' : '';
+
         return `
-            <div class="result-item">
+            <div class="result-item${highlightClass}">
                 <div class="metric-label">
                     ${icon}
                     ${metric.label}
