@@ -124,13 +124,16 @@
 
     .sidebar-front {
         animation: mobileFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        position: relative;
+        padding-bottom: 60px;
     }
 
     .sidebar-back {
         display: none;
-        position: static;
+        position: relative;
         transform: none;
         padding: 0;
+        padding-bottom: 60px;
         animation: mobileFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
