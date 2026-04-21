@@ -1,7 +1,7 @@
 /* Mobile Responsive */
 @media (max-width: 640px) {
     .container {
-        padding: 32px 20px;
+        padding: 0;
     }
 
     .app-layout {
@@ -10,6 +10,10 @@
 
     .form-grid {
         gap: 20px;
+    }
+
+    .sidebar-header-section {
+        border-radius: 0;
     }
 
     .header-title {
@@ -26,6 +30,8 @@
         visibility: visible;
         transform: none;
         transition: none;
+        padding: 32px 20px;
+        padding-top: 0;
     }
 
     .metric-sub-value {
@@ -125,7 +131,6 @@
     .sidebar-front {
         animation: mobileFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         position: relative;
-        padding-bottom: 60px;
     }
 
     .sidebar-back {

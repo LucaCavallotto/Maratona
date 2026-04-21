@@ -106,8 +106,7 @@
         box-sizing: border-box;
         backface-visibility: hidden;
         -webkit-backface-visibility: hidden;
-        padding: 32px;
-        padding-bottom: 80px;
+        padding: 0;
         overflow: visible;
 
         /* The 'Card' identity is now on the faces themselves */
@@ -202,6 +201,19 @@
     margin-bottom: 18px;
 }
 
+.sidebar-header-section {
+    background-color: var(--card-border);
+    border-bottom: 1px solid var(--divider-color);
+    padding: 25px;
+    border-radius: 15px 15px 0 0;
+}
+
+.sidebar-body {
+    padding: 25px;
+    padding-bottom: 60px;
+    padding-top: 10px;
+}
+
 .header-title {
     font-size: 32px;
     font-weight: 600;
@@ -223,14 +235,8 @@
 }
 
 .selector-header {
-    /* Targeting the semantic class for potentially specific styling */
+    /* Grouped into sidebar-header-section */
     position: relative;
-    /* User request: highlight background and 4-side border */
-    background-color: var(--card-border);
-    border: 1px solid var(--divider-color);
-    padding: 10px;
-    border-radius: 14px;
-    margin-bottom: 5px;
 }
 
 .selector-header .label {
@@ -307,11 +313,4 @@
 }
 
 
-@media (min-width: 992px) {
-
-    .sidebar-front,
-    .sidebar-back {
-        padding-bottom: 60px;
-        /* Space for footer */
-    }
-}
+@media (min-width: 992px) {}

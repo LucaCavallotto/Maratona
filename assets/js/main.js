@@ -291,6 +291,16 @@ async function handleCalculate(e) {
     setLoadingState(false);
     showResultsGrid(appLayout);
     updateFlipButtonVisibility(mode);
+
+    // Mobile UX: Auto-scroll to results
+    if (window.innerWidth <= 640) {
+        setTimeout(() => {
+            const resultsSection = document.getElementById('results');
+            if (resultsSection) {
+                resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }, 300); // Matches transition timings
+    }
 }
 
 let isAnimatingReset = false;
