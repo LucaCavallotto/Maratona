@@ -261,14 +261,18 @@ export function showResultsGrid(appLayout) {
 
 export function enableCalculate() {
     const mode = document.getElementById('calcMode')?.value;
-    const isFlipped = document.getElementById('sidebarFlipper')?.classList.contains('flipped');
+    const flipper = document.getElementById('sidebarFlipper');
+    const isFlipped = flipper && flipper.classList.contains('flipped');
+    
     let isValid = false;
     let hasValue = false;
 
     if (isFlipped) {
-        // Sliders are always considered "filled" as they always have a numeric value
+        // On the back face, we only enable Reset if a calculation was performed
+        // or if we want to allow resetting sliders to defaults. 
+        // For simplicity and matching user expectation of "erasing/resetting":
         isValid = true;
-        hasValue = true;
+        hasValue = true; // Sliders always have a numeric value
     } else {
         if (mode === 'zone') {
             const val = document.getElementById('time10k').value.trim();
@@ -296,9 +300,12 @@ export function enableCalculate() {
         }
     }
 
+    // A calculation has been done if UIState.isCalculated is true
+    const shouldEnableReset = hasValue || UIState.isCalculated;
+
     document.querySelectorAll('.calculateBtn').forEach(btn => btn.disabled = !isValid);
     document.querySelectorAll('.resetBtn').forEach(btn => {
-        btn.disabled = !(hasValue || UIState.isCalculated);
+        btn.disabled = !shouldEnableReset;
     });
 }
 
@@ -380,6 +387,9 @@ export function renderPaceTimeResults(container, metrics, splits, highlightLabel
 }
 
 export function resetUI(skipLayoutReset = false) {
+    UIState.currentResults = null;
+    UIState.isCalculated = false;
+
     document.getElementById('time10k').value = '';
 
     // Reset hidden selects
@@ -424,9 +434,6 @@ export function resetUI(skipLayoutReset = false) {
 
     // Calculate button should only enable if fields are filled (e.g. if presets auto-filled them)
     enableCalculate();
-
-    UIState.currentResults = null;
-    UIState.isCalculated = false;
 
     updateDistanceInput(document.getElementById('calcMode').value);
 
