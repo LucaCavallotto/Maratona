@@ -19,6 +19,13 @@
     opacity: 0.9;
 }
 
+.form-grid {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    flex: 1;
+}
+
 .error-text {
     font-size: 13px;
     font-weight: 500;
@@ -437,13 +444,18 @@
    ============================================================ */
 
 .slider-form {
+    flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 0;
+    justify-content: space-evenly;
 }
 
 .slider-group {
     margin-bottom: 28px;
+}
+
+.sidebar-back .slider-group {
+    margin-bottom: 20px;
 }
 
 .slider-label-row {
@@ -451,6 +463,10 @@
     justify-content: space-between;
     align-items: baseline;
     margin-bottom: 14px;
+}
+
+.sidebar-back .slider-label-row {
+    margin-bottom: 8px;
 }
 
 .slider-label-row .label {
