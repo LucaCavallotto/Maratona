@@ -184,11 +184,17 @@
     display: inline-block;
     width: 20px;
     height: 20px;
-    border: 2px solid rgba(255, 255, 255, 0.3);
+    border: 2px solid rgba(0, 0, 0, 0.1); /* Subtle base */
     border-radius: 50%;
-    border-top-color: #fff;
+    border-top-color: var(--btn-primary-text);
     animation: spin 0.8s ease-in-out infinite;
     vertical-align: middle;
+}
+
+/* Ensure the base border matches the text color logic too */
+.btn-primary .spinner {
+    border-color: color-mix(in srgb, var(--btn-primary-text), transparent 70%);
+    border-top-color: var(--btn-primary-text);
 }
 
 @keyframes spin {
