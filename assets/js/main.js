@@ -316,8 +316,16 @@ async function handleReset(e) {
     document.querySelectorAll('.calculateBtn').forEach(btn => btn.disabled = true);
 
     const appLayout = document.querySelector('.app-layout');
+    const isMobile = window.innerWidth <= 640;
 
     try {
+        // Mobile UX: Scroll back to top FIRST to avoid content jumping
+        if (isMobile) {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            // Wait for scroll to be mostly complete before collapsing results
+            await new Promise(r => setTimeout(r, 400));
+        }
+
         // Fade out results first
         if (appLayout && appLayout.classList.contains('results-ready')) {
             await clearOldResults(appLayout);
@@ -331,11 +339,6 @@ async function handleReset(e) {
             appLayout.classList.remove('state-results');
             // Wait for the slide transition to complete
             await new Promise(r => setTimeout(r, 600));
-        }
-
-        // Mobile UX: Scroll back to top on reset
-        if (window.innerWidth <= 640) {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     } finally {
         isAnimatingReset = false;
