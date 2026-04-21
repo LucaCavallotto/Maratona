@@ -6,7 +6,7 @@
     /* New Mono Font */
 
     /* Color Palette - Light Mode Default */
-    --bg-body: #FAFAFA;
+    --bg-body: #FFFFFF;
     --bg-container: #FFFFFF;
 
     --text-primary: #1C1C1E;
@@ -55,7 +55,7 @@
 @media (prefers-color-scheme: dark) {
     :root {
         /* Color Palette - Dark Mode Override */
-        --bg-body: #000000;
+        --bg-body: #1C1C1E;
         --bg-container: #1C1C1E;
 
         --text-primary: #E5E5EA;

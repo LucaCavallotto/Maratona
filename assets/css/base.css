@@ -16,16 +16,4 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
-@media (min-width: 641px) {
-    body {
-        background-color: #ffffff;
-        /* PC fallback base */
-    }
 
-    @media (prefers-color-scheme: dark) {
-        body {
-            background-color: #1c1c1e;
-        }
-    }
-
-}

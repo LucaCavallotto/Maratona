@@ -301,7 +301,7 @@
 @media (max-width: 991px) {
     .app-footer {
         position: relative;
-        padding: 40px 24px;
+        padding: 24px 24px;
         background: transparent;
     }
 }
