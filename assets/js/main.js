@@ -332,6 +332,11 @@ async function handleReset(e) {
             // Wait for the slide transition to complete
             await new Promise(r => setTimeout(r, 600));
         }
+
+        // Mobile UX: Scroll back to top on reset
+        if (window.innerWidth <= 640) {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
     } finally {
         isAnimatingReset = false;
         resetUI();
