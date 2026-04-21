@@ -465,9 +465,10 @@ export function updateFlipButtonVisibility(mode) {
 
     const SLIDER_MODES = ['pace', 'time', 'distance'];
     if (SLIDER_MODES.includes(mode) && UIState.isCalculated) {
+        btn.classList.add('show');
         btn.classList.remove('hidden');
     } else {
-        btn.classList.add('hidden');
+        btn.classList.remove('show');
         // Auto-flip back if currently on back for a mode that doesn't support sliders
         flipToFront();
     }
