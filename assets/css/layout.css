@@ -115,7 +115,8 @@
         border-radius: 16px;
         box-shadow: none;
         position: relative;
-        min-height: 600px; /* Ensure enough height for spacing */
+        min-height: 600px;
+        /* Ensure enough height for spacing */
     }
 
     /* Front panel is the positioning context for btn-flip */
@@ -253,13 +254,16 @@
 
 #calcModeToggle {
     border-color: var(--divider-color);
-    background-color: var(--card-border);
+    background-color: var(--input-bg);
 }
 
+/* In dark mode the toggle sits on the header band (--card-border background #334155).
+   Using --bg-body (#0F172A) provides strong contrast. */
 @media (prefers-color-scheme: dark) {
     #calcModeToggle {
-        border-color: #48484A;
-        /* Sharper border for dark mode visibility */
+        background-color: var(--input-bg);
+        border-color: transparent;
+        box-shadow: none;
     }
 }
 

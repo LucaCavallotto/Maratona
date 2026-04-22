@@ -89,7 +89,10 @@
     color: var(--text-placeholder);
 }
 
-/* Webkit Autofill Override for Dark Mode consistency */
+/* Webkit Autofill Override — always follows the active theme variables.
+   The inset box-shadow trick is the only reliable way to override
+   the browser's hardcoded autofill background in WebKit/Blink.
+   transition: background-color delay prevents the flash on page load. */
 .input-field:-webkit-autofill,
 .input-field:-webkit-autofill:hover,
 .input-field:-webkit-autofill:focus,
@@ -100,12 +103,6 @@
     color: var(--text-input) !important;
     border-color: var(--input-border) !important;
     transition: background-color 5000s ease-in-out 0s;
-}
-
-@media (prefers-color-scheme: dark) {
-    .input-field:-webkit-autofill {
-        -webkit-box-shadow: 0 0 0 1000px #2C2C2E inset !important;
-    }
 }
 
 
