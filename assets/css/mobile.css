@@ -1,7 +1,10 @@
-/* Mobile Responsive */
-@media (max-width: 640px) {
+/* Mobile & Tablet Responsive (< 992px) */
+@media (max-width: 991px) {
     .container {
         padding: 0;
+        max-width: none;
+        margin: 0;
+        border-radius: 0;
     }
 
     .app-layout {
@@ -16,15 +19,6 @@
         border-radius: 0;
     }
 
-    .header-title {
-        font-size: 28px;
-    }
-
-    .metrics-grid {
-        grid-template-columns: 1fr;
-        gap: 16px;
-    }
-
     .container.app-layout .main-content {
         opacity: 1;
         visibility: visible;
@@ -34,81 +28,7 @@
         padding-top: 0;
     }
 
-    .metric-sub-value {
-        display: block;
-        margin-left: 0;
-        margin-top: 4px;
-        font-size: 14px;
-    }
-
-    .button-group {
-        grid-template-columns: 1fr;
-    }
-
-    .input-row {
-        grid-template-columns: 1.5fr 1fr;
-        gap: 12px;
-    }
-
-    .select-field,
-    .input-field,
-    .custom-dropdown-toggle {
-        width: 100%;
-        height: 52px;
-        padding: 14px 16px;
-        min-height: 52px;
-    }
-
-    .btn {
-        width: 100%;
-        min-height: 52px;
-    }
-
-    .custom-dropdown-menu {
-        position: fixed;
-        top: 50% !important;
-        left: 50% !important;
-        transform: translate(-50%, -50%);
-        width: 90%;
-        max-width: 400px;
-        max-height: 300px;
-        z-index: 10000;
-        border: none;
-        box-shadow: none;
-        padding: 8px;
-        border-radius: 20px;
-        animation: modalEnter 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-
-    .custom-dropdown {
-        z-index: auto !important;
-    }
-
-    .custom-dropdown.is-open {
-        /* No z-index here either, to allow fixed children to escape */
-        z-index: auto !important;
-    }
-
-    .custom-dropdown-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: rgba(0, 0, 0, 0.5);
-        z-index: 500;
-        display: none;
-    }
-
-    .custom-dropdown-overlay.show {
-        display: block;
-    }
-
-    .zone-card {
-        padding: 16px;
-    }
-
-    /* Mobile: flip via simple show/hide since 3D transforms are unreliable
+    /* Flip via simple show/hide since 3D transforms are unreliable
        with dropdowns/fixed modals on small screens */
     .sidebar-flipper {
         min-height: unset;
@@ -156,10 +76,94 @@
         top: 12px;
         right: 12px;
     }
+
+    /* Smaller devices specific tweaks */
+    @media (max-width: 640px) {
+        .header-title {
+            font-size: 28px;
+        }
+
+        .metrics-grid {
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+
+        .metric-sub-value {
+            display: block;
+            margin-left: 0;
+            margin-top: 4px;
+            font-size: 14px;
+        }
+
+        .button-group {
+            grid-template-columns: 1fr;
+        }
+
+        .input-row {
+            grid-template-columns: 1.5fr 1fr;
+            gap: 12px;
+        }
+
+        .select-field,
+        .input-field,
+        .custom-dropdown-toggle {
+            width: 100%;
+            height: 52px;
+            padding: 14px 16px;
+            min-height: 52px;
+        }
+
+        .btn {
+            width: 100%;
+            min-height: 52px;
+        }
+
+        .custom-dropdown-menu {
+            position: fixed;
+            top: 50% !important;
+            left: 50% !important;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 400px;
+            max-height: 300px;
+            z-index: 10000;
+            border: none;
+            box-shadow: none;
+            padding: 8px;
+            border-radius: 20px;
+            animation: modalEnter 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .custom-dropdown {
+            z-index: auto !important;
+        }
+
+        .custom-dropdown.is-open {
+            z-index: auto !important;
+        }
+
+        .custom-dropdown-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 500;
+            display: none;
+        }
+
+        .custom-dropdown-overlay.show {
+            display: block;
+        }
+
+        .zone-card {
+            padding: 16px;
+        }
+    }
 }
 
 @media (max-width: 400px) {
-
     .zone-name,
     .race-name {
         font-size: 13.5px;
