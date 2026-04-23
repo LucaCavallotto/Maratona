@@ -26,10 +26,11 @@
 
     --divider-color: #E2E8F0;
 
-    --input-bg: #F1F5F9;
-    --input-border: transparent;
+    --input-bg: #F8FAFC;
+    --input-border: #E2E8F0;
     --input-focus-bg: #FFFFFF;
-    --input-focus-border: #D9383A;
+    --input-focus-border: #3B82F6;
+    --input-focus-shadow: rgba(59, 130, 246, 0.12);
 
     --btn-primary-bg: #D9383A;
     --btn-primary-text: #FFFFFF;
@@ -77,11 +78,12 @@
 
         --divider-color: #334155;
 
-        /* Inputs sit one step darker than the card (#1E293B) */
-        --input-bg: #0F172A;
-        --input-border: transparent;
+        /* Inputs sit slightly darker/different than the card (#1E293B) */
+        --input-bg: #161E2E;
+        --input-border: #334155;
         --input-focus-bg: #0F172A;
-        --input-focus-border: #EF4444;
+        --input-focus-border: #60A5FA;
+        --input-focus-shadow: rgba(96, 165, 250, 0.15);
 
         --btn-primary-bg: #EF4444;
         --btn-primary-text: #FFFFFF;
@@ -89,7 +91,7 @@
 
         --btn-secondary-bg: transparent;
         --btn-secondary-text: #F8FAFC;
-        --btn-secondary-border: transparent;
+        --btn-secondary-border: #334155;
         --btn-secondary-hover-bg: #1E293B;
         --btn-secondary-hover-border: #60A5FA;
 
@@ -133,10 +135,11 @@
 
     --divider-color: #334155;
 
-    --input-bg: #0F172A;
-    --input-border: transparent;
+    --input-bg: #161E2E;
+    --input-border: #334155;
     --input-focus-bg: #0F172A;
-    --input-focus-border: #EF4444;
+    --input-focus-border: #60A5FA;
+    --input-focus-shadow: rgba(96, 165, 250, 0.15);
 
     --btn-primary-bg: #EF4444;
     --btn-primary-text: #FFFFFF;
@@ -144,7 +147,7 @@
 
     --btn-secondary-bg: transparent;
     --btn-secondary-text: #F8FAFC;
-    --btn-secondary-border: transparent;
+    --btn-secondary-border: #334155;
     --btn-secondary-hover-bg: #1E293B;
     --btn-secondary-hover-border: #60A5FA;
 
