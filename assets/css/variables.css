@@ -77,6 +77,12 @@
     --zone-5-color: #DC2626; /* Z5 VO2 Max: Track Red */
     --zone-6-color: #9333EA; /* Z6 Anaerobic: Intense Purple */
     --zone-7-color: #C026D3; /* Z7 Sprint: Neon Magenta */
+
+    /* Race Predictions Color Scale (Yellow to Red Thermal Scale) */
+    --race-1-color: #EAB308; /* 5K: Electric Yellow */
+    --race-2-color: #F59E0B; /* 10K: Amber Orange */
+    --race-3-color: #EA580C; /* Half Marathon: Deep Orange */
+    --race-4-color: #D9383A; /* Marathon: Track Red */
 }
 
 
@@ -144,6 +150,12 @@
         --zone-5-color: #F87171;
         --zone-6-color: #C084FC;
         --zone-7-color: #E879F9;
+
+        /* Race Predictions Color Scale (Yellow to Red Thermal Scale - Dark Mode) */
+        --race-1-color: #FACC15; /* 5K: Neon Yellow */
+        --race-2-color: #FBBF24; /* 10K: Neon Amber */
+        --race-3-color: #FB923C; /* Half Marathon: Neon Orange */
+        --race-4-color: #EF4444; /* Marathon: Bright Track Red */
     }
 }
 

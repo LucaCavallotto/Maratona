@@ -219,13 +219,15 @@
 }
 
 .race-card::before {
-    width: 3.5px;
-    background-color: var(--btn-primary-bg);
+    width: 4.5px;
+    background-color: var(--race-color, var(--btn-primary-bg));
+    transition: var(--transition-bounce);
 }
 
 @media (hover: hover) {
     .race-card:hover {
-        border-color: var(--btn-primary-bg);
+        transform: translateY(-2px);
+        border-color: var(--race-color, var(--btn-primary-bg));
     }
 }
 

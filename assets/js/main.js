@@ -143,8 +143,8 @@ async function handleCalculate(e) {
         const races = [
             [5, "5K (3.11 mi)"],
             [10, "10K (6.21 mi)"],
-            [21.0975, "Half Marathon (13.11 mi)"],
-            [42.195, "Marathon (26.22 mi)"]
+            [21.0975, "Half Marathon (21.1 km, 13.11 mi)"],
+            [42.195, "Marathon (42.2 km, 26.22 mi)"]
         ].map(([distanceInKm, raceName]) => ({
             name: raceName,
             ...estimateRacePace(thresholdPace, distanceInKm)
@@ -173,7 +173,7 @@ async function handleCalculate(e) {
 
         document.getElementById('races').innerHTML = races.map((racePrediction, index) => {
             return `
-                <div class="zone-card race-card animate-card" style="animation-delay: ${(2 + zones.length + index) * 0.05}s;">
+                <div class="zone-card race-card animate-card" style="--race-color: var(--race-${index + 1}-color); animation-delay: ${(2 + zones.length + index) * 0.05}s;">
                     <div>
                         <div class="race-name">${racePrediction.name}</div>
                         <div class="race-time"><span class="metric-num">${secondsToTime(racePrediction.totalSeconds)}</span></div>
