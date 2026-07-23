@@ -1,4 +1,4 @@
-import { normalizeInput, validateTime, secondsToTime, secondsToPace, presetDistances, formatTimeComponent, parseSmartInput } from './utils.js';
+import { normalizeInput, validateTime, secondsToTime, secondsToPace, timeToSeconds, presetDistances, formatTimeComponent, parseSmartInput } from './utils.js';
 import {
     calculateThresholdPace,
     calculateZones,
@@ -6,7 +6,8 @@ import {
     calculatePaceMetrics,
     calculateTimeMetrics,
     calculateDistanceMetrics,
-    calculateConverterMetrics
+    calculateConverterMetrics,
+    calculateStrategySplits
 } from './calculators.js';
 import {
     initCustomDropdowns,
@@ -25,6 +26,7 @@ import {
     enableCalculate
 } from './ui-controller.js';
 import { initSliders, updateFlipButtonVisibility, flipToFront, flipToBack, isFlipped, syncSlidersToFront, syncFrontToSliders, resetSliders } from './sliders.js';
+
 
 // Validation Decoupler
 function validateInputsForMode(mode) {
@@ -722,3 +724,34 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
+// Strategy Change Event Listener for Real-Time Split Recalculations
+document.addEventListener('strategyChanged', (e) => {
+    if (!UIState.currentResults) return;
+
+    const detail = e.detail;
+    const current = UIState.currentResults;
+    if (current.mode === 'distance' || !current.pace || !current.distance) return;
+
+    const basePaceSeconds = timeToSeconds(current.pace);
+    const updatedSplits = calculateStrategySplits(basePaceSeconds, current.distance, detail);
+
+    const splitsContainer = document.querySelector('.splits-table');
+    if (splitsContainer) {
+        splitsContainer.innerHTML = `
+            <div class="split-row header">
+                <div class="split-col">Km</div>
+                <div class="split-col">Pace</div>
+                <div class="split-col">Time</div>
+            </div>
+            ${updatedSplits.map((split, index) => `
+                <div class="split-row animate-card" style="animation-delay: ${(4 + index) * 0.03}s;">
+                    <div class="split-col">${split.km}</div>
+                    <div class="split-col">${split.pace}</div>
+                    <div class="split-col">${split.time}</div>
+                </div>
+            `).join('')}
+        `;
+    }
+});
+

@@ -125,14 +125,19 @@
 }
 
 .zones-grid,
-.races-grid,
-.result-grid {
+.races-grid {
     display: grid;
     gap: 16px;
 }
 
+.result-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
 .results-section {
-    margin-bottom: 24px;
+    margin: 0;
 }
 
 .result-card {
@@ -260,7 +265,7 @@
 }
 
 .splits-section {
-    margin-top: 24px;
+    margin: 0;
 }
 
 /* ============================================================
@@ -313,6 +318,10 @@
     flex: 1;
 }
 
+.split-col:nth-child(2) {
+    text-align: center;
+}
+
 .split-col:last-child {
     text-align: right;
 }
@@ -321,4 +330,121 @@
 .animate-card {
     opacity: 0;
     animation: premiumFadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ============================================================
+   Advanced Race Strategy UI Component
+   ============================================================ */
+.strategy-section {
+    margin: 0;
+}
+
+.strategy-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 20px;
+    transition: var(--transition-smooth);
+}
+
+.strategy-toggle-group {
+    display: flex;
+    gap: 8px;
+    background-color: var(--input-bg);
+    padding: 4px;
+    border-radius: 12px;
+    border: 1px solid var(--input-border);
+    margin-bottom: 20px;
+}
+
+.strategy-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 16px;
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.strategy-btn:hover {
+    color: var(--text-primary);
+}
+
+.strategy-btn.active {
+    background-color: var(--toggle-active-bg);
+    color: #FFFFFF;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.strategy-controls {
+    position: relative;
+}
+
+.strategy-mode-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.strategy-mode-panel.hidden {
+    display: none;
+    opacity: 0;
+    transform: translateY(8px);
+}
+
+.strategy-label-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+}
+
+.strategy-output {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    background: var(--input-bg);
+    padding: 4px 10px;
+    border-radius: 6px;
+    border: 1px solid var(--input-border);
+}
+
+.strategy-range {
+    margin-top: 4px;
+    margin-bottom: 4px;
+}
+
+@media (max-width: 576px) {
+    .strategy-card {
+        padding: 16px;
+    }
+
+    .strategy-toggle-group {
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .strategy-btn {
+        padding: 8px 12px;
+        font-size: 12px;
+    }
+
+    .strategy-label-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+    }
 }

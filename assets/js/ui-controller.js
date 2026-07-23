@@ -315,20 +315,70 @@ export function enableCalculate() {
 }
 
 export function renderPaceTimeResults(container, metrics, splits, highlightLabel = null) {
+    const isDistanceCalc = highlightLabel && highlightLabel.toLowerCase() === 'distance';
+    const strategyVisibilityClass = isDistanceCalc ? ' hidden' : '';
+
     const splitsHtml = `
         <div class="splits-section">
             <div class="section-title">Splits</div>
             <div class="splits-table">
                 <div class="split-row header">
                     <div class="split-col">Km</div>
+                    <div class="split-col">Pace</div>
                     <div class="split-col">Time</div>
                 </div>
                 ${splits.map((split, index) => `
                     <div class="split-row animate-card" style="animation-delay: ${(metrics.length + index) * 0.05}s;">
                         <div class="split-col">${split.km}</div>
+                        <div class="split-col">${split.pace}</div>
                         <div class="split-col">${split.time}</div>
                     </div>
                 `).join('')}
+            </div>
+        </div>
+    `;
+
+    const strategyHtml = `
+        <div class="strategy-section${strategyVisibilityClass}" id="strategySection">
+            <div class="section-title">Advanced Race Strategy</div>
+            <div class="strategy-card">
+                <div class="strategy-toggle-group" role="tablist" aria-label="Race Strategy Selection">
+                    <button type="button" class="strategy-btn active" data-mode="half" id="stratBtnHalf" role="tab" aria-selected="true" aria-controls="controlsModeHalf">
+                        <i class="bi bi-pie-chart-fill"></i> Half-Race Strategy
+                    </button>
+                    <button type="button" class="strategy-btn" data-mode="progressive" id="stratBtnProgressive" role="tab" aria-selected="false" aria-controls="controlsModeProgressive">
+                        <i class="bi bi-graph-up-arrow"></i> Progressive Pacing
+                    </button>
+                </div>
+
+                <div class="strategy-controls">
+                    <!-- Mode A: Half-Race Strategy -->
+                    <div class="strategy-mode-panel active" id="controlsModeHalf" role="tabpanel">
+                        <div class="strategy-label-row">
+                            <label class="label" for="sliderEffortRatio">Effort Ratio (1st / 2nd Half)</label>
+                            <output class="strategy-output" id="valEffortRatio" for="sliderEffortRatio">50% / 50% (Even)</output>
+                        </div>
+                        <input type="range" class="form-range strategy-range" id="sliderEffortRatio" min="45" max="55" step="0.5" value="50">
+                        <div class="slider-bounds">
+                            <span>45% (Faster 1st)</span>
+                            <span>50% (Even)</span>
+                            <span>55% (Faster 2nd)</span>
+                        </div>
+                    </div>
+
+                    <!-- Mode B: Progressive Pacing -->
+                    <div class="strategy-mode-panel hidden" id="controlsModeProgressive" role="tabpanel">
+                        <div class="strategy-label-row">
+                            <label class="label" for="sliderPaceDelta">Pace Decrement per Km</label>
+                            <output class="strategy-output" id="valPaceDelta" for="sliderPaceDelta">0.0 s/km (Constant)</output>
+                        </div>
+                        <input type="range" class="form-range strategy-range" id="sliderPaceDelta" min="0" max="5" step="0.5" value="0">
+                        <div class="slider-bounds">
+                            <span>0 s/km (Constant)</span>
+                            <span>5 s/km (Aggressive)</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     `;
@@ -382,6 +432,7 @@ export function renderPaceTimeResults(container, metrics, splits, highlightLabel
                 </div>
             </div>
             ${splitsHtml}
+            ${strategyHtml}
         </div>
     `;
 
@@ -389,7 +440,97 @@ export function renderPaceTimeResults(container, metrics, splits, highlightLabel
     container.classList.remove('hidden');
     // Ensure parent results container is visible
     void container.offsetHeight;
+
+    initStrategyControls();
 }
+
+export function initStrategyControls() {
+    const btnHalf = document.getElementById('stratBtnHalf');
+    const btnProgressive = document.getElementById('stratBtnProgressive');
+    const controlsHalf = document.getElementById('controlsModeHalf');
+    const controlsProgressive = document.getElementById('controlsModeProgressive');
+    const sliderEffort = document.getElementById('sliderEffortRatio');
+    const sliderDelta = document.getElementById('sliderPaceDelta');
+    const valEffort = document.getElementById('valEffortRatio');
+    const valDelta = document.getElementById('valPaceDelta');
+
+    if (!btnHalf || !btnProgressive || !sliderEffort || !sliderDelta) return;
+
+    let activeMode = 'half';
+
+    const updateTrackGradient = (slider) => {
+        const min = parseFloat(slider.min) || 0;
+        const max = parseFloat(slider.max) || 100;
+        const val = parseFloat(slider.value) || 0;
+        const pct = ((val - min) / (max - min)) * 100;
+        slider.style.backgroundSize = `${pct}% 100%`;
+    };
+
+    const updateDisplaysAndEmit = () => {
+        const effortVal = parseFloat(sliderEffort.value);
+        const deltaVal = parseFloat(sliderDelta.value);
+
+        if (effortVal === 50) {
+            valEffort.textContent = '50% / 50% (Even)';
+        } else if (effortVal > 50) {
+            const secondHalf = (100 - effortVal).toFixed(1);
+            valEffort.textContent = `${effortVal}% / ${secondHalf}% (Negative Split)`;
+        } else {
+            const secondHalf = (100 - effortVal).toFixed(1);
+            valEffort.textContent = `${effortVal}% / ${secondHalf}% (Positive Split)`;
+        }
+
+        if (deltaVal === 0) {
+            valDelta.textContent = '0.0 s/km (Constant)';
+        } else {
+            valDelta.textContent = `${deltaVal.toFixed(1)} s/km`;
+        }
+
+        updateTrackGradient(sliderEffort);
+        updateTrackGradient(sliderDelta);
+
+        const detail = {
+            mode: activeMode,
+            effortRatio: effortVal,
+            paceDelta: deltaVal
+        };
+
+        const event = new CustomEvent('strategyChanged', { detail, bubbles: true });
+        document.dispatchEvent(event);
+    };
+
+    const switchMode = (newMode) => {
+        activeMode = newMode;
+        if (newMode === 'half') {
+            btnHalf.classList.add('active');
+            btnHalf.setAttribute('aria-selected', 'true');
+            btnProgressive.classList.remove('active');
+            btnProgressive.setAttribute('aria-selected', 'false');
+
+            controlsHalf.classList.remove('hidden');
+            controlsProgressive.classList.add('hidden');
+        } else {
+            btnProgressive.classList.add('active');
+            btnProgressive.setAttribute('aria-selected', 'true');
+            btnHalf.classList.remove('active');
+            btnHalf.setAttribute('aria-selected', 'false');
+
+            controlsProgressive.classList.remove('hidden');
+            controlsHalf.classList.add('hidden');
+        }
+        updateDisplaysAndEmit();
+    };
+
+    btnHalf.addEventListener('click', () => switchMode('half'));
+    btnProgressive.addEventListener('click', () => switchMode('progressive'));
+
+    sliderEffort.addEventListener('input', updateDisplaysAndEmit);
+    sliderDelta.addEventListener('input', updateDisplaysAndEmit);
+
+    updateTrackGradient(sliderEffort);
+    updateTrackGradient(sliderDelta);
+}
+
 
 export function resetUI(skipLayoutReset = false) {
     UIState.currentResults = null;
