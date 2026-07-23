@@ -74,14 +74,11 @@
     .btn-flip {
         z-index: 400;
         top: 12px;
-        right: 12px;
+        right: 16px;
     }
 
     /* Smaller devices specific tweaks */
     @media (max-width: 640px) {
-        .header-title {
-            font-size: 28px;
-        }
 
         .metrics-grid {
             grid-template-columns: 1fr;

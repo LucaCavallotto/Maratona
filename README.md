@@ -1,50 +1,110 @@
-# Maratona
+# Maratona – User Manual
 
-**Welcome to Maratona!** This is your comprehensive running calculator designed to quickly help you plan your training and race strategies.
+Welcome to **Maratona**, your high-precision running companion designed for performance-driven athletes, coaches, and runners. Whether you are aiming for a sub-40 minute 10K, pacing your first marathon, or building custom training zones, Maratona provides intuitive, real-time tools to plan every kilometer of your run.
 
-## Getting Started
+---
 
-Maratona includes six essential tools for runners. Select your mode from the dropdown and start calculating:
+## Quick Start Guide
 
-### 1. Quick DTP Input (Distance, Time, Pace)
-The fastest way to calculate your metrics. Type any two values separated by commas (e.g., `10, ?, 4:30` or `?, 00:45:00, 4:30`) to solve for the missing variable. "DTP" stands for **Distance, Time, and Pace**. This "Smart" input automatically detects your intent and calculates the unknown field (marked with a `?`).
+1. **Select a Tool**: Use the **Mode** dropdown menu to choose your calculation type.
+2. **Enter Your Values**: Fill in the required fields or use the **Quick DTP Input** to calculate missing metrics instantly.
+3. **View Real-Time Results**: Results, telemetry metrics, and split times display immediately upon calculation.
+4. **Fine-Tune Your Strategy**: Adjust pacing strategies or flip the card to fine-tune your target values interactively.
 
-### 2. Pace Calculator
-Calculate your average pace based on a given distance and total time. Includes quick presets for common race distances (5K, 10K, HM, Marathon) and generates 1km splits.
+---
 
-### 3. Time Calculator
-Determine your total race time based on a target distance and pace. Useful for planning race goals or estimating finish times.
+## Feature Guide & Tools
 
-### 4. Distance Calculator
-Find out how far you can run in a specific time at a given pace. Perfect for time-based training sessions.
+### 1. ⚡ Quick DTP Input (Smart Calculator)
+The fastest way to solve any running equation. Type any two known values separated by commas, using a `?` for the missing value:
+- **Calculate Pace**: Enter `42.195, 03:30:00, ?` (Distance, Time, `?`)
+- **Calculate Finish Time**: Enter `10, ?, 04:30` (Distance, `?`, Pace)
+- **Calculate Distance**: Enter `?, 01:00:00, 05:00` (`?`, Time, Pace)
 
-### 5. Training Zones Calculator
-Input your recent best 10K time to generate personalized training zones (Z1 to Z7). This tool also provides race predictions for 5K, 10K, Half Marathon, and Marathon distances based on your threshold pace.
+*Tip: Use the interactive preset buttons below the input field to test sample inputs with a single click!*
 
-### 6. Km-Mile Converter
-Instantly convert distances and paces between kilometers and miles.
+---
 
-### 7. Interactive Fine-tuning
-Switch between the standard input form and interactive range sliders (Distance, Time, Pace) for a more tactile experience. Perfect for seeing how small adjustments to your pace affect your finish time or distance.
+### 2. Dedicated Calculators
 
-## Additional Features & Instructions
+#### Pace Calculator
+Determines your average kilometer pace and speed metrics based on total distance and time.
+- **Race Presets**: Easily pick common race distances (**5K**, **10K**, **Half Marathon**, **Marathon**) or type a custom distance.
+- **Speed Metrics**: Automatically converts your pace into **km/h**, **m/s**, and **mph**.
 
--   **Interactive Flip Card:** Click the flip button or press **`F`** to toggle between the input form and the **Fine-tuning** sliders with a smooth 3D transition.
--   **Keyboard Shortcuts for Speed:** Maratona is built for rapid use.
-    -   Press **`Enter`** at any time to calculate your results.
-    -   Press **`R`** (when not typing in an input) to instantly reset the calculator and hide results.
-    -   Press **`C`** (when not typing in an input) to copy your formatted calculation results directly to your clipboard.
-    -   Press **`F`** (when not typing in an input) to flip the card.
-    -   **`Arrow Keys`** + **`Enter`** / **`Escape`** can be used to fully navigate and select options within the custom dropdown menus.
--   **Dynamic Result Highlighting:** The result grid automatically highlights the primary value you are calculating (e.g., highlighting "Pace" when in Pace mode).
--   **High-Precision Logic & Sliders:** 
-    -   Sliders feature a **Relative Anchor** system: manual adjustments snap to 10-second intervals for usability, while internal calculations maintain 1-second precision.
-    -   Slider tracks dynamically expand their boundaries to ensure every mathematically valid combination is reachable.
--   **Race Predictions:** Estimates your potential performance across various distances based on threshold pace.
--   **Split Times:** Automatically generates detailed 1km split tables for precise race planning.
--   **Modern Responsive Design:** Fully optimized for both desktop and mobile use, featuring smooth cross-fade transitions on smaller screens.
+#### Time Calculator
+Projects your exact finish time based on your target distance and goal pace per kilometer. Perfect for establishing realistic race day goals.
+
+#### Distance Calculator
+Calculates total distance covered during a specific time duration at a given pace. Ideal for structured, time-based training sessions.
+
+---
+
+### 3. Training Zones & Race Predictions
+Enter your recent best **10K time** to generate a personalized performance profile:
+
+- **7 Personal Training Zones**:
+  - **Z1 – Recovery**: Active recovery and light cooldowns.
+  - **Z2 – Aerobic / Slow Bottom**: Base endurance building.
+  - **Z3 – Tempo / Medium XC**: Aerobic capacity and steady effort.
+  - **Z4 – Threshold**: Lactate threshold, optimal race pace.
+  - **Z5 – VO2 Max**: Speed development and interval training.
+  - **Z6 – Anaerobic**: High-intensity power and fatigue resistance.
+  - **Z7 – Sprint**: Maximum neuromuscular speed.
+
+- **Race Predictions**: Calculates predicted race finish times for **5K**, **10K**, **Half Marathon**, and **Marathon** based on your threshold performance.
+
+---
+
+### 4. Advanced Race Strategy (Pace Splits Telemetry)
+When calculating Pace or Time, the **Advanced Race Strategy** panel appears below your split table to model custom pacing strategies while keeping your target finish time constant:
+
+- **Half-Race Strategy (Negative / Positive Split)**:
+  - Slide the **Effort Ratio** slider from **45% to 55%**.
+  - **50% / 50%**: Even pacing across both halves.
+  - **> 50% (Negative Split)**: Run the first half controlled and accelerate in the second half.
+  - **< 50% (Positive Split)**: Run the first half faster and hold on in the second half.
+
+- **Progressive Pacing (Continuous Acceleration)**:
+  - Slide the **Pace Decrement** slider from **0 to 5 s/km**.
+  - Models progressive acceleration, making each kilometer faster than the last.
+
+- **Pace Distribution Table**:
+  - Review your detailed kilometer-by-kilometer strategy breakdown across three columns: **Km**, **Pace**, and **Time**.
+
+---
+
+### 5. Interactive Fine-Tuning (3D Flip Card)
+Prefer tactile controls? Click the **Flip Button** or press **`F`** to switch to the **Fine-Tuning** interface:
+- Smooth range sliders for **Distance**, **Time**, and **Pace**.
+- Real-time bidirectional adjustments let you slide values and immediately observe their impact on overall performance.
+
+---
+
+### 6. Km-Mile Unit Converter
+Seamlessly convert distances and paces between metric (kilometers) and imperial (miles) units with instant live updates.
+
+---
+
+## Keyboard Shortcuts
+
+Speed up your workflow with built-in hotkeys:
+
+| Shortcut | Action | Description |
+| :--- | :--- | :--- |
+| <kbd>Enter</kbd> | **Calculate** | Computes results for the active form |
+| <kbd>R</kbd> | **Reset** | Clears inputs and resets the calculator |
+| <kbd>C</kbd> | **Copy** | Copies formatted summary results to your clipboard |
+| <kbd>F</kbd> | **Flip** | Flips between standard inputs and tactile sliders |
+| <kbd>Arrow Keys</kbd> | **Navigate** | Navigates custom dropdown options |
+
+---
+
+## Copying & Exporting Results
+
+Once your calculation is complete, click the **Copy** button or press **`C`** on your keyboard. A formatted summary of your distance, finish time, average pace, speed metrics, and training zones will be copied directly to your clipboard, ready to paste into training logs or messages.
 
 ---
 
 > [!NOTE]
-> All data provided are mathematical estimates. Actual performance, training zones, and converted metrics may vary based on individual physiology, terrain, conditions and rounding.
+> All metrics and predictions are calculated using standard exercise physiology formulas. Actual race performance may vary based on weather, elevation, course terrain, and personal fitness.
