@@ -1,6 +1,6 @@
 # Maratona – User Manual
 
-Welcome to **Maratona**, your high-precision running companion designed for performance-driven athletes, coaches, and runners. Whether you are aiming for a sub-40 minute 10K, pacing your first marathon, or building custom training zones, Maratona provides intuitive, real-time tools to plan every kilometer of your run.
+A high-precision running companion and calculator designed for runners. Features dedicated pace, time, and distance solvers, quick Distance-Time-Pace (DTP) smart formulas, speed metric conversions, split calculations, and personalized 7-zone training pace profiles based on 10K benchmarks.
 
 ## Quick Start Guide
 
